@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
-* Студент: [Kristina Kuzmenko](https://up.htmlacademy.ru/ecmascript/11/user/608749).
-* Наставник: `Неизвестно`.
+- Студент: [Kristina Kuzmenko](https://up.htmlacademy.ru/ecmascript/11/user/608749).
+- Наставник: [Владимир Коршунов](https://htmlacademy.ru/profile/bekobou).
 
 ---
 
