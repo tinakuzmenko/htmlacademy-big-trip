@@ -1,14 +1,16 @@
-import {renderTripInfoContainer} from "./components/trip-info-container.js";
-import {renderTripRoute} from "./components/trip-route.js";
-import {renderTripCost} from "./components/trip-cost.js";
-import {renderPageNavigation} from "./components/page-navigation.js";
-import {renderPageFilter} from "./components/page-filter.js";
-import {renderTripSort} from "./components/trip-sort.js";
-import {renderEventForm} from "./components/event-form.js";
-import {renderDaysContainer} from "./components/days-container.js";
-import {renderDay} from "./components/day.js";
-import {renderEventsContainer} from "./components/events-container.js";
-import {renderEvent} from "./components/event.js";
+import {renderDay} from "./components/events-list/day/day.js";
+import {renderDaysContainer} from "./components/events-list/days-container.js";
+import {renderEvent} from "./components/events-list/route-point/render-route-point.js";
+import {renderEventForm} from "./components/trip-form/event-form.js";
+import {renderEventsContainer} from "./components/events-list/events-container.js";
+import {renderPageFilter} from "./components/header/page-filter/page-filter.js";
+import {renderPageNavigation} from "./components/header/page-navigation/page-navigation.js";
+import {renderTripCost} from "./components/header/trip-cost/trip-cost.js";
+import {renderTripInfoContainer} from "./components/header/trip-info-container.js";
+import {renderTripRoute} from "./components/header/trip-route/trip-route.js";
+import {renderTripSort} from "./components/trip-sort/trip-sort.js";
+
+import {getRoutePoint} from "./components/events-list/route-point/route-point.js";
 
 const EVENTS_AMOUNT = 3;
 
@@ -50,3 +52,5 @@ renderComponent(day, renderEventsContainer(), `beforeend`);
 const eventsContainer = document.querySelector(`.trip-events__list`);
 
 renderManyComponents(eventsContainer, renderEvent(), `beforeend`);
+
+console.log(getRoutePoint());
