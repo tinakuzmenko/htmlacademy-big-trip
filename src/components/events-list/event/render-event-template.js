@@ -1,10 +1,11 @@
-export const renderEvent = () => {
+const renderEvent = (event) => {
+  const {type, destinationName, basePrice} = event;
   return `<li class="trip-events__item">
             <div class="event">
               <div class="event__type">
-                <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+                <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
               </div>
-              <h3 class="event__title">Taxi to Amsterdam</h3>
+              <h3 class="event__title">${type} to ${destinationName}</h3>
 
               <div class="event__schedule">
                 <p class="event__time">
@@ -16,7 +17,7 @@ export const renderEvent = () => {
               </div>
 
               <p class="event__price">
-                &euro;&nbsp;<span class="event__price-value">20</span>
+                &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
               </p>
 
               <h4 class="visually-hidden">Offers:</h4>
@@ -34,3 +35,5 @@ export const renderEvent = () => {
             </div>
           </li>`;
 };
+
+export {renderEvent};

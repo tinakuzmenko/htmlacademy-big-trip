@@ -1,6 +1,6 @@
 import {renderDay} from "./components/events-list/day/day.js";
 import {renderDaysContainer} from "./components/events-list/days-container.js";
-import {renderEvent} from "./components/events-list/route-point/render-route-point.js";
+import {renderEvent} from "./components/events-list/event/render-event-template.js";
 import {renderEventForm} from "./components/trip-form/event-form.js";
 import {renderEventsContainer} from "./components/events-list/events-container.js";
 import {renderPageFilter} from "./components/header/page-filter/page-filter.js";
@@ -10,18 +10,12 @@ import {renderTripInfoContainer} from "./components/header/trip-info-container.j
 import {renderTripRoute} from "./components/header/trip-route/trip-route.js";
 import {renderTripSort} from "./components/trip-sort/trip-sort.js";
 
-import {getRoutePoint} from "./components/events-list/route-point/route-point.js";
+import {generateEvents} from "./components/events-list/event/event.js";
 
-const EVENTS_AMOUNT = 3;
+const EVENTS_AMOUNT = 15;
 
 const renderComponent = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
-};
-
-const renderManyComponents = (container, template, place, amount = EVENTS_AMOUNT) => {
-  for (let i = 0; i < amount; i++) {
-    renderComponent(container, template, place);
-  }
 };
 
 const tripMain = document.querySelector(`.trip-main`);
@@ -51,6 +45,8 @@ renderComponent(day, renderEventsContainer(), `beforeend`);
 
 const eventsContainer = document.querySelector(`.trip-events__list`);
 
-renderManyComponents(eventsContainer, renderEvent(), `beforeend`);
+const events = generateEvents(EVENTS_AMOUNT);
 
-console.log(getRoutePoint());
+for (let i = 0; i < events.length; i++) {
+  renderComponent(eventsContainer, renderEvent(events[i]), `beforeend`);
+}
