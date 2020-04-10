@@ -1,11 +1,15 @@
-const renderEvent = (event) => {
-  const {type, destinationName, basePrice} = event;
+import {renderTripEventOffers} from './render-trip-event-offers.js';
+
+const renderTripEvent = (tripEvent) => {
+  const {type, city, basePrice, offers, action} = tripEvent;
+  const eventOffers = offers !== null ? renderTripEventOffers(offers) : ``;
+
   return `<li class="trip-events__item">
             <div class="event">
               <div class="event__type">
                 <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
               </div>
-              <h3 class="event__title">${type} to ${destinationName}</h3>
+              <h3 class="event__title">${type} ${action} ${city}</h3>
 
               <div class="event__schedule">
                 <p class="event__time">
@@ -22,11 +26,7 @@ const renderEvent = (event) => {
 
               <h4 class="visually-hidden">Offers:</h4>
               <ul class="event__selected-offers">
-                <li class="event__offer">
-                  <span class="event__offer-title">Order Uber</span>
-                  &plus;
-                  &euro;&nbsp;<span class="event__offer-price">20</span>
-                </li>
+                ${eventOffers}
               </ul>
 
               <button class="event__rollup-btn" type="button">
@@ -36,4 +36,4 @@ const renderEvent = (event) => {
           </li>`;
 };
 
-export {renderEvent};
+export {renderTripEvent};
