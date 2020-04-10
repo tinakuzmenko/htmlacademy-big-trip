@@ -1,29 +1,31 @@
-import {eventTypes, eventDestinations} from '../events-list/trip-events/trip-event-data.js';
+import {eventTypes, eventDestinations} from '../events-list/trip-events/trip-event-mocks.js';
+
 import {renderOffers} from './render-offers.js';
+import {renderOptions} from './render-options.js';
+import {renderPhotos} from './render-photos.js';
 import {renderTypesList} from './render-types-list.js';
 
-const renderOptions = (cities) => {
-  return cities.map((city) => {
-    return (`<option value="${city}"></option>`);
-  })
-  .join(`\n`);
-};
+const getDateAndTimeFormat = (date) => {
+  const dateYear = date.getFullYear().toString().slice(2, 4);
 
-const renderPhotos = (photos) => {
-  return photos.map((photo) => {
-    return (`<img class="event__photo" src="${photo}" alt="Event photo">`);
-  })
-  .join(`\n`);
-};
+  const dateValues = Array.of(date.getDate(), date.getMonth(), date.getHours(), date.getMinutes()).map((value) => {
+    return value < 10 ? `0` + value : value;
+  });
 
+  const [dateDay, dateMonth, dateHours, dateMinutes] = dateValues;
+
+  return dateDay + `/` + dateMonth + `/` + dateYear + ` ` + dateHours + `:` + dateMinutes;
+};
 
 const renderTripEventForm = (tripEvent) => {
-  const {type, city, description, action, offers, photos} = tripEvent;
+  const {type, city, description, action, offers, photos, start, end, basePrice} = tripEvent;
 
   const typesTransferList = renderTypesList(eventTypes.slice(0, 7));
   const typesActivitiesList = renderTypesList(eventTypes.slice(7, 10));
   const eventOptions = renderOptions(eventDestinations);
   const eventPhotos = renderPhotos(photos);
+  const startTime = getDateAndTimeFormat(start);
+  const endTime = getDateAndTimeFormat(end);
 
   const eventOffers = offers !== null ? renderOffers(offers) : ``;
 
@@ -69,12 +71,12 @@ const renderTripEventForm = (tripEvent) => {
                 <label class="visually-hidden" for="event-start-time-1">
                   From
                 </label>
-                <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 00:00">
+                <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startTime}">
                 &mdash;
                 <label class="visually-hidden" for="event-end-time-1">
                   To
                 </label>
-                <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 00:00">
+                <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endTime}">
               </div>
 
               <div class="event__field-group  event__field-group--price">
@@ -82,7 +84,7 @@ const renderTripEventForm = (tripEvent) => {
                   <span class="visually-hidden">Price</span>
                   &euro;
                 </label>
-                <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+                <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
               </div>
 
               <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>

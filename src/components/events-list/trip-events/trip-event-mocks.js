@@ -15,20 +15,6 @@ const eventActionsMap = {
 
 const eventDestinations = [`Copenhagen`, `Longyearbyen`, `Tromsø`, `Reykjavík`, `Nuuk`, `Moscow`, `Tórshavn`];
 
-const eventDescriptions = [
-  `Lorem ipsum dolor sit amet, consectetur adipiscing elit. `,
-  `Cras aliquet varius magna, non porta ligula feugiat eget. `,
-  `Fusce tristique felis at fermentum pharetra. `,
-  `Aliquam id orci ut lectus varius viverra. `,
-  `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. `,
-  `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. `,
-  `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. `,
-  `Sed sed nisi sed augue convallis suscipit in sed felis. `,
-  `Aliquam erat volutpat. `,
-  `Nunc fermentum tortor ac porta dapibus. `,
-  `In rutrum ac purus sit amet tempus. `
-];
-
 const eventOffers = [{
   id: `luggage`,
   title: `Add luggage`,
@@ -80,8 +66,4 @@ const eventOffers = [{
   price: 50
 }];
 
-const getPhotoLink = () => {
-  return `http://picsum.photos/248/152?r=${Math.random()}`;
-};
-
-export {eventTypes, eventActionsMap, eventDestinations, eventDescriptions, eventOffers, getPhotoLink};
+export {eventTypes, eventActionsMap, eventDestinations, eventOffers};

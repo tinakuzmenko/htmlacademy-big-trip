@@ -10,7 +10,7 @@ import {renderTripInfoContainer} from "./components/header/trip-info-container.j
 import {renderTripRoute} from "./components/header/trip-route/trip-route.js";
 import {renderTripSort} from "./components/trip-sort/trip-sort.js";
 
-import {getTripEvent, generateTripEvents} from "./components/events-list/trip-events/trip-event.js";
+import {getTripEvent, generateTripEvents} from "./components/events-list/trip-events/generate-trip-events.js";
 
 const EVENTS_AMOUNT = 15;
 
