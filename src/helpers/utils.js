@@ -8,5 +8,8 @@ const getRandomArrayItem = (array) => {
   return array[randomIndex];
 };
 
+const renderComponent = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
 
-export {getRandomIntegerNumber, getRandomArrayItem};
+export {getRandomIntegerNumber, getRandomArrayItem, renderComponent};

@@ -1,21 +1,9 @@
 import {eventTypes, eventDestinations} from '../events-list/trip-events/trip-event-mocks.js';
-
+import {getDateAndTimeFormat} from './get-date-and-time-format.js';
 import {renderOffers} from './render-offers.js';
 import {renderOptions} from './render-options.js';
 import {renderPhotos} from './render-photos.js';
 import {renderTypesList} from './render-types-list.js';
-
-const getDateAndTimeFormat = (date) => {
-  const dateYear = date.getFullYear().toString().slice(2, 4);
-
-  const dateValues = Array.of(date.getDate(), date.getMonth(), date.getHours(), date.getMinutes()).map((value) => {
-    return value < 10 ? `0` + value : value;
-  });
-
-  const [dateDay, dateMonth, dateHours, dateMinutes] = dateValues;
-
-  return dateDay + `/` + dateMonth + `/` + dateYear + ` ` + dateHours + `:` + dateMinutes;
-};
 
 const renderTripEventForm = (tripEvent) => {
   const {type, city, description, action, offers, photos, start, end, basePrice} = tripEvent;

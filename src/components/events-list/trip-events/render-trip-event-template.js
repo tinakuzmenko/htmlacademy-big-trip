@@ -1,15 +1,8 @@
 import {renderTripEventOffers} from './render-trip-event-offers.js';
-
-const getTimeFormat = (time) => {
-  const timeValues = Array.of(time.getHours(), time.getMinutes()).map((value) => {
-    return value < 10 ? `0` + value : value;
-  });
-
-  return timeValues.join(`:`);
-};
+import {getTimeFormat} from './get-time-format.js';
 
 const renderTripEvent = (tripEvent) => {
-  const {type, city, basePrice, offers, action, start, end} = tripEvent;
+  const {type, city, basePrice, offers, action, start, end, timeDiff} = tripEvent;
   const eventOffers = offers !== null ? renderTripEventOffers(offers) : ``;
   const startTime = getTimeFormat(start);
   const endTime = getTimeFormat(end);
@@ -27,7 +20,7 @@ const renderTripEvent = (tripEvent) => {
                   &mdash;
                   <time class="event__end-time" datetime="${end.toISOString()}">${endTime}</time>
                 </p>
-                <p class="event__duration">30M</p>
+                <p class="event__duration">${timeDiff}</p>
               </div>
 
               <p class="event__price">

@@ -2,7 +2,8 @@ import {getRandomIntegerNumber, getRandomArrayItem} from '../../../helpers/utils
 import {getPhotos} from './get-photos.js';
 import {getRandomDescription} from './get-random-description';
 import {getRandomOffers} from './get-random-offers.js';
-import {generateStartDate, generateEndDate, getTimeDifference} from './generate-dates.js';
+import {generateStartDate, generateEndDate} from './generate-dates.js';
+import {getTimeDifference} from './get-time-difference.js';
 import {eventTypes, eventActionsMap, eventDestinations, eventOffers} from './trip-event-mocks.js';
 
 const getTripEvent = () => {
