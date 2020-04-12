@@ -1,4 +1,4 @@
-import {getRandomIntegerNumber} from '../../../helpers/utils.js';
+import {getRandomIntegerNumber} from './utils.js';
 
 const getPhotoLink = () => {
   return `http://picsum.photos/248/152?r=${Math.random()}`;

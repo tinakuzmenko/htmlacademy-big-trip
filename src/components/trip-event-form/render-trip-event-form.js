@@ -1,19 +1,19 @@
-import {eventTypes, eventDestinations} from '../events-list/trip-events/trip-event-mocks.js';
-import {getDateAndTimeFormat} from './get-date-and-time-format.js';
+import {eventTypes, eventDestinations} from '../../mocks/trip-event-mocks.js';
+import {getDateAndTimeFormFormat} from '../../helpers/get-date-and-time-form-format.js';
 import {renderOffers} from './render-offers.js';
 import {renderOptions} from './render-options.js';
 import {renderPhotos} from './render-photos.js';
-import {renderTypesList} from './render-types-list.js';
+import {renderTripTypesList} from './render-trip-types-list.js';
 
 const renderTripEventForm = (tripEvent) => {
   const {type, city, description, action, offers, photos, start, end, basePrice} = tripEvent;
 
-  const typesTransferList = renderTypesList(eventTypes.slice(0, 7));
-  const typesActivitiesList = renderTypesList(eventTypes.slice(7, 10));
+  const typesTransferList = renderTripTypesList(eventTypes.slice(0, 7));
+  const typesActivitiesList = renderTripTypesList(eventTypes.slice(7, 10));
   const eventOptions = renderOptions(eventDestinations);
   const eventPhotos = renderPhotos(photos);
-  const startTime = getDateAndTimeFormat(start);
-  const endTime = getDateAndTimeFormat(end);
+  const startTime = getDateAndTimeFormFormat(start);
+  const endTime = getDateAndTimeFormFormat(end);
 
   const eventOffers = offers !== null ? renderOffers(offers) : ``;
 

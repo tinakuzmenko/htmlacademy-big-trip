@@ -1,4 +1,4 @@
-const renderTypesList = (types) => {
+const renderTripTypesList = (types) => {
   return types.map((type) => {
     return (
       `<div class="event__type-item">
@@ -10,4 +10,4 @@ const renderTypesList = (types) => {
   .join(`\n`);
 };
 
-export {renderTypesList};
+export {renderTripTypesList};

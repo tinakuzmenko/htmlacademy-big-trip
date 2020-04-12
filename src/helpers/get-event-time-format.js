@@ -1,4 +1,4 @@
-const getTimeFormat = (time) => {
+const getEventTimeFormat = (time) => {
   const timeValues = Array.of(time.getHours(), time.getMinutes()).map((value) => {
     return value < 10 ? `0` + value : value;
   });
@@ -6,4 +6,4 @@ const getTimeFormat = (time) => {
   return timeValues.join(`:`);
 };
 
-export {getTimeFormat};
+export {getEventTimeFormat};

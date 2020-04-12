@@ -1,4 +1,4 @@
-import {getRandomIntegerNumber, getRandomArrayItem} from '../../../helpers/utils.js';
+import {getRandomIntegerNumber, getRandomArrayItem} from '../helpers/utils.js';
 
 const getRandomOffers = (offers) => {
   const offersAmount = getRandomIntegerNumber(1, 5);

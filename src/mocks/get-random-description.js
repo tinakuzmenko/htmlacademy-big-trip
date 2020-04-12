@@ -1,4 +1,4 @@
-import {getRandomIntegerNumber} from '../../../helpers/utils.js';
+import {getRandomIntegerNumber} from '../helpers/utils.js';
 
 const eventDescriptions = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit. `,

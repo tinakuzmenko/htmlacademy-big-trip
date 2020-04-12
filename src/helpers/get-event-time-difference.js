@@ -1,7 +1,7 @@
-import {getRandomIntegerNumber} from '../../../helpers/utils.js';
-import {TIME_PARSE_COEFFICIENT} from '../../../helpers/constants.js';
+import {getRandomIntegerNumber} from './utils.js';
+import {TIME_PARSE_COEFFICIENT} from './constants.js';
 
-const generateTimeDifference = () => {
+const generateEventTimeDifference = () => {
   const differenceMin = 10;
   const differenceIterations = getRandomIntegerNumber(1, 6);
   let difference = (differenceMin * differenceIterations) * getRandomIntegerNumber(1, 4);
@@ -18,4 +18,4 @@ const getTimeDifference = (start, end) => {
   }
 };
 
-export {generateTimeDifference, getTimeDifference};
+export {generateEventTimeDifference, getTimeDifference};

@@ -1,10 +1,10 @@
-import {getRandomIntegerNumber, getRandomArrayItem} from '../../../helpers/utils.js';
-import {getPhotos} from './get-photos.js';
-import {getRandomDescription} from './get-random-description';
-import {getRandomOffers} from './get-random-offers.js';
-import {generateStartDate, generateEndDate} from './generate-dates.js';
-import {getTimeDifference} from './get-time-difference.js';
-import {eventTypes, eventActionsMap, eventDestinations, eventOffers} from './trip-event-mocks.js';
+import {getRandomIntegerNumber, getRandomArrayItem} from '../../helpers/utils.js';
+import {getPhotos} from '../../helpers/get-photos.js';
+import {getRandomDescription} from '../../mocks/get-random-description.js';
+import {getRandomOffers} from '../../mocks/get-random-offers.js';
+import {generateStartDate, generateEndDate} from '../../mocks/generate-dates.js';
+import {getTimeDifference} from '../../helpers/get-event-time-difference.js';
+import {eventTypes, eventActionsMap, eventDestinations, eventOffers} from '../../mocks/trip-event-mocks.js';
 
 const getTripEvent = () => {
   const hasOffers = Math.random() > 0.5;
@@ -26,10 +26,10 @@ const getTripEvent = () => {
   };
 };
 
-const generateTripEvents = (count) => {
+const createTripEvents = (count) => {
   return new Array(count)
     .fill(``)
     .map(getTripEvent);
 };
 
-export {getTripEvent, generateTripEvents};
+export {getTripEvent, createTripEvents};

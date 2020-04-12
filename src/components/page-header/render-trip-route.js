@@ -1,4 +1,4 @@
-import {tripEventsList} from '../../events-list/trip-events/trip-events-list.js';
+import {tripEventsList} from '../trip-events/parse-trip-events-list.js';
 
 const getTripRoute = (tripEvents) => {
   const tripEventsCities = tripEvents.map((tripEvent) => tripEvent.city);
@@ -6,7 +6,7 @@ const getTripRoute = (tripEvents) => {
   const fullRoute = uniqueCities.join(` — `);
   const shortRoute = uniqueCities.slice(0, 1) + ` — … — ` + uniqueCities.slice(uniqueCities.length - 1);
 
-  return tripEventsCities.length < 3 ? fullRoute : shortRoute;
+  return tripEventsCities.length <= 3 ? fullRoute : shortRoute;
 };
 
 const renderTripRoute = () => {
