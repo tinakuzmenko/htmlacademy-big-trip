@@ -2,9 +2,9 @@ import {getRandomIntegerNumber} from './utils.js';
 import {TIME_PARSE_COEFFICIENT} from './constants.js';
 
 const generateEventTimeDifference = () => {
-  const differenceMin = 10;
+  const differenceInMinutes = 10;
   const differenceIterations = getRandomIntegerNumber(1, 6);
-  let difference = (differenceMin * differenceIterations) * getRandomIntegerNumber(1, 4);
+  let difference = (differenceInMinutes * differenceIterations) * getRandomIntegerNumber(1, 4);
 
   return difference;
 };
