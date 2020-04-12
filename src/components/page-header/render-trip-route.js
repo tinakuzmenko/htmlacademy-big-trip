@@ -1,5 +1,5 @@
 import {MONTHS} from '../../helpers/constants.js';
-import {getTripEvensDates} from '../trip-events/get-trip-events-dates.js';
+import {getTripEventsDates} from '../../helpers/get-trip-events-dates.js';
 
 const MAXIMUM_CITIES_SHOWN = 3;
 
@@ -27,7 +27,7 @@ const getTripDates = (startDate, endDate) => {
 
 const renderTripRoute = (tripEventsList) => {
   const title = getTripRoute(tripEventsList);
-  const tripDates = getTripEvensDates(tripEventsList).sort((a, b) => a - b);
+  const tripDates = getTripEventsDates(tripEventsList).sort((a, b) => a - b);
   const tripDatesString = getTripDates(tripDates[0], tripDates[tripDates.length - 1]);
 
   return `<div class="trip-info__main">

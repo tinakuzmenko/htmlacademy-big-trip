@@ -1,7 +1,9 @@
 import {addParsedDate} from './components/trip-events/add-parsed-dates.js';
 import {createTripDays} from './components/trip-days/create-trip-days.js';
+import {createTripEvents} from './components/trip-events/create-trip-events-list.js';
 import {getSortedEvents} from './helpers/get-sorted-events.js';
 import {getTripEvent} from "./components/trip-events/create-trip-events-list.js";
+import {getTripEventsDates} from './helpers/get-trip-events-dates.js';
 import {renderComponent} from './helpers/utils.js';
 import {renderEventsInDays} from './components/trip-events/render-events-in-days.js';
 import {renderPageFilter} from "./components/page-header/render-page-filter.js";
@@ -13,8 +15,6 @@ import {renderTripEventForm} from "./components/trip-event-form/render-trip-even
 import {renderTripHeaderInfoContainer} from "./components/containers/render-trip-header-info-container.js";
 import {renderTripRoute} from "./components/page-header/render-trip-route.js";
 import {renderTripSort} from "./components/trip-sort/trip-sort.js";
-import {createTripEvents} from './components/trip-events/create-trip-events-list.js';
-import {getTripEvensDates} from './components/trip-events/get-trip-events-dates.js';
 
 const EVENTS_AMOUNT = 20;
 const eventsList = createTripEvents(EVENTS_AMOUNT);
@@ -53,7 +53,7 @@ const tripEventsSortedByDate = getSortedEvents(eventsList);
 
 addParsedDate(tripEventsSortedByDate);
 
-const tripEventsDates = getTripEvensDates(eventsList);
+const tripEventsDates = getTripEventsDates(eventsList);
 const tripDays = createTripDays(tripEventsDates);
 
 renderComponent(daysContainer, renderTripDays(tripDays), `beforeend`);
