@@ -1,9 +1,9 @@
+const countTripOffersCost = (offers) => {
+  return offers === null ? 0 : offers.reduce((offersTotal, offerCost) => offersTotal + offerCost.price, 0);
+};
+
 const getTripEventsCost = (tripEvents) => {
-  return tripEvents.reduce((total, cost) => {
-    return cost.offers === null ? total + cost.basePrice : total + cost.basePrice + cost.offers.reduce((offersTotal, offer) => {
-      return offersTotal + offer.price;
-    }, 0);
-  }, 0);
+  return tripEvents.reduce((total, cost) => total + cost.basePrice + countTripOffersCost(cost.offers), 0);
 };
 
 const renderTripCost = (tripEvents) => {
