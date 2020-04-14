@@ -13,7 +13,7 @@ const renderEventOffers = (offers) => {
           &plus;
           &euro;&nbsp;<span class="event__offer-price">${price}</span>
         </label>
-      </div>`
+      </div>`.trim()
     );
   })
   .join(``);
@@ -27,7 +27,7 @@ const renderOffers = (offers) => {
       <div class="event__available-offers">
         ${eventOffers}
       </div>
-    </section>`
+    </section>`.trim()
   );
 };
 

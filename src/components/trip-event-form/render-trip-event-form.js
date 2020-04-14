@@ -17,12 +17,12 @@ const renderTripEventForm = (tripEvent) => {
 
   const eventOffers = offers !== null ? renderOffers(offers) : ``;
 
-  return `<form class="trip-events__item  event  event--edit" action="#" method="post">
+  return (`<form class="trip-events__item  event  event--edit" action="#" method="post">
             <header class="event__header">
               <div class="event__type-wrapper">
                 <label class="event__type  event__type-btn" for="event-type-toggle-1">
                   <span class="visually-hidden">Choose event type</span>
-                  <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
+                  <img class="event__type-icon" width="17" height="17" src="img/icons/${type.toLowerCase()}.png" alt="Event ${type.toLowerCase()} icon">
                 </label>
                 <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -92,7 +92,8 @@ const renderTripEventForm = (tripEvent) => {
                 </div>
               </section>
             </section>
-          </form>`;
+          </form>`.trim()
+  );
 };
 
 export {renderTripEventForm};

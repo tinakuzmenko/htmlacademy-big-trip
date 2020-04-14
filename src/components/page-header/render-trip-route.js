@@ -6,10 +6,8 @@ const MAXIMUM_CITIES_SHOWN = 3;
 const getTripRoute = (tripEvents) => {
   const tripEventsCities = tripEvents.map((tripEvent) => tripEvent.city);
   const uniqueCities = [...new Set(tripEventsCities)].sort();
-  const fullRoute = uniqueCities.join(` — `);
-  const shortRoute = uniqueCities.slice(0, 1) + ` — … — ` + uniqueCities.slice(uniqueCities.length - 1);
 
-  return tripEventsCities.length <= MAXIMUM_CITIES_SHOWN ? fullRoute : shortRoute;
+  return tripEventsCities.length <= MAXIMUM_CITIES_SHOWN ? uniqueCities.join(` — `) : uniqueCities.slice(0, 1) + ` — … — ` + uniqueCities.slice(uniqueCities.length - 1);
 };
 
 const getTripDates = (startDate, endDate) => {
@@ -34,7 +32,7 @@ const renderTripRoute = (tripEventsList) => {
             <h1 class="trip-info__title">${title}</h1>
 
             <p class="trip-info__dates">${tripDatesString}</p>
-          </div>`;
+          </div>`.trim();
 };
 
 export {renderTripRoute};

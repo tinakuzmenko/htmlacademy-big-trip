@@ -13,7 +13,7 @@ const renderTripDays = (dates) => {
                 <span class="day__counter">${index + 1}</span>
                 <time class="day__date" datetime="${yearValue}-${monthValue + 1}-${dateValue}">${MONTHS[monthValue]} ${dateValue}</time>
               </div>
-            </li>`);
+            </li>`.trim());
   })
   .join(`\n`);
 };

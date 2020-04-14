@@ -28,5 +28,5 @@ export const renderTripSort = () => {
             </div>
 
             <span class="trip-sort__item  trip-sort__item--offers">Offers</span>
-          </form>`;
+          </form>`.trim();
 };

@@ -7,7 +7,7 @@ const renderTripEventOffers = (offers) => {
         <span class="event__offer-title">${title}</span>
         &plus;
         &euro;&nbsp;<span class="event__offer-price">${price}</span>
-      </li>`
+      </li>`.trim()
     );
   })
   .join(`\n`);
