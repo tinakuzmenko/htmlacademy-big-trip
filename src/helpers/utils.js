@@ -1,3 +1,9 @@
+let counter = 1;
+
+const increaseCounter = () => {
+  return counter++;
+};
+
 const getRandomIntegerNumber = (min, max) => {
   return min + Math.floor(Math.random() * (max - min));
 };
@@ -12,4 +18,4 @@ const renderComponent = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-export {getRandomIntegerNumber, getRandomArrayItem, renderComponent};
+export {increaseCounter, getRandomIntegerNumber, getRandomArrayItem, renderComponent};

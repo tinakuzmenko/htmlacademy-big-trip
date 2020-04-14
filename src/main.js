@@ -40,8 +40,8 @@ renderComponent(secondTitle, renderPageFilter(), `afterend`);
 renderComponent(tripEvents, renderTripSort(), `beforeend`);
 
 // Форма
-
-renderComponent(tripEvents, renderTripEventForm(getTripEvent()), `beforeend`);
+const tripEventFormObject = getTripEvent();
+renderComponent(tripEvents, renderTripEventForm(tripEventFormObject, tripEventFormObject.counter), `beforeend`);
 
 // Дни
 

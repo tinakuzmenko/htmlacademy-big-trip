@@ -5,7 +5,7 @@ import {renderOptions} from './render-options.js';
 import {renderPhotos} from './render-photos.js';
 import {renderTripTypesList} from './render-trip-types-list.js';
 
-const renderTripEventForm = (tripEvent) => {
+const renderTripEventForm = (tripEvent, counter) => {
   const {type, city, description, action, offers, photos, start, end, basePrice} = tripEvent;
 
   const typesTransferList = renderTripTypesList(eventTypes.slice(0, 7));
@@ -20,11 +20,11 @@ const renderTripEventForm = (tripEvent) => {
   return (`<form class="trip-events__item  event  event--edit" action="#" method="post">
             <header class="event__header">
               <div class="event__type-wrapper">
-                <label class="event__type  event__type-btn" for="event-type-toggle-1">
+                <label class="event__type  event__type-btn" for="event-type-toggle-${counter}">
                   <span class="visually-hidden">Choose event type</span>
                   <img class="event__type-icon" width="17" height="17" src="img/icons/${type.toLowerCase()}.png" alt="Event ${type.toLowerCase()} icon">
                 </label>
-                <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+                <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${counter}" type="checkbox">
 
                 <div class="event__type-list">
                   <fieldset class="event__type-group">
@@ -46,33 +46,33 @@ const renderTripEventForm = (tripEvent) => {
               </div>
 
               <div class="event__field-group  event__field-group--destination">
-                <label class="event__label  event__type-output" for="event-destination-1">
+                <label class="event__label  event__type-output" for="event-destination-${counter}">
                   ${type} ${action}
                 </label>
-                <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
-                <datalist id="destination-list-1">
+                <input class="event__input  event__input--destination" id="event-destination-${counter}" type="text" name="event-destination" value="${city}" list="destination-list-${counter}">
+                <datalist id="destination-list-${counter}">
                   ${eventOptions}
                 </datalist>
               </div>
 
               <div class="event__field-group  event__field-group--time">
-                <label class="visually-hidden" for="event-start-time-1">
+                <label class="visually-hidden" for="event-start-time-${counter}">
                   From
                 </label>
-                <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startTime}">
+                <input class="event__input  event__input--time" id="event-start-time-${counter}" type="text" name="event-start-time" value="${startTime}">
                 &mdash;
-                <label class="visually-hidden" for="event-end-time-1">
+                <label class="visually-hidden" for="event-end-time-${counter}">
                   To
                 </label>
-                <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endTime}">
+                <input class="event__input  event__input--time" id="event-end-time-${counter}" type="text" name="event-end-time" value="${endTime}">
               </div>
 
               <div class="event__field-group  event__field-group--price">
-                <label class="event__label" for="event-price-1">
+                <label class="event__label" for="event-price-${counter}">
                   <span class="visually-hidden">Price</span>
                   &euro;
                 </label>
-                <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+                <input class="event__input  event__input--price" id="event-price-${counter}" type="text" name="event-price" value="${basePrice}">
               </div>
 
               <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
