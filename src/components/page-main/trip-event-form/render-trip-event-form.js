@@ -1,8 +1,8 @@
-import {eventTypes, eventDestinations} from '../../mocks/trip-event-mocks.js';
-import {getDateAndTimeFormFormat} from '../../helpers/get-date-and-time-form-format.js';
+import {eventTypes, eventDestinations} from '../../../mocks/trip-event-mocks.js';
+import {getDateAndTimeFormFormat} from './get-date-and-time-form-format.js';
 import {renderOffers} from './render-offers.js';
 import {renderOptions} from './render-options.js';
-import {renderPhotos} from './render-photos.js';
+import {renderPhotos} from './photos.js';
 import {renderTripTypesList} from './render-trip-types-list.js';
 
 const renderTripEventForm = (tripEvent, counter) => {

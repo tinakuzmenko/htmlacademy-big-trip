@@ -1,4 +1,4 @@
-import {TimeInMs} from './constants.js';
+import {TimeInMs} from '../../../helpers/constants.js';
 
 const getTimeDifference = (start, end) => {
   const differenceInMs = end - start;
@@ -15,4 +15,12 @@ const getTimeDifference = (start, end) => {
   return daysString + hoursString + minutesString;
 };
 
-export {getTimeDifference};
+const getEventTimeFormat = (time) => {
+  const timeValues = Array.of(time.getHours(), time.getMinutes()).map((value) => {
+    return value < 10 ? `0` + value : value;
+  });
+
+  return timeValues.join(`:`);
+};
+
+export {getTimeDifference, getEventTimeFormat};

@@ -14,8 +14,17 @@ const getRandomArrayItem = (array) => {
   return array[randomIndex];
 };
 
-const renderComponent = (container, template, place) => {
+const renderComponent = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
-export {increaseCounter, getRandomIntegerNumber, getRandomArrayItem, renderComponent};
+const parseDate = (date) => {
+  const dateValue = date.getDate();
+  const monthValue = date.getMonth();
+  const yearValue = date.getFullYear();
+
+  const roundDate = new Date(yearValue, monthValue, dateValue);
+  return Date.parse(roundDate);
+};
+
+export {increaseCounter, getRandomIntegerNumber, getRandomArrayItem, renderComponent, parseDate};

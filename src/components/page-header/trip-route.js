@@ -1,5 +1,5 @@
 import {MONTHS} from '../../helpers/constants.js';
-import {getTripEventsDates} from '../../helpers/get-trip-events-dates.js';
+import {getTripEventsDates} from '../../helpers/trip-events-data.js';
 
 const MAXIMUM_CITIES_SHOWN = 3;
 

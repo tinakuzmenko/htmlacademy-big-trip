@@ -1,5 +1,5 @@
 import {renderTripEventOffers} from './render-trip-event-offers.js';
-import {getEventTimeFormat} from '../../helpers/get-event-time-format.js';
+import {getEventTimeFormat} from './trip-event-time.js';
 
 const renderTripEvent = (tripEvent) => {
   const {type, city, basePrice, offers, action, start, end, timeDiff} = tripEvent;
