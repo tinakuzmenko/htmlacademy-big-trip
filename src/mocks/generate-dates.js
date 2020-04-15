@@ -1,22 +1,31 @@
-import {TIME_PARSE_COEFFICIENT} from '../helpers/constants.js';
+import {TimeInMs, MONTHS_DAYS} from '../helpers/constants.js';
 import {getRandomIntegerNumber} from '../helpers/utils.js';
-import {generateEventTimeDifference} from '../helpers/get-event-time-difference.js';
-
-const now = new Date();
-
-const currentYear = now.getFullYear();
-const currentMonth = now.getMonth();
 
 const generateStartDate = () => {
-  const randomDay = getRandomIntegerNumber(1, 30);
+  const now = new Date();
+
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
+  const randomDay = getRandomIntegerNumber(1, MONTHS_DAYS[currentMonth.toString()]);
   const randomHour = getRandomIntegerNumber(0, 23);
   const randomMinutes = getRandomIntegerNumber(0, 59);
 
   return new Date(currentYear, currentMonth, randomDay, randomHour, randomMinutes);
 };
 
+const generateEventTimeDifference = () => {
+  const minimalDifferenceInMinutes = 5;
+  const randomDifferenceIterations = getRandomIntegerNumber(1, 12);
+  const randomHoursAmount = getRandomIntegerNumber(1, 48);
+  return ((minimalDifferenceInMinutes * randomDifferenceIterations) * randomHoursAmount) * TimeInMs.MINUTE;
+};
+
 const generateEndDate = (startDate) => {
-  return new Date(Date.parse(startDate) + Math.floor(generateEventTimeDifference()) * TIME_PARSE_COEFFICIENT / 60);
+  const parsedStartDate = Date.parse(startDate);
+  const endDateInMs = parsedStartDate + generateEventTimeDifference();
+
+  return new Date(endDateInMs);
 };
 
 export {generateStartDate, generateEndDate};

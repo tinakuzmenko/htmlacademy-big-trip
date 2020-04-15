@@ -1,21 +1,18 @@
-import {getRandomIntegerNumber} from './utils.js';
-import {TIME_PARSE_COEFFICIENT} from './constants.js';
-
-const generateEventTimeDifference = () => {
-  const differenceInMinutes = 10;
-  const differenceIterations = getRandomIntegerNumber(1, 6);
-  let difference = (differenceInMinutes * differenceIterations) * getRandomIntegerNumber(1, 4);
-
-  return difference;
-};
+import {TimeInMs} from './constants.js';
 
 const getTimeDifference = (start, end) => {
-  const differenceInMinutes = ((end - start) / TIME_PARSE_COEFFICIENT) * 60;
-  if (differenceInMinutes % 60 === 0) {
-    return differenceInMinutes / 60 + `H`;
-  } else {
-    return Math.floor(differenceInMinutes / 60) > 0 ? Math.floor(differenceInMinutes / 60) + `H` + Math.floor(differenceInMinutes % 60) + `M` : Math.floor(differenceInMinutes % 60) + `M`;
-  }
+  const differenceInMs = end - start;
+
+  const days = Math.trunc(differenceInMs / TimeInMs.DAY);
+  const daysString = days > 0 ? days + `D ` : ``;
+
+  const hours = Math.trunc((differenceInMs % TimeInMs.DAY) / TimeInMs.HOUR);
+  const hoursString = hours > 0 ? hours + `H ` : ``;
+
+  const minutes = Math.trunc(((differenceInMs % TimeInMs.DAY) % TimeInMs.HOUR) / TimeInMs.MINUTE);
+  const minutesString = minutes > 0 ? minutes + `M` : ``;
+
+  return daysString + hoursString + minutesString;
 };
 
-export {generateEventTimeDifference, getTimeDifference};
+export {getTimeDifference};

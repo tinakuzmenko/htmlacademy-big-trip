@@ -12,6 +12,7 @@ const renderTripEventForm = (tripEvent, counter) => {
   const typesActivitiesList = renderTripTypesList(eventTypes.slice(7, 10));
   const eventOptions = renderOptions(eventDestinations);
   const eventPhotos = renderPhotos(photos);
+
   const startTime = getDateAndTimeFormFormat(start);
   const endTime = getDateAndTimeFormFormat(end);
 
