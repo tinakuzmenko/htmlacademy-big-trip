@@ -11,7 +11,7 @@ const renderTripCost = (tripEvents) => {
 
   return `<p class="trip-info__cost">
             Total: &euro;&nbsp;<span class="trip-info__cost-value">${tripEventsCost}</span>
-          </p>`.trim();
+          </p>`;
 };
 
 export {renderTripCost};

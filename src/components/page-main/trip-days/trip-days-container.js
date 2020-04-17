@@ -1,5 +1,5 @@
 const renderTripDaysContainer = () => {
-  return `<ul class="trip-days"></ul>`.trim();
+  return `<ul class="trip-days"></ul>`;
 };
 
 export {renderTripDaysContainer};

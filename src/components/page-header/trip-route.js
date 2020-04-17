@@ -1,13 +1,13 @@
 import {MONTHS} from '../../helpers/constants.js';
-import {getTripEventsDates} from '../../helpers/trip-events-data.js';
+import {getTripEventsDates, getSortedTripEvents} from '../../helpers/trip-events-data.js';
 
 const MAXIMUM_CITIES_SHOWN = 3;
 
 const getTripRoute = (tripEvents) => {
-  const tripEventsCities = tripEvents.map((tripEvent) => tripEvent.city);
-  const uniqueCities = [...new Set(tripEventsCities)].sort();
+  const tripEventsSortedByDate = getSortedTripEvents(tripEvents);
+  const tripEventsCities = tripEventsSortedByDate.map((tripEvent) => tripEvent.city);
 
-  return tripEventsCities.length <= MAXIMUM_CITIES_SHOWN ? uniqueCities.join(` — `) : uniqueCities.slice(0, 1) + ` — … — ` + uniqueCities.slice(uniqueCities.length - 1);
+  return tripEventsCities.length <= MAXIMUM_CITIES_SHOWN ? tripEventsCities.join(` — `) : tripEventsCities.slice(0, 1) + ` — … — ` + tripEventsCities.slice(tripEventsCities.length - 1);
 };
 
 const getTripDates = (startDate, endDate) => {
@@ -30,9 +30,8 @@ const renderTripRoute = (tripEventsList) => {
 
   return `<div class="trip-info__main">
             <h1 class="trip-info__title">${title}</h1>
-
             <p class="trip-info__dates">${tripDatesString}</p>
-          </div>`.trim();
+          </div>`;
 };
 
 export {renderTripRoute};

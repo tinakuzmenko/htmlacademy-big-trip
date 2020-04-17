@@ -48,7 +48,7 @@ const renderTripDay = (dayObject) => {
                 <span class="day__counter">${counter}</span>
                 <time class="day__date" datetime="${yearValue}-${monthValue + 1}-${dateValue}">${MONTHS[monthValue]} ${dateValue}</time>
               </div>
-            </li>`.trim();
+          </li>`;
 };
 
 export {createTripDaysCounters, getTripDays, getTripDaysWithDates, renderTripDay};

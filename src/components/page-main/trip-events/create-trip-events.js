@@ -21,7 +21,7 @@ const generateTripEvent = () => {
     basePrice: getRandomIntegerNumber(10, 500),
     city: getRandomArrayItem(eventDestinations),
     description: getRandomDescription(),
-    offers: hasOffers === true ? getRandomOffers(eventOffers) : null,
+    offers: hasOffers ? getRandomOffers(eventOffers) : null,
     photos: getPhotos(),
     timeDiff: getTimeDifference(start, end),
     counter: increaseCounter()
