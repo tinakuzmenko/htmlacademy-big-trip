@@ -1,52 +1,58 @@
-import {renderTripInfoContainer} from "./components/trip-info-container.js";
-import {renderTripRoute} from "./components/trip-route.js";
-import {renderTripCost} from "./components/trip-cost.js";
-import {renderPageNavigation} from "./components/page-navigation.js";
-import {renderPageFilter} from "./components/page-filter.js";
-import {renderTripSort} from "./components/trip-sort.js";
-import {renderEventForm} from "./components/event-form.js";
-import {renderDaysContainer} from "./components/days-container.js";
-import {renderDay} from "./components/day.js";
-import {renderEventsContainer} from "./components/events-container.js";
-import {renderEvent} from "./components/event.js";
+import {renderPageNavigation} from "./components/page-header/page-navigation.js";
+import {renderTripHeaderInfoContainer} from "./components/page-header/page-header-container.js";
+import {renderPageFilter} from "./components/page-header/page-filter.js";
+import {renderTripCost} from "./components/page-header/trip-cost.js";
+import {renderTripRoute} from "./components/page-header/trip-route.js";
 
-const EVENTS_AMOUNT = 3;
+import {createTripDaysCounters, getTripDaysWithDates, getTripDays} from './components/page-main/trip-days/trip-days.js';
+import {createTripEvents, generateTripEvent} from './components/page-main/trip-events/create-trip-events.js';
+import {renderEventsInDays} from './components/page-main/trip-events/render-events-in-days.js';
+import {renderTripDaysContainer} from "./components/page-main/trip-days/trip-days-container.js";
+import {renderTripEventForm} from "./components/page-main/trip-event-form/render-trip-event-form.js";
+import {renderTripSort} from "./components/page-main/trip-sort/trip-sort.js";
 
-const renderComponent = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
+import {createUniqueTripDays, getTripEventsDates, getSortedTripEvents} from './helpers/trip-events-data.js';
+import {renderComponent} from './helpers/utils.js';
 
-const renderManyComponents = (container, template, place, amount = EVENTS_AMOUNT) => {
-  for (let i = 0; i < amount; i++) {
-    renderComponent(container, template, place);
-  }
-};
+const EVENTS_AMOUNT = 20;
+const tripEventsObjects = createTripEvents(EVENTS_AMOUNT);
+
+// Хэдер
 
 const tripMain = document.querySelector(`.trip-main`);
-const tripEvents = document.querySelector(`.trip-events`);
+const tripEventsSection = document.querySelector(`.trip-events`);
 
-renderComponent(tripMain, renderTripInfoContainer(), `afterbegin`);
+renderComponent(tripMain, renderTripHeaderInfoContainer(), `afterbegin`);
 
 const tripInfoContainer = tripMain.querySelector(`.trip-info`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
 const [firstTitle, secondTitle] = tripControls.querySelectorAll(`h2`);
 
-renderComponent(tripInfoContainer, renderTripRoute(), `beforeend`);
-renderComponent(tripInfoContainer, renderTripCost(), `beforeend`);
+renderComponent(tripInfoContainer, renderTripRoute(tripEventsObjects));
+renderComponent(tripInfoContainer, renderTripCost(tripEventsObjects));
 renderComponent(firstTitle, renderPageNavigation(), `afterend`);
 renderComponent(secondTitle, renderPageFilter(), `afterend`);
-renderComponent(tripEvents, renderTripSort(), `beforeend`);
-renderComponent(tripEvents, renderEventForm(), `beforeend`);
-renderComponent(tripEvents, renderDaysContainer(), `beforeend`);
 
-const daysContainer = tripEvents.querySelector(`.trip-days`);
+// Сортировка
 
-renderComponent(daysContainer, renderDay(), `beforeend`);
+renderComponent(tripEventsSection, renderTripSort());
 
-const day = document.querySelector(`.day`);
+// Форма
+const tripEventFormObject = generateTripEvent();
+renderComponent(tripEventsSection, renderTripEventForm(tripEventFormObject, tripEventFormObject.counter));
 
-renderComponent(day, renderEventsContainer(), `beforeend`);
+const tripEventsSortedByDate = getSortedTripEvents(tripEventsObjects);
+const allTripEventsDates = getTripEventsDates(tripEventsObjects);
+const uniqueTripEventsDates = createUniqueTripDays(allTripEventsDates);
+const tripDaysCounters = createTripDaysCounters(uniqueTripEventsDates);
+const tripDays = getTripDays(tripDaysCounters);
 
-const eventsContainer = document.querySelector(`.trip-events__list`);
+// События
 
-renderManyComponents(eventsContainer, renderEvent(), `beforeend`);
+const tripDaysObjects = getTripDaysWithDates(tripDays, uniqueTripEventsDates);
+
+renderComponent(tripEventsSection, renderTripDaysContainer());
+
+const daysContainer = tripEventsSection.querySelector(`.trip-days`);
+
+renderEventsInDays(tripEventsSortedByDate, tripDaysObjects, daysContainer);
