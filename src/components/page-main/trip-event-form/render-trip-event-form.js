@@ -4,6 +4,7 @@ import {renderOffers} from './render-offers.js';
 import {renderOptions} from './render-options.js';
 import {renderPhotos} from './photos.js';
 import {renderTripTypesList} from './render-trip-types-list.js';
+import {createElement} from '../../../helpers/utils.js';
 
 const renderTripEventForm = (tripEvent, id) => {
   const {type, city, description, action, offers, photos, start, end, basePrice} = tripEvent;
@@ -96,4 +97,25 @@ const renderTripEventForm = (tripEvent, id) => {
           </form>`);
 };
 
-export {renderTripEventForm};
+export default class TripEventForm {
+  constructor(tripEvent, id) {
+    this._tripEvent = tripEvent;
+    this._id = id;
+  }
+
+  getTemplate() {
+    return renderTripEventForm(this._tripEvent, this._id);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

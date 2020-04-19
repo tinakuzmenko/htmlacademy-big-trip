@@ -4,6 +4,13 @@ const TimeInMs = {
   MINUTE: 60000,
 };
 
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  AFTEREND: `afterend`,
+  BEFOREBEGIN: `beforebegin`,
+  BEFOREEND: `beforeend`
+};
+
 const MONTHS = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
 
 const MONTHS_DAYS = {
@@ -21,4 +28,5 @@ const MONTHS_DAYS = {
   '11': 31,
 };
 
-export {TimeInMs, MONTHS, MONTHS_DAYS};
+
+export {TimeInMs, RenderPosition, MONTHS, MONTHS_DAYS};

@@ -1,3 +1,5 @@
+import {createElement} from '../../helpers/utils.js';
+
 const renderPageFilter = () => {
   return `<form class="trip-filters" action="#" method="get">
             <div class="trip-filters__filter">
@@ -19,4 +21,24 @@ const renderPageFilter = () => {
           </form>`;
 };
 
-export {renderPageFilter};
+export default class PageFilter {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return renderPageFilter();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

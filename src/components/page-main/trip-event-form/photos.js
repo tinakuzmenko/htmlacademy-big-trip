@@ -1,5 +1,3 @@
-import {getPhotos} from '../../../mocks/get-photos.js';
-
 const renderPhotos = (photos) => {
   return photos.map((photo) => {
     return (
@@ -8,4 +6,4 @@ const renderPhotos = (photos) => {
   .join(`\n`);
 };
 
-export {getPhotos, renderPhotos};
+export {renderPhotos};

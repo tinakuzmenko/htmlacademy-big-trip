@@ -1,4 +1,4 @@
-import {MONTHS, TimeInMs} from '../../../helpers/constants.js';
+import {TimeInMs} from '../../../helpers/constants.js';
 
 const createTripDaysCounters = (tripDays) => {
   const tripDaysCounters = [];
@@ -34,21 +34,4 @@ const getTripDaysWithDates = (tripDays, uniqueTripEventsDates) => {
   });
 };
 
-const renderTripDay = (dayObject) => {
-  const {date, counter} = dayObject;
-
-  const dateString = new Date(date);
-
-  const dateValue = dateString.getDate();
-  const monthValue = dateString.getMonth();
-  const yearValue = dateString.getFullYear();
-
-  return `<li class="trip-days__item  day">
-              <div class="day__info">
-                <span class="day__counter">${counter}</span>
-                <time class="day__date" datetime="${yearValue}-${monthValue + 1}-${dateValue}">${MONTHS[monthValue]} ${dateValue}</time>
-              </div>
-          </li>`;
-};
-
-export {createTripDaysCounters, getTripDays, getTripDaysWithDates, renderTripDay};
+export {createTripDaysCounters, getTripDays, getTripDaysWithDates};

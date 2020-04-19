@@ -1,26 +1,31 @@
-import {renderComponent} from '../../../helpers/utils.js';
-import {renderTripDay} from '../trip-days/trip-days.js';
-import {renderTripEventsContainer} from '../trip-events/trip-events-container.js';
-import {renderTripEvent} from '../trip-events/render-trip-event.js';
+import TripEventsContainerComponent from '../trip-events/trip-events-container.js';
+import TripDayComponent from '../trip-days/trip-day.js';
+import TripEventComponent from './trip-event.js';
+import {render} from '../../../helpers/utils.js';
 
 const renderEventsInDays = (tripEventsSortedByDate, tripDaysObjects, daysContainer) => {
   let daysContainerCount = 0;
 
   tripEventsSortedByDate.forEach((tripEvent) => {
-    const {parsedStartDate} = tripEvent;
 
-    if (!document.querySelector(`.day`) || parsedStartDate !== tripDaysObjects[daysContainerCount].date) {
-      renderComponent(daysContainer, renderTripDay(tripDaysObjects[daysContainerCount]));
+    const {parsedStartDate} = tripEvent;
+    const isTheSameDate = parsedStartDate === tripDaysObjects[daysContainerCount].date;
+
+    if (!document.querySelector(`.day`) || !isTheSameDate) {
+      render(daysContainer, new TripDayComponent(tripDaysObjects[daysContainerCount]).getElement());
 
       const dayWrapper = document.querySelector(`.day:last-child`);
-      renderComponent(dayWrapper, renderTripEventsContainer());
 
-      daysContainerCount++;
+      render(dayWrapper, new TripEventsContainerComponent().getElement());
+
+      if (daysContainerCount < tripDaysObjects.length - 1) {
+        daysContainerCount++;
+      }
     }
 
     const tripEventContainer = document.querySelector(`.day:last-child .trip-events__list`);
 
-    renderComponent(tripEventContainer, renderTripEvent(tripEvent));
+    render(tripEventContainer, new TripEventComponent(tripEvent).getElement());
   });
 };
 
