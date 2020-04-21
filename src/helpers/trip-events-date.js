@@ -20,6 +20,7 @@ const createUniqueTripDays = (dates) => {
   });
 
   tripDays.sort((a, b) => a - b).forEach((date) => date);
+
   return tripDays;
 };
 

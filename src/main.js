@@ -6,7 +6,7 @@ import TripCostComponent from './components/page-header/trip-cost.js';
 import TripSortComponent from './components/page-main/trip-sort/trip-sort.js';
 import TripDaysContainerComponent from "./components/page-main/trip-days/trip-days-container.js";
 
-import {createTripDaysCounters, getTripDaysWithDates, getTripDays} from './components/page-main/trip-days/trip-days.js';
+import {getDaysDifference, getTripDaysWithDates, getTripDays} from './components/page-main/trip-days/trip-days.js';
 import {createUniqueTripDays, getTripEventsDates, getSortedTripEvents} from './helpers/trip-events-date.js';
 
 import {createTripEvents} from './mocks/generate-trip-events.js';
@@ -33,15 +33,15 @@ render(firstTitle, new PageNavigationComponent().getElement(), RenderPosition.AF
 render(secondTitle, new PageFilterComponent().getElement(), RenderPosition.AFTEREND);
 render(tripEventsSection, new TripSortComponent().getElement());
 
-const tripEventsSortedByDate = getSortedTripEvents(tripEventsObjects);
-const allTripEventsDates = getTripEventsDates(tripEventsObjects);
-const uniqueTripEventsDates = createUniqueTripDays(allTripEventsDates);
-const tripDaysCounters = createTripDaysCounters(uniqueTripEventsDates);
-const tripDays = getTripDays(tripDaysCounters);
-const tripDaysObjects = getTripDaysWithDates(tripDays, uniqueTripEventsDates);
+// const tripEventsSortedByDate = getSortedTripEvents(tripEventsObjects);
+// const allTripEventsDates = getTripEventsDates(tripEventsObjects);
+// const uniqueTripEventsDates = createUniqueTripDays(allTripEventsDates);
+// const tripDaysCounters = getDaysDifference(uniqueTripEventsDates);
+// const tripDays = getTripDays(tripDaysCounters);
+// const tripDaysObjects = getTripDaysWithDates(tripDays, uniqueTripEventsDates);
 
 render(tripEventsSection, new TripDaysContainerComponent().getElement());
 
 const daysContainer = tripEventsSection.querySelector(`.trip-days`);
 
-renderEventsInDays(tripEventsSortedByDate, tripDaysObjects, daysContainer);
+renderEventsInDays(tripEventsObjects, daysContainer);

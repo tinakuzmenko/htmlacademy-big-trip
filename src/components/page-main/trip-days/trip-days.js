@@ -1,6 +1,6 @@
 import {TimeInMs} from '../../../helpers/constants.js';
 
-const createTripDaysCounters = (tripDays) => {
+const getDaysDifference = (tripDays) => {
   const tripDaysCounters = [];
   const startCounterNumber = 0;
 
@@ -34,4 +34,4 @@ const getTripDaysWithDates = (tripDays, uniqueTripEventsDates) => {
   });
 };
 
-export {createTripDaysCounters, getTripDays, getTripDaysWithDates};
+export {getDaysDifference, getTripDays, getTripDaysWithDates};
