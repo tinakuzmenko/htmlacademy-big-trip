@@ -5,11 +5,9 @@ import TripRouteComponent from './components/page-header/trip-route.js';
 import TripCostComponent from './components/page-header/trip-cost.js';
 import TripSortComponent from './components/page-main/trip-sort/trip-sort.js';
 import TripDaysContainerComponent from "./components/page-main/trip-days/trip-days-container.js";
-// import TripEventFormComponent from './components/page-main/trip-event-form/render-trip-event-form.js';
-// import TripEventComponent from './components/page-main/trip-events/trip-event.js';
 
 import {createTripDaysCounters, getTripDaysWithDates, getTripDays} from './components/page-main/trip-days/trip-days.js';
-import {createUniqueTripDays, getTripEventsDates, getSortedTripEvents} from './helpers/trip-events-data.js';
+import {createUniqueTripDays, getTripEventsDates, getSortedTripEvents} from './helpers/trip-events-date.js';
 
 import {createTripEvents} from './mocks/generate-trip-events.js';
 import {render} from './helpers/utils.js';
@@ -34,23 +32,6 @@ render(tripInfoContainer, new TripCostComponent(tripEventsObjects).getElement())
 render(firstTitle, new PageNavigationComponent().getElement(), RenderPosition.AFTEREND);
 render(secondTitle, new PageFilterComponent().getElement(), RenderPosition.AFTEREND);
 render(tripEventsSection, new TripSortComponent().getElement());
-
-// FORM
-
-
-// const renderTripEvent = (tripEventListElement, tripEvent) => {
-//   const replaceTripEventToEditForm = () => {
-//     tripEventListElement.replaceChild(tripEventEditComponent.getElement(), tripEventComponent.getElement());
-//   };
-
-//   const replaceEditFormToTripEvent = () => {
-//     tripEventListElement.replaceChild(tripEventComponent.getElement(), tripEventEditComponent.getElement());
-//   };
-
-//   const tripEventComponent = new TripEventComponent(tripEvent);
-//   const tripEventEditComponent = new TripEventFormComponent(tripEvent, tripEvent.count);
-// };
-
 
 const tripEventsSortedByDate = getSortedTripEvents(tripEventsObjects);
 const allTripEventsDates = getTripEventsDates(tripEventsObjects);

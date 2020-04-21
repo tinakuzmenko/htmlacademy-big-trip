@@ -1,10 +1,66 @@
 import {eventTypes, eventDestinations} from '../../../mocks/trip-event-mocks.js';
 import {getDateAndTimeFormFormat} from './get-date-and-time-form-format.js';
-import {renderOffers} from './render-offers.js';
-import {renderOptions} from './render-options.js';
-import {renderPhotos} from './photos.js';
-import {renderTripTypesList} from './render-trip-types-list.js';
 import {createElement} from '../../../helpers/utils.js';
+
+const renderEventOffers = (offers) => {
+  return offers.map((offer, index) => {
+    const {id, title, price} = offer;
+    const isChecked = Math.random() > 0.5;
+
+    return (
+      `<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}-${index + 1}" type="checkbox" name="event-offer-${id}"
+        ${isChecked ? `checked` : ``}
+        >
+        <label class="event__offer-label" for="event-offer-${id}-${index + 1}">
+          <span class="event__offer-title">${title}</span>
+          &plus;
+          &euro;&nbsp;<span class="event__offer-price">${price}</span>
+        </label>
+      </div>`.trim()
+    );
+  })
+  .join(``);
+};
+
+const renderOffers = (offers) => {
+  const eventOffers = renderEventOffers(offers);
+  return (
+    `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+      <div class="event__available-offers">
+        ${eventOffers}
+      </div>
+    </section>`.trim()
+  );
+};
+
+const renderOptions = (cities) => {
+  return cities.map((city) => {
+    return (`<option value="${city}"></option>`.trim());
+  })
+  .join(`\n`);
+};
+
+const renderTripTypesList = (types) => {
+  return types.map((type, id) => {
+    return (
+      `<div class="event__type-item">
+        <input id="event-type-${type.toLowerCase()}-${id + 1}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+        <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-${id + 1}">${type}</label>
+      </div>`.trim()
+    );
+  })
+  .join(`\n`);
+};
+
+const renderPhotos = (photos) => {
+  return photos.map((photo) => {
+    return (
+      `<img class="event__photo" src="${photo}" alt="Event photo">`.trim());
+  })
+  .join(`\n`);
+};
 
 const renderTripEventForm = (tripEvent, id) => {
   const {type, city, description, action, offers, photos, start, end, basePrice} = tripEvent;
