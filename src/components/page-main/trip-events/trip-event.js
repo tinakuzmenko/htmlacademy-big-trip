@@ -1,4 +1,4 @@
-import {getEventTimeFormat} from './trip-event-time.js';
+import {getEventTimeFormat} from './get-event-time-format.js';
 import {createElement} from '../../../helpers/utils.js';
 
 const renderTripEventOffers = (offers) => {

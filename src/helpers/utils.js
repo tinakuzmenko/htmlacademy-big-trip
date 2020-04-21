@@ -49,4 +49,14 @@ const parseDate = (date) => {
   return Date.parse(roundDate);
 };
 
-export {increaseCounter, getRandomIntegerNumber, getRandomArrayItem, createElement, render, parseDate};
+const getSortedTripEvents = (tripEvents) => {
+  return tripEvents.slice().sort((a, b) => a.start - b.start);
+};
+
+const getTripEventsDates = (tripEvents) => {
+  return tripEvents.map((tripEvent) => {
+    return new Date(tripEvent.start.getFullYear(), tripEvent.start.getMonth(), tripEvent.start.getDate());
+  });
+};
+
+export {increaseCounter, getRandomIntegerNumber, getRandomArrayItem, createElement, render, parseDate, getSortedTripEvents, getTripEventsDates};

@@ -6,9 +6,6 @@ import TripCostComponent from './components/page-header/trip-cost.js';
 import TripSortComponent from './components/page-main/trip-sort/trip-sort.js';
 import TripDaysContainerComponent from "./components/page-main/trip-days/trip-days-container.js";
 
-import {getDaysDifference, getTripDaysWithDates, getTripDays} from './components/page-main/trip-days/trip-days.js';
-import {createUniqueTripDays, getTripEventsDates, getSortedTripEvents} from './helpers/trip-events-date.js';
-
 import {createTripEvents} from './mocks/generate-trip-events.js';
 import {render} from './helpers/utils.js';
 import {renderEventsInDays} from './components/page-main/trip-events/render-events-in-days.js';
@@ -32,13 +29,6 @@ render(tripInfoContainer, new TripCostComponent(tripEventsObjects).getElement())
 render(firstTitle, new PageNavigationComponent().getElement(), RenderPosition.AFTEREND);
 render(secondTitle, new PageFilterComponent().getElement(), RenderPosition.AFTEREND);
 render(tripEventsSection, new TripSortComponent().getElement());
-
-// const tripEventsSortedByDate = getSortedTripEvents(tripEventsObjects);
-// const allTripEventsDates = getTripEventsDates(tripEventsObjects);
-// const uniqueTripEventsDates = createUniqueTripDays(allTripEventsDates);
-// const tripDaysCounters = getDaysDifference(uniqueTripEventsDates);
-// const tripDays = getTripDays(tripDaysCounters);
-// const tripDaysObjects = getTripDaysWithDates(tripDays, uniqueTripEventsDates);
 
 render(tripEventsSection, new TripDaysContainerComponent().getElement());
 

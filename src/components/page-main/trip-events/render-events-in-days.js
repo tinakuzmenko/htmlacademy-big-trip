@@ -2,10 +2,9 @@ import TripEventsContainerComponent from '../trip-events/trip-events-container.j
 import TripDayComponent from '../trip-days/trip-day.js';
 import TripEventComponent from './trip-event.js';
 import TripEventFormComponent from './../trip-event-form/trip-event-form.js';
-import {render} from '../../../helpers/utils.js';
 
-import {getDaysDifference, getTripDaysWithDates, getTripDays} from '../trip-days/trip-days.js';
-import {createUniqueTripDays, getTripEventsDates, getSortedTripEvents} from '../../../helpers/trip-events-date.js';
+import {render, getSortedTripEvents} from '../../../helpers/utils.js';
+import {getTripDaysWithDates} from '../trip-days/get-trip-days-with-dates.js';
 
 const addTripEventToList = (tripEventListElement, tripEvent) => {
   const eventRollupButtonClickHandler = () => {
@@ -29,12 +28,7 @@ const addTripEventToList = (tripEventListElement, tripEvent) => {
 };
 
 const renderEventsInDays = (tripEvents, daysContainer) => {
-  const sortedTripEvents = getSortedTripEvents(tripEvents);
-  const allTripEventsDates = getTripEventsDates(sortedTripEvents);
-  const uniqueTripEventsDates = createUniqueTripDays(allTripEventsDates);
-  const tripDaysCounters = getDaysDifference(uniqueTripEventsDates);
-  const tripDays = getTripDays(tripDaysCounters);
-  const tripDaysObjects = getTripDaysWithDates(tripDays, uniqueTripEventsDates);
+  const sortedTripEvents = getSortedTripEvents(tripEvents); const tripDaysObjects = getTripDaysWithDates(sortedTripEvents);
 
   let daysContainerCount = 0;
 
