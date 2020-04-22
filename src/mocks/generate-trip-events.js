@@ -1,10 +1,10 @@
-import {increaseCounter, getRandomIntegerNumber, getRandomArrayItem, parseDate} from '../../../helpers/utils.js';
-import {getPhotos} from '../trip-event-form/photos.js';
-import {getRandomDescription} from '../../../mocks/get-random-description.js';
-import {getRandomOffers} from '../../../mocks/get-random-offers.js';
-import {generateStartDate, generateEndDate} from '../../../mocks/generate-dates.js';
-import {getTimeDifference} from './trip-event-time.js';
-import {eventTypes, eventActionsMap, eventDestinations, eventOffers} from '../../../mocks/trip-event-mocks.js';
+import {increaseCounter, getRandomIntegerNumber, getRandomArrayItem, parseDate} from '../helpers/utils.js';
+import {getPhotos} from './get-photos.js';
+import {getRandomDescription} from './get-random-description.js';
+import {getRandomOffers} from './get-random-offers.js';
+import {generateStartDate, generateEndDate} from './generate-dates.js';
+import {eventTypes, eventActionsMap, eventDestinations, eventOffers} from './trip-event-mocks.js';
+import {getTimeDifference} from '../components/page-main/trip-events/get-time-difference.js';
 
 const generateTripEvent = () => {
   const hasOffers = Math.random() > 0.5;

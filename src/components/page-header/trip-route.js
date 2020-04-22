@@ -1,5 +1,5 @@
 import {MONTHS} from '../../helpers/constants.js';
-import {getTripEventsDates, getSortedTripEvents} from '../../helpers/trip-events-data.js';
+import {createElement, getTripEventsDates, getSortedTripEvents} from '../../helpers/utils.js';
 
 const MAXIMUM_CITIES_SHOWN = 3;
 
@@ -34,4 +34,25 @@ const renderTripRoute = (tripEventsList) => {
           </div>`;
 };
 
-export {renderTripRoute};
+export default class TripRoute {
+  constructor(tripEventsList) {
+    this._tripEventsList = tripEventsList;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return renderTripRoute(this._tripEventsList);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

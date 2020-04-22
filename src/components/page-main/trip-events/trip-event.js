@@ -1,5 +1,20 @@
-import {renderTripEventOffers} from './render-trip-event-offers.js';
-import {getEventTimeFormat} from './trip-event-time.js';
+import {getEventTimeFormat} from './get-event-time-format.js';
+import {createElement} from '../../../helpers/utils.js';
+
+const renderTripEventOffers = (offers) => {
+  return offers.map((offer) => {
+    const {title, price} = offer;
+
+    return (
+      `<li class="event__offer">
+        <span class="event__offer-title">${title}</span>
+        &plus;
+        &euro;&nbsp;<span class="event__offer-price">${price}</span>
+      </li>`.trim()
+    );
+  })
+  .join(`\n`);
+};
 
 const renderTripEvent = (tripEvent) => {
   const {type, city, basePrice, offers, action, start, end, timeDiff} = tripEvent;
@@ -42,4 +57,25 @@ const renderTripEvent = (tripEvent) => {
   );
 };
 
-export {renderTripEvent};
+export default class TripEvent {
+  constructor(tripEvent) {
+    this._element = null;
+    this._tripEvent = tripEvent;
+  }
+
+  getTemplate() {
+    return renderTripEvent(this._tripEvent);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

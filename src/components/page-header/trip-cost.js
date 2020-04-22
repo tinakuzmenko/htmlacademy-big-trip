@@ -1,5 +1,7 @@
+import {createElement} from '../../helpers/utils.js';
+
 const countTripOffersCost = (offers) => {
-  return offers === null ? 0 : offers.reduce((offersTotal, offerCost) => offersTotal + offerCost.price, 0);
+  return offers !== null ? offers.reduce((offersTotal, offerCost) => offersTotal + offerCost.price, 0) : 0;
 };
 
 const getTripEventsCost = (tripEvents) => {
@@ -14,4 +16,25 @@ const renderTripCost = (tripEvents) => {
           </p>`;
 };
 
-export {renderTripCost};
+export default class TripCost {
+  constructor(tripEvents) {
+    this._tripEvents = tripEvents;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return renderTripCost(this._tripEvents);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
