@@ -5,7 +5,7 @@ import {renderEventsInDays} from './render-events-in-days.js';
 import {render} from '../../../helpers/utils.js';
 
 const renderTripEventsBoard = (tripEvents, tripEventsSection) => {
-  if (!tripEvents[0]) {
+  if (!tripEvents.length) {
     render(tripEventsSection, new NoTripEventsComponent().getElement());
     return;
   }

@@ -22,7 +22,6 @@ const tripControls = tripMain.querySelector(`.trip-controls`);
 const [firstTitle, secondTitle] = tripControls.querySelectorAll(`h2`);
 
 render(tripInfoContainer, new TripRouteComponent(tripEventsObjects).getElement());
-
 render(tripInfoContainer, new TripCostComponent(tripEventsObjects).getElement());
 
 render(firstTitle, new PageNavigationComponent().getElement(), RenderPosition.AFTEREND);
