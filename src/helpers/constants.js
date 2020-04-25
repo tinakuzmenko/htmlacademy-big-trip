@@ -28,5 +28,9 @@ const MONTHS_DAYS = {
   '11': 31,
 };
 
+const Keycode = {
+  ESCAPE: `Escape`,
+};
 
-export {TimeInMs, RenderPosition, MONTHS, MONTHS_DAYS};
+
+export {TimeInMs, RenderPosition, MONTHS, MONTHS_DAYS, Keycode};
