@@ -35,13 +35,13 @@ const renderTripRoute = (tripEventsList) => {
 };
 
 export default class TripRoute {
-  constructor(tripEventsList) {
-    this._tripEventsList = tripEventsList;
+  constructor(tripEvents) {
+    this._tripEvents = tripEvents;
     this._element = null;
   }
 
   getTemplate() {
-    return renderTripRoute(this._tripEventsList);
+    return renderTripRoute(this._tripEvents);
   }
 
   getElement() {
