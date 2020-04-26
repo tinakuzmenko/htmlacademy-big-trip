@@ -1,5 +1,3 @@
-import {RenderPosition} from './constants.js';
-
 let counter = 1;
 
 const increaseCounter = () => {
@@ -14,30 +12,6 @@ const getRandomArrayItem = (array) => {
   const randomIndex = getRandomIntegerNumber(0, array.length);
 
   return array[randomIndex];
-};
-
-const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
-
-const render = (container, element, place = RenderPosition.BEFOREEND) => {
-  switch (place) {
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case RenderPosition.AFTEREND:
-      container.after(element);
-      break;
-    case RenderPosition.BEFOREBEGIN:
-      container.before(element);
-      break;
-    case RenderPosition.BEFOREEND:
-      container.append(element);
-      break;
-  }
 };
 
 const parseDate = (date) => {
@@ -59,4 +33,4 @@ const getTripEventsDates = (tripEvents) => {
   });
 };
 
-export {increaseCounter, getRandomIntegerNumber, getRandomArrayItem, createElement, render, parseDate, getSortedTripEvents, getTripEventsDates};
+export {increaseCounter, getRandomIntegerNumber, getRandomArrayItem, parseDate, getSortedTripEvents, getTripEventsDates};

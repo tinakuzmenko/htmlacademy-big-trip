@@ -3,17 +3,18 @@ import TripDayComponent from '../trip-days/trip-day.js';
 import TripEventComponent from './trip-event.js';
 import TripEventFormComponent from './../trip-event-form/trip-event-form.js';
 
-import {render, getSortedTripEvents} from '../../../helpers/utils.js';
+import {getSortedTripEvents} from '../../../helpers/utils.js';
+import {render, replace} from '../../../helpers/render.js';
 import {getTripDaysWithDates} from '../trip-days/get-trip-days-with-dates.js';
 import {Keycode} from '../../../helpers/constants.js';
 
 const addTripEventToList = (tripEventListElement, tripEvent) => {
   const replaceTripEventToEditForm = () => {
-    tripEventListElement.replaceChild(tripEventEditFormComponent.getElement(), tripEventComponent.getElement());
+    replace(tripEventEditFormComponent, tripEventComponent);
   };
 
   const replaceEditFormToTripEvent = () => {
-    tripEventListElement.replaceChild(tripEventComponent.getElement(), tripEventEditFormComponent.getElement());
+    replace(tripEventComponent, tripEventEditFormComponent);
   };
 
   const documentEscKeydownHandler = (evt) => {
@@ -39,7 +40,7 @@ const addTripEventToList = (tripEventListElement, tripEvent) => {
     document.removeEventListener(`keydown`, documentEscKeydownHandler);
   });
 
-  render(tripEventListElement, tripEventComponent.getElement());
+  render(tripEventListElement, tripEventComponent);
 };
 
 const renderEventsInDays = (tripEvents, daysContainer) => {
@@ -53,9 +54,9 @@ const renderEventsInDays = (tripEvents, daysContainer) => {
     const isTheSameDate = parsedStartDate === tripDaysObjects[daysContainerCount].date;
 
     if (!document.querySelector(`.day`)) {
-      render(daysContainer, new TripDayComponent(tripDaysObjects[daysContainerCount]).getElement());
+      render(daysContainer, new TripDayComponent(tripDaysObjects[daysContainerCount]));
       const dayWrapper = document.querySelector(`.day:last-child`);
-      render(dayWrapper, new TripEventsContainerComponent().getElement());
+      render(dayWrapper, new TripEventsContainerComponent());
     }
 
     if (!isTheSameDate) {
@@ -63,9 +64,9 @@ const renderEventsInDays = (tripEvents, daysContainer) => {
         daysContainerCount++;
       }
 
-      render(daysContainer, new TripDayComponent(tripDaysObjects[daysContainerCount]).getElement());
+      render(daysContainer, new TripDayComponent(tripDaysObjects[daysContainerCount]));
       const dayWrapper = document.querySelector(`.day:last-child`);
-      render(dayWrapper, new TripEventsContainerComponent().getElement());
+      render(dayWrapper, new TripEventsContainerComponent());
 
     }
 
