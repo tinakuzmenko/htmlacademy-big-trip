@@ -1,12 +1,14 @@
-import TripEventsContainerComponent from '../trip-events/trip-events-container.js';
-import TripDayComponent from '../trip-days/trip-day.js';
-import TripEventComponent from './trip-event.js';
-import TripEventFormComponent from './../trip-event-form/trip-event-form.js';
-
-import {getSortedTripEvents} from '../../../helpers/utils.js';
-import {render, replace} from '../../../helpers/render.js';
-import {getTripDaysWithDates} from '../trip-days/get-trip-days-with-dates.js';
-import {Keycode} from '../../../helpers/constants.js';
+import {Keycode} from '../helpers/constants.js';
+import {render, replace} from '../helpers/render.js';
+import {getSortedTripEvents} from '../helpers/utils.js';
+import {getTripDaysWithDates} from '../components/page-main/trip-days/get-trip-days-with-dates.js';
+import TripDayComponent from '../components/page-main/trip-days/trip-day.js';
+import TripDaysContainerComponent from "../components/page-main/trip-days/trip-days-container.js";
+import TripEventsContainerComponent from '../components/page-main/trip-events/trip-events-container.js';
+import TripSortComponent from '../components/page-main/trip-sort/trip-sort.js';
+import TripEventFormComponent from '../components/page-main/trip-event-form/trip-event-form.js';
+import NoTripEventsComponent from '../components/page-main/trip-events/no-trip-events.js';
+import TripEventComponent from '../components/page-main/trip-events/trip-event.js';
 
 const addTripEventToList = (tripEventListElement, tripEvent) => {
   const replaceTripEventToEditForm = () => {
@@ -65,7 +67,6 @@ const renderEventsInDays = (tripEvents, daysContainer) => {
       render(daysContainer, new TripDayComponent(tripDaysObjects[daysContainerCount]));
       const dayWrapper = document.querySelector(`.day:last-child`);
       render(dayWrapper, new TripEventsContainerComponent());
-
     }
 
     const tripEventContainer = document.querySelector(`.day:last-child .trip-events__list`);
@@ -73,6 +74,27 @@ const renderEventsInDays = (tripEvents, daysContainer) => {
   });
 };
 
-export {renderEventsInDays};
+export default class TripController {
+  constructor(container) {
+    this._container = container;
+    this._noTasksComponent = new NoTripEventsComponent();
+    this._sortComponent = new TripSortComponent();
+    this._daysContainerComponent = new TripDaysContainerComponent();
+  }
 
+  render(tripEvents) {
+    const container = this._container.getElement();
 
+    if (!tripEvents.length) {
+      render(container, this._noTasksComponent);
+      return;
+    }
+
+    render(container, this._sortComponent);
+    render(container, this._daysContainerComponent);
+
+    const daysContainer = this._daysContainerComponent.getElement();
+
+    renderEventsInDays(tripEvents, daysContainer);
+  }
+}
