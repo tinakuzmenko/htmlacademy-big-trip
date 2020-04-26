@@ -45,7 +45,10 @@ export default class TripRoute {
   }
 
   getElement() {
-    this._element = this._tripEventsList.length ? createElement(this.getTemplate()) : ``;
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
     return this._element;
   }
 

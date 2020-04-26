@@ -1,9 +1,8 @@
 import PageHeaderContainerComponent from './components/page-header/page-header-container.js';
 import PageNavigationComponent from './components/page-header/page-navigation.js';
 import PageFilterComponent from './components/page-header/page-filter.js';
-import TripRouteComponent from './components/page-header/trip-route.js';
 import TripCostComponent from './components/page-header/trip-cost.js';
-
+import TripRouteComponent from './components/page-header/trip-route.js';
 import {createTripEvents} from './mocks/generate-trip-events.js';
 import {render} from './helpers/utils.js';
 import {renderTripEventsBoard} from './components/page-main/trip-events/render-trip-events-board.js';
@@ -21,7 +20,10 @@ const tripInfoContainer = tripMain.querySelector(`.trip-info`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
 const [firstTitle, secondTitle] = tripControls.querySelectorAll(`h2`);
 
-render(tripInfoContainer, new TripRouteComponent(tripEventsObjects).getElement());
+if (tripEventsObjects.length > 0) {
+  render(tripInfoContainer, new TripRouteComponent(tripEventsObjects).getElement());
+}
+
 render(tripInfoContainer, new TripCostComponent(tripEventsObjects).getElement());
 
 render(firstTitle, new PageNavigationComponent().getElement(), RenderPosition.AFTEREND);
