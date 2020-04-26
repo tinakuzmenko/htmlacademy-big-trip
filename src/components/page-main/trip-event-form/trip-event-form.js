@@ -1,6 +1,6 @@
+import AbstractComponent from '../../abstract-component.js';
 import {eventTypes, eventDestinations} from '../../../mocks/trip-event-mocks.js';
 import {getDateAndTimeFormFormat} from './get-date-and-time-form-format.js';
-import AbstractComponent from '../../abstract-component.js';
 
 const renderEventOffers = (offers) => {
   return offers.map((offer, index) => {
@@ -162,5 +162,9 @@ export default class TripEventForm extends AbstractComponent {
 
   getTemplate() {
     return renderTripEventForm(this._tripEvent, this._id);
+  }
+
+  setSubmitHandler(handler) {
+    this.getElement().addEventListener(`submit`, handler);
   }
 }

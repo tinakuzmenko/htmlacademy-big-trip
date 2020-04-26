@@ -25,17 +25,15 @@ const addTripEventToList = (tripEventListElement, tripEvent) => {
   };
 
   const tripEventComponent = new TripEventComponent(tripEvent);
-  const eventRollupButton = tripEventComponent.getElement().querySelector(`.event__rollup-btn`);
+  const tripEventEditFormComponent = new TripEventFormComponent(tripEvent, tripEvent.counter);
 
-  eventRollupButton.addEventListener(`click`, () => {
+  tripEventComponent.setClickHandler(() => {
     replaceTripEventToEditForm();
     document.addEventListener(`keydown`, documentEscKeydownHandler);
   });
 
-  const tripEventEditFormComponent = new TripEventFormComponent(tripEvent, tripEvent.counter);
-  const eventEditForm = tripEventEditFormComponent.getElement();
-
-  eventEditForm.addEventListener(`submit`, () => {
+  tripEventEditFormComponent.setSubmitHandler((evt) => {
+    evt.preventDefault();
     replaceEditFormToTripEvent();
     document.removeEventListener(`keydown`, documentEscKeydownHandler);
   });
