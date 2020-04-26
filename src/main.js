@@ -4,7 +4,7 @@ import PageNavigationComponent from './components/page-header/page-navigation.js
 import TripCostComponent from './components/page-header/trip-cost.js';
 import TripRouteComponent from './components/page-header/trip-route.js';
 import TripEventsContainerComponent from './components/page-main/trip-events/trip-events-container.js';
-import TripEventsBoardController from './controllers/trip-event.js';
+import TripEventsBoardController from './controllers/trip-events.js';
 import {RenderPosition} from "./helpers/constants.js";
 import {render} from './helpers/render.js';
 import {createTripEvents} from './mocks/generate-trip-events.js';

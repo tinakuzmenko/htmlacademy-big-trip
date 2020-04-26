@@ -1,5 +1,5 @@
-import {getEventTimeFormat} from './get-event-time-format.js';
 import AbstractComponent from '../../abstract-component.js';
+import {getEventTimeFormat} from './get-event-time-format.js';
 
 const renderTripEventOffers = (offers) => {
   return offers.map((offer) => {

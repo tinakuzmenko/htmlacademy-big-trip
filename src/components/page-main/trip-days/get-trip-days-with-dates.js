@@ -57,3 +57,4 @@ const getTripDaysWithDates = (sortedTripEvents) => {
 };
 
 export {getTripDaysWithDates};
+

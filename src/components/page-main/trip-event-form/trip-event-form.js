@@ -1,5 +1,5 @@
+import {eventDestinations, eventTypes} from '../../../mocks/trip-event-mocks.js';
 import AbstractComponent from '../../abstract-component.js';
-import {eventTypes, eventDestinations} from '../../../mocks/trip-event-mocks.js';
 import {getDateAndTimeFormFormat} from './get-date-and-time-form-format.js';
 
 const renderEventOffers = (offers) => {

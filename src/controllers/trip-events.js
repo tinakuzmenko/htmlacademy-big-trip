@@ -1,14 +1,14 @@
-import {Keycode} from '../helpers/constants.js';
-import {render, replace} from '../helpers/render.js';
-import {getSortedTripEvents} from '../helpers/utils.js';
 import {getTripDaysWithDates} from '../components/page-main/trip-days/get-trip-days-with-dates.js';
 import TripDayComponent from '../components/page-main/trip-days/trip-day.js';
 import TripDaysContainerComponent from "../components/page-main/trip-days/trip-days-container.js";
-import TripEventsContainerComponent from '../components/page-main/trip-events/trip-events-container.js';
-import TripSortComponent from '../components/page-main/trip-sort/trip-sort.js';
 import TripEventFormComponent from '../components/page-main/trip-event-form/trip-event-form.js';
 import NoTripEventsComponent from '../components/page-main/trip-events/no-trip-events.js';
 import TripEventComponent from '../components/page-main/trip-events/trip-event.js';
+import TripEventsContainerComponent from '../components/page-main/trip-events/trip-events-container.js';
+import TripSortComponent from '../components/page-main/trip-sort/trip-sort.js';
+import {Keycode} from '../helpers/constants.js';
+import {render, replace} from '../helpers/render.js';
+import {getSortedTripEvents} from '../helpers/utils.js';
 
 const addTripEventToList = (tripEventListElement, tripEvent) => {
   const replaceTripEventToEditForm = () => {
