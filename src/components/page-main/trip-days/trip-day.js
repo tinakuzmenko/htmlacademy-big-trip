@@ -1,5 +1,5 @@
 import {MONTHS} from '../../../helpers/constants.js';
-import {createElement} from '../../../helpers/utils.js';
+import AbstractComponent from '../../abstract-component.js';
 
 const renderTripDay = (dayObject) => {
   const {date, counter} = dayObject;
@@ -18,24 +18,13 @@ const renderTripDay = (dayObject) => {
           </li>`;
 };
 
-export default class TripDay {
+export default class TripDay extends AbstractComponent {
   constructor(day) {
+    super();
     this._day = day;
   }
 
   getTemplate() {
     return renderTripDay(this._day);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

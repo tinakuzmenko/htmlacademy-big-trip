@@ -1,27 +1,11 @@
-import {createElement} from '../../helpers/utils.js';
+import AbstractComponent from '../abstract-component.js';
 
 const renderPageHeaderInfoContainer = () => {
   return `<section class="trip-main__trip-info  trip-info"></section>`;
 };
 
-export default class PageHeaderContainer {
-  constructor() {
-    this._element = null;
-  }
-
+export default class PageHeaderContainer extends AbstractComponent {
   getTemplate() {
     return renderPageHeaderInfoContainer();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

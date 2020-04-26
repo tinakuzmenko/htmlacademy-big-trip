@@ -1,27 +1,11 @@
-import {createElement} from '../../../helpers/utils.js';
+import AbstractComponent from '../../abstract-component.js';
 
 const renderTripEventsContainer = () => {
   return `<ul class="trip-events__list"></ul>`;
 };
 
-export default class TripEventsContainer {
-  constructor() {
-    this._element = null;
-  }
-
+export default class TripEventsContainer extends AbstractComponent {
   getTemplate() {
     return renderTripEventsContainer();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

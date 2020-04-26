@@ -1,4 +1,4 @@
-import {createElement} from '../../helpers/utils.js';
+import AbstractComponent from '../abstract-component.js';
 
 const renderPageNavigation = () => {
   return `<nav class="trip-controls__trip-tabs  trip-tabs">
@@ -7,24 +7,8 @@ const renderPageNavigation = () => {
           </nav>`;
 };
 
-export default class PageNavigation {
-  constructor() {
-    this._element = null;
-  }
-
+export default class PageNavigation extends AbstractComponent {
   getTemplate() {
     return renderPageNavigation();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,5 +1,6 @@
 import {MONTHS} from '../../helpers/constants.js';
-import {createElement, getTripEventsDates, getSortedTripEvents} from '../../helpers/utils.js';
+import AbstractComponent from '../abstract-component.js';
+import {getTripEventsDates, getSortedTripEvents} from '../../helpers/utils.js';
 
 const MAXIMUM_CITIES_SHOWN = 3;
 
@@ -34,25 +35,13 @@ const renderTripRoute = (tripEventsList) => {
           </div>`;
 };
 
-export default class TripRoute {
+export default class TripRoute extends AbstractComponent {
   constructor(tripEvents) {
+    super();
     this._tripEvents = tripEvents;
-    this._element = null;
   }
 
   getTemplate() {
     return renderTripRoute(this._tripEvents);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
