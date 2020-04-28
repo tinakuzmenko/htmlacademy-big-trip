@@ -1,4 +1,4 @@
-import {TimeInMs, MONTHS_DAYS} from '../helpers/constants.js';
+import {MONTHS_DAYS, TimeInMs} from '../helpers/constants.js';
 import {getRandomIntegerNumber} from '../helpers/utils.js';
 
 const generateStartDate = () => {
@@ -29,3 +29,4 @@ const generateEndDate = (startDate) => {
 };
 
 export {generateStartDate, generateEndDate};
+

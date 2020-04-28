@@ -1,4 +1,4 @@
-import {createElement} from "../../../helpers/utils.js";
+import AbstractComponent from '../../abstract-component.js';
 
 const createNoTripEventsTemplate = () => {
   return (
@@ -7,24 +7,8 @@ const createNoTripEventsTemplate = () => {
 };
 
 
-export default class NoTripEvents {
-  constructor() {
-    this._element = null;
-  }
-
+export default class NoTripEvents extends AbstractComponent {
   getTemplate() {
     return createNoTripEventsTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

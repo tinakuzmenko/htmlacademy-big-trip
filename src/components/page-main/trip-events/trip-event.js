@@ -1,5 +1,5 @@
+import AbstractComponent from '../../abstract-component.js';
 import {getEventTimeFormat} from './get-event-time-format.js';
-import {createElement} from '../../../helpers/utils.js';
 
 const renderTripEventOffers = (offers) => {
   return offers.map((offer) => {
@@ -57,9 +57,9 @@ const renderTripEvent = (tripEvent) => {
   );
 };
 
-export default class TripEvent {
+export default class TripEvent extends AbstractComponent {
   constructor(tripEvent) {
-    this._element = null;
+    super();
     this._tripEvent = tripEvent;
   }
 
@@ -67,15 +67,8 @@ export default class TripEvent {
     return renderTripEvent(this._tripEvent);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setClickHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`)
+    .addEventListener(`click`, handler);
   }
 }

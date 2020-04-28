@@ -1,6 +1,6 @@
-import {eventTypes, eventDestinations} from '../../../mocks/trip-event-mocks.js';
+import {eventDestinations, eventTypes} from '../../../mocks/trip-event-mocks.js';
+import AbstractComponent from '../../abstract-component.js';
 import {getDateAndTimeFormFormat} from './get-date-and-time-form-format.js';
-import {createElement} from '../../../helpers/utils.js';
 
 const renderEventOffers = (offers) => {
   return offers.map((offer, index) => {
@@ -153,8 +153,9 @@ const renderTripEventForm = (tripEvent, id) => {
           </form>`);
 };
 
-export default class TripEventForm {
+export default class TripEventForm extends AbstractComponent {
   constructor(tripEvent, id) {
+    super();
     this._tripEvent = tripEvent;
     this._id = id;
   }
@@ -163,15 +164,7 @@ export default class TripEventForm {
     return renderTripEventForm(this._tripEvent, this._id);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setSubmitHandler(handler) {
+    this.getElement().addEventListener(`submit`, handler);
   }
 }

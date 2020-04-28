@@ -1,4 +1,4 @@
-import {createElement} from '../../../helpers/utils.js';
+import AbstractComponent from '../../abstract-component.js';
 
 const renderTripSort = () => {
   return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
@@ -33,24 +33,8 @@ const renderTripSort = () => {
           </form>`.trim();
 };
 
-export default class TripSort {
-  constructor() {
-    this._element = null;
-  }
-
+export default class TripSort extends AbstractComponent {
   getTemplate() {
     return renderTripSort(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
