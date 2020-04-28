@@ -6,7 +6,7 @@ import NoTripEventsComponent from '../components/page-main/trip-events/no-trip-e
 import TripEventComponent from '../components/page-main/trip-events/trip-event.js';
 import TripEventsContainerComponent from '../components/page-main/trip-events/trip-events-container.js';
 import TripSortComponent from '../components/page-main/trip-sort/trip-sort.js';
-import {Keycode} from '../helpers/constants.js';
+import {Keycode, SortType} from '../helpers/constants.js';
 import {render, replace} from '../helpers/render.js';
 import {getSortedTripEvents} from '../helpers/utils.js';
 
@@ -43,8 +43,8 @@ const addTripEventToList = (tripEventListElement, tripEvent) => {
   render(tripEventListElement, tripEventComponent);
 };
 
-const renderEventsInDays = (tripEvents, daysContainer) => {
-  const sortedTripEvents = getSortedTripEvents(tripEvents);
+const renderTripEvents = (tripEvents, daysContainer, sortType = SortType.EVENT) => {
+  const sortedTripEvents = getSortedTripEvents(tripEvents, sortType);
   const tripDaysObjects = getTripDaysWithDates(sortedTripEvents);
 
   let daysContainerCount = 0;
@@ -54,17 +54,17 @@ const renderEventsInDays = (tripEvents, daysContainer) => {
     const isTheSameDate = parsedStartDate === tripDaysObjects[daysContainerCount].date;
 
     if (!document.querySelector(`.day`)) {
-      render(daysContainer, new TripDayComponent(tripDaysObjects[daysContainerCount]));
+      render(daysContainer, new TripDayComponent(tripDaysObjects[daysContainerCount], sortType));
       const dayWrapper = document.querySelector(`.day:last-child`);
       render(dayWrapper, new TripEventsContainerComponent());
     }
 
-    if (!isTheSameDate) {
+    if (!isTheSameDate && sortType === SortType.EVENT) {
       if (daysContainerCount < tripDaysObjects.length - 1) {
         daysContainerCount++;
       }
 
-      render(daysContainer, new TripDayComponent(tripDaysObjects[daysContainerCount]));
+      render(daysContainer, new TripDayComponent(tripDaysObjects[daysContainerCount], sortType));
       const dayWrapper = document.querySelector(`.day:last-child`);
       render(dayWrapper, new TripEventsContainerComponent());
     }
@@ -94,7 +94,16 @@ export default class TripController {
     render(container, this._daysContainerComponent);
 
     const daysContainer = this._daysContainerComponent.getElement();
+    renderTripEvents(tripEvents, daysContainer);
 
-    renderEventsInDays(tripEvents, daysContainer);
+    this._sortComponent.setSortTypeChangeHandler((sortType) => {
+      const tripSortItemDay = this._sortComponent.getElement().firstElementChild;
+
+      tripSortItemDay.textContent = sortType === SortType.EVENT ? `Day` : ``;
+      daysContainer.innerHTML = ``;
+
+      const sortedTripEvents = getSortedTripEvents(tripEvents, sortType);
+      renderTripEvents(sortedTripEvents, daysContainer, sortType);
+    });
   }
 }
