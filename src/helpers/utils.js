@@ -25,7 +25,7 @@ const parseDate = (date) => {
   return Date.parse(roundDate);
 };
 
-const getSortedTripEvents = (tripEvents, sortType) => {
+const getSortedTripEvents = (tripEvents, sortType = SortType.EVENT) => {
   let sortedTripEvents = [];
   const tripEventsCopy = tripEvents.slice();
 
