@@ -32,5 +32,11 @@ const Keycode = {
   ESCAPE: `Escape`,
 };
 
+const SortType = {
+  EVENT: `sort-event`,
+  TIME: `sort-time`,
+  PRICE: `sort-price`,
+};
 
-export {TimeInMs, RenderPosition, MONTHS, MONTHS_DAYS, Keycode};
+
+export {TimeInMs, RenderPosition, MONTHS, MONTHS_DAYS, Keycode, SortType};

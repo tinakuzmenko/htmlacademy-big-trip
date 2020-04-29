@@ -1,3 +1,5 @@
+import {SortType} from './constants.js';
+
 let counter = 1;
 
 const increaseCounter = () => {
@@ -23,8 +25,23 @@ const parseDate = (date) => {
   return Date.parse(roundDate);
 };
 
-const getSortedTripEvents = (tripEvents) => {
-  return tripEvents.slice().sort((a, b) => a.start - b.start);
+const getSortedTripEvents = (tripEvents, sortType = SortType.EVENT) => {
+  let sortedTripEvents = [];
+  const tripEventsCopy = tripEvents.slice();
+
+  switch (sortType) {
+    case SortType.EVENT:
+      sortedTripEvents = tripEventsCopy.sort((a, b) => a.start - b.start);
+      break;
+    case SortType.TIME:
+      sortedTripEvents = tripEventsCopy.sort((a, b) => (b.end - b.start) - (a.end - a.start));
+      break;
+    case SortType.PRICE:
+      sortedTripEvents = tripEventsCopy.sort((a, b) => b.basePrice - a.basePrice);
+      break;
+  }
+
+  return sortedTripEvents;
 };
 
 const getTripEventsDates = (tripEvents) => {
