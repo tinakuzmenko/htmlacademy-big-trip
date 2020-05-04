@@ -8,6 +8,7 @@ export default class TripEventController {
     this._container = container;
     this._tripEventComponent = null;
     this._tripEventFormComponent = null;
+    this._documentEscKeydownHandler = this._documentEscKeydownHandler.bind(this);
   }
 
   render(tripEvent) {
@@ -21,6 +22,11 @@ export default class TripEventController {
 
     this._tripEventFormComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
+      this._replaceEditFormToTripEvent();
+      document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
+    });
+
+    this._tripEventFormComponent.setButtonRollUpHandler(() => {
       this._replaceEditFormToTripEvent();
       document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
     });
