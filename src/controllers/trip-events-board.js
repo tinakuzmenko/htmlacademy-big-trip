@@ -11,46 +11,50 @@ export default class TripEventsBoardController {
     this._container = container;
     this._noTasksComponent = new NoTripEventsComponent();
     this._sortComponent = new TripSortComponent();
-  }
-
-  renderTripEventsGroupedByDays() {
-    this._renderTripEventsGroupedByDays = new TripEventsGroupedByDays(this._sortedTripEvents);
-    render(this._container, this._renderTripEventsGroupedByDays);
-  }
-
-  renderTripEventsInEmptyDays() {
-    this._renderTripEventsInEmptyDays = new TripEventsInEmptyDays(this._sortedTripEvents);
-    render(this._container, this._renderTripEventsInEmptyDays);
+    this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
   render(tripEvents) {
-    if (!tripEvents.length) {
+    this._tripEvents = tripEvents;
+
+    if (!this._tripEvents.length) {
       render(this._container, this._noTasksComponent);
       return;
     }
 
-    this._sortedTripEvents = getSortedTripEvents(tripEvents);
+    this._sortedTripEvents = getSortedTripEvents(this._tripEvents);
 
     render(this._container, this._sortComponent);
-    this.renderTripEventsGroupedByDays();
 
-    this._sortComponent.setSortTypeChangeHandler((sortType) => {
-      this._sortedTripEvents = getSortedTripEvents(tripEvents, sortType);
-      const tripSortItemDay = this._sortComponent.getElement().querySelector(`.trip-sort__item--day`);
+    this._renderTripEventsGroupedByDays(this._sortedTripEvents);
+    this._sortComponent.setSortTypeChangeHandler(this._sortTypeChangeHandler);
+  }
 
-      switch (sortType) {
-        case SortType.TIME:
-        case SortType.PRICE:
-          this._container.querySelector(`.trip-days`).remove();
-          tripSortItemDay.textContent = ``;
-          this.renderTripEventsInEmptyDays(this._sortedTripEvents);
-          break;
-        default:
-          this._container.querySelector(`.trip-days`).remove();
-          tripSortItemDay.textContent = `Day`;
-          this.renderTripEventsGroupedByDays();
-          break;
-      }
-    });
+  _renderTripEventsGroupedByDays(sortedTripEvents) {
+    const tripEventsGroupedByDays = new TripEventsGroupedByDays(sortedTripEvents);
+    render(this._container, tripEventsGroupedByDays);
+  }
+
+  _renderTripEventsInEmptyDays(sortedTripEvents) {
+    const tripEventsInEmptyDays = new TripEventsInEmptyDays(sortedTripEvents);
+    render(this._container, tripEventsInEmptyDays);
+  }
+
+  _sortTypeChangeHandler(sortType) {
+    this._sortedTripEvents = getSortedTripEvents(this._tripEvents, sortType);
+    this._tripSortItemDay = this._sortComponent.getElement().querySelector(`.trip-sort__item--day`);
+
+    switch (sortType) {
+      case SortType.EVENT:
+        this._container.querySelector(`.trip-days`).remove();
+        this._tripSortItemDay.textContent = `Day`;
+        this._renderTripEventsGroupedByDays(this._sortedTripEvents);
+        break;
+      default:
+        this._container.querySelector(`.trip-days`).remove();
+        this._tripSortItemDay.textContent = ``;
+        this._renderTripEventsInEmptyDays(this._sortedTripEvents);
+        break;
+    }
   }
 }

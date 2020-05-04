@@ -1,7 +1,7 @@
 import TripDaysContainer from '../trip-days/trip-days-container.js';
 import EmptyTripDayComponent from '../trip-days/empty-trip-day.js';
 import TripEventsContainerComponent from './trip-events-container.js';
-import {addTripEventToList} from "./add-trip-events-to-list.js";
+import TripEventController from "../../../controllers/trip-event.js";
 
 export default class TripEventsInEmptyDays {
   constructor(sortedTripEvents) {
@@ -10,11 +10,11 @@ export default class TripEventsInEmptyDays {
   }
 
   getElement() {
-    this.renderEventsInEmptyDays();
+    this._renderEventsInEmptyDays();
     return this._markup;
   }
 
-  renderEventsInEmptyDays() {
+  _renderEventsInEmptyDays() {
     this._tripDay = new EmptyTripDayComponent();
     this._dayWrapper = this._tripDay.getElement();
     this._tripEventsContainer = new TripEventsContainerComponent().getElement();
@@ -23,7 +23,8 @@ export default class TripEventsInEmptyDays {
     this._dayWrapper.append(this._tripEventsContainer);
 
     this._sortedTripEvents.forEach((sortedTripEvent) => {
-      addTripEventToList(this._tripEventsContainer, sortedTripEvent);
+      const tripEventController = new TripEventController(this._tripEventsContainer, sortedTripEvent);
+      tripEventController.render(sortedTripEvent);
     });
   }
 }
