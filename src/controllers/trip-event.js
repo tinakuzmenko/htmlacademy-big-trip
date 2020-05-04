@@ -6,30 +6,23 @@ import {render, replace} from "../helpers/render.js";
 export default class TripEventController {
   constructor(container) {
     this._container = container;
+
     this._tripEventComponent = null;
     this._tripEventFormComponent = null;
+
     this._documentEscKeydownHandler = this._documentEscKeydownHandler.bind(this);
+    this._tripEventComponentClickHandler = this._tripEventComponentClickHandler.bind(this);
+    this._tripEventFormComponentRollUpHandler = this._tripEventFormComponentRollUpHandler.bind(this);
+    this._tripEventFormComponentSubmitHandler = this._tripEventFormComponentSubmitHandler.bind(this);
   }
 
   render(tripEvent) {
     this._tripEventComponent = new TripEventComponent(tripEvent);
     this._tripEventFormComponent = new TripEventFormComponent(tripEvent, tripEvent.counter);
 
-    this._tripEventComponent.setClickHandler(() => {
-      this._replaceTripEventToEditForm();
-      document.addEventListener(`keydown`, this._documentEscKeydownHandler);
-    });
-
-    this._tripEventFormComponent.setSubmitHandler((evt) => {
-      evt.preventDefault();
-      this._replaceEditFormToTripEvent();
-      document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
-    });
-
-    this._tripEventFormComponent.setButtonRollUpHandler(() => {
-      this._replaceEditFormToTripEvent();
-      document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
-    });
+    this._tripEventComponent.setClickHandler(this._tripEventComponentClickHandler);
+    this._tripEventFormComponent.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);
+    this._tripEventFormComponent.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
 
     render(this._container, this._tripEventComponent);
   }
@@ -47,5 +40,20 @@ export default class TripEventController {
       this._replaceEditFormToTripEvent();
       document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
     }
+  }
+
+  _tripEventFormComponentRollUpHandler() {
+    this._replaceEditFormToTripEvent();
+    document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
+  }
+
+  _tripEventComponentClickHandler() {
+    this._replaceTripEventToEditForm();
+    document.addEventListener(`keydown`, this._documentEscKeydownHandler);
+  }
+
+  _tripEventFormComponentSubmitHandler(evt) {
+    evt.preventDefault();
+    this._tripEventFormComponentRollUpHandler();
   }
 }
