@@ -15,6 +15,7 @@ export default class TripEventsBoardController {
 
     this._noTasksComponent = new NoTripEventsComponent();
     this._sortComponent = new TripSortComponent();
+    this._sortType = SortType.EVENT;
 
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
     this._dataChangeHandler = this._dataChangeHandler.bind(this);
@@ -56,12 +57,11 @@ export default class TripEventsBoardController {
     render(this._container, tripEventsInEmptyDays);
   }
 
-  _sortTypeChangeHandler(sortType) {
-    this._sortedTripEvents = getSortedTripEvents(this._tripEvents, sortType);
+  _renderSortedTripEvents() {
     this._tripSortItemDay = this._sortComponent.getElement().querySelector(`.trip-sort__item--day`);
     this._renderTripEvents();
 
-    switch (sortType) {
+    switch (this._sortType) {
       case SortType.EVENT:
         this._container.querySelector(`.trip-days`).remove();
         this._tripSortItemDay.textContent = `Day`;
@@ -75,16 +75,25 @@ export default class TripEventsBoardController {
     }
   }
 
+  _sortTypeChangeHandler(sortType) {
+    this._sortedTripEvents = getSortedTripEvents(this._sortedTripEvents, sortType);
+    this._sortType = sortType;
+    this._renderSortedTripEvents();
+  }
+
   _dataChangeHandler(oldTripEvent, updatedTripEvent) {
-    const index = this._tripEvents.findIndex((tripEvent) => tripEvent === oldTripEvent);
+    const index = this._sortedTripEvents.findIndex((tripEvent) => tripEvent === oldTripEvent);
 
     if (index === -1) {
       return;
     }
 
-    this._tripEvents = [].concat(this._tripEvents.slice(0, index), updatedTripEvent, this._tripEvents.slice(index + 1));
+    this._sortedTripEvents = [].concat(this._sortedTripEvents.slice(0, index), updatedTripEvent, this._sortedTripEvents.slice(index + 1));
 
     const tripEventWrapper = new TripEventWrapperComponent().getElement();
-    this._renderedTripEvents[index] = new TripEventController(tripEventWrapper, this._tripEvents[index], this._dataChangeHandler);
+    this._renderedTripEvents[index] = new TripEventController(tripEventWrapper, this._sortedTripEvents[index], this._dataChangeHandler);
+
+    this._renderedTripEvents[index].render();
+    this._renderSortedTripEvents();
   }
 }
