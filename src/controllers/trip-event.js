@@ -4,10 +4,11 @@ import {Keycode} from '../helpers/constants.js';
 import {render, replace} from "../helpers/render.js";
 
 export default class TripEventController {
-  constructor(container, tripEvent) {
+  constructor(container, tripEvent, dataChangeHandler) {
     this._container = container;
-
     this._tripEvent = tripEvent;
+    this._dataChangeHandler = dataChangeHandler;
+
     this._tripEventComponent = null;
     this._tripEventFormComponent = null;
 
@@ -15,6 +16,7 @@ export default class TripEventController {
     this._tripEventFormComponentRollUpHandler = this._tripEventFormComponentRollUpHandler.bind(this);
     this._documentEscKeydownHandler = this._documentEscKeydownHandler.bind(this);
     this._tripEventFormComponentSubmitHandler = this._tripEventFormComponentSubmitHandler.bind(this);
+    this._tripEventFormComponentFavoritesButtonClickHandler = this._tripEventFormComponentFavoritesButtonClickHandler.bind(this);
   }
 
   getParsedStartDate() {
@@ -32,6 +34,7 @@ export default class TripEventController {
     this._tripEventComponent.setClickHandler(this._tripEventComponentClickHandler);
     this._tripEventFormComponent.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);
     this._tripEventFormComponent.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
+    this._tripEventFormComponent.setFavoritesButtonClickHandler(this._tripEventFormComponentFavoritesButtonClickHandler);
 
     render(this._container, this._tripEventComponent);
 
@@ -51,10 +54,6 @@ export default class TripEventController {
     document.addEventListener(`keydown`, this._documentEscKeydownHandler);
   }
 
-  _tripEventFormComponentRollUpHandler() {
-    this._replaceEditFormToTripEvent();
-    document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
-  }
 
   _documentEscKeydownHandler(evt) {
     if (evt.key === Keycode.ESCAPE) {
@@ -62,8 +61,20 @@ export default class TripEventController {
     }
   }
 
+  _tripEventFormComponentRollUpHandler() {
+    this._replaceEditFormToTripEvent();
+    document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
+  }
+
   _tripEventFormComponentSubmitHandler(evt) {
     evt.preventDefault();
     this._tripEventFormComponentRollUpHandler();
+  }
+
+  _tripEventFormComponentFavoritesButtonClickHandler() {
+    const updatedTripEvent = Object.assign({}, this._tripEvent, {
+      isFavorite: !this._tripEvent.isFavorite,
+    });
+    this._dataChangeHandler(this._tripEvent, updatedTripEvent);
   }
 }

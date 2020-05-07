@@ -63,8 +63,7 @@ const renderPhotos = (photos) => {
 };
 
 const renderTripEventForm = (tripEvent, id) => {
-  const {type, city, description, action, offers, photos, start, end, basePrice} = tripEvent;
-  const isFavorite = Math.random() > 0.5;
+  const {type, city, description, action, offers, photos, start, end, basePrice, isFavorite} = tripEvent;
 
   const typesTransferList = renderTripTypesList(eventTypes.slice(0, 7));
   const typesActivitiesList = renderTripTypesList(eventTypes.slice(7, 10));

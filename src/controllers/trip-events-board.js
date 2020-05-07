@@ -11,12 +11,13 @@ import {getSortedTripEvents} from '../helpers/utils.js';
 export default class TripEventsBoardController {
   constructor(container) {
     this._container = container;
-
     this._tripEvents = [];
-    this._showedTripEventsControllers = [];
+
     this._noTasksComponent = new NoTripEventsComponent();
     this._sortComponent = new TripSortComponent();
+
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
+    this._dataChangeHandler = this._dataChangeHandler.bind(this);
   }
 
   render(tripEvents) {
@@ -28,7 +29,7 @@ export default class TripEventsBoardController {
     }
 
     this._sortedTripEvents = getSortedTripEvents(this._tripEvents);
-    this._showedTripEventsControllers = this._renderTripEvents();
+    this._renderTripEvents();
 
     render(this._container, this._sortComponent);
 
@@ -39,7 +40,7 @@ export default class TripEventsBoardController {
   _renderTripEvents() {
     this._renderedTripEvents = this._sortedTripEvents.map((tripEvent) => {
       const tripEventWrapper = new TripEventWrapperComponent().getElement();
-      const tripEventController = new TripEventController(tripEventWrapper, tripEvent);
+      const tripEventController = new TripEventController(tripEventWrapper, tripEvent, this._dataChangeHandler);
 
       return tripEventController;
     });
@@ -58,7 +59,7 @@ export default class TripEventsBoardController {
   _sortTypeChangeHandler(sortType) {
     this._sortedTripEvents = getSortedTripEvents(this._tripEvents, sortType);
     this._tripSortItemDay = this._sortComponent.getElement().querySelector(`.trip-sort__item--day`);
-    this._showedTripEventsControllers = this._renderTripEvents();
+    this._renderTripEvents();
 
     switch (sortType) {
       case SortType.EVENT:
@@ -72,5 +73,18 @@ export default class TripEventsBoardController {
         this._renderTripEventsInEmptyDays();
         break;
     }
+  }
+
+  _dataChangeHandler(oldTripEvent, updatedTripEvent) {
+    const index = this._tripEvents.findIndex((tripEvent) => tripEvent === oldTripEvent);
+
+    if (index === -1) {
+      return;
+    }
+
+    this._tripEvents = [].concat(this._tripEvents.slice(0, index), updatedTripEvent, this._tripEvents.slice(index + 1));
+
+    const tripEventWrapper = new TripEventWrapperComponent().getElement();
+    this._renderedTripEvents[index] = new TripEventController(tripEventWrapper, this._tripEvents[index], this._dataChangeHandler);
   }
 }

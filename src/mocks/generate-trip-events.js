@@ -8,6 +8,7 @@ import {eventActionsMap, eventDestinations, eventOffers, eventTypes} from './tri
 
 const generateTripEvent = () => {
   const hasOffers = Math.random() > 0.5;
+  const isFavorite = Math.random() > 0.5;
   const type = getRandomArrayItem(eventTypes);
   const start = new Date(generateStartDate());
   const end = generateEndDate(start);
@@ -16,6 +17,7 @@ const generateTripEvent = () => {
     type,
     start,
     end,
+    isFavorite,
     action: eventActionsMap[type],
     parsedStartDate: parseDate(start),
     basePrice: getRandomIntegerNumber(10, 500),
