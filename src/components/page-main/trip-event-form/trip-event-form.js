@@ -184,4 +184,8 @@ export default class TripEventForm extends AbstractComponent {
   setButtonRollUpHandler(handler) {
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
   }
+
+  setFavoritesButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`change`, handler);
+  }
 }

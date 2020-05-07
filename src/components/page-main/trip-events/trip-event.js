@@ -24,8 +24,7 @@ const renderTripEvent = (tripEvent) => {
   const startTime = getEventTimeFormat(start);
   const endTime = getEventTimeFormat(end);
 
-  return (`<li class="trip-events__item">
-            <div class="event">
+  return (`<div class="event">
               <div class="event__type">
                 <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event ${type.toLowerCase()} icon">
               </div>
@@ -52,8 +51,7 @@ const renderTripEvent = (tripEvent) => {
               <button class="event__rollup-btn" type="button">
                 <span class="visually-hidden">Open event</span>
               </button>
-            </div>
-          </li>`.trim()
+            </div>`.trim()
   );
 };
 
