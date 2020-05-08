@@ -3,11 +3,18 @@ import TripEventFormComponent from '../components/page-main/trip-event-form/trip
 import {Keycode} from '../helpers/constants.js';
 import {render, replace} from "../helpers/render.js";
 
+const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
+};
+
 export default class TripEventController {
-  constructor(container, tripEvent, dataChangeHandler) {
+  constructor(container, tripEvent, dataChangeHandler, viewChangeHandler) {
     this._container = container;
     this._tripEvent = tripEvent;
     this._dataChangeHandler = dataChangeHandler;
+    this._viewChangeHandler = viewChangeHandler;
+    this._mode = Mode.DEFAULT;
 
     this._tripEventComponent = null;
     this._tripEventFormComponent = null;
@@ -28,6 +35,9 @@ export default class TripEventController {
   }
 
   render() {
+    const oldTripEventComponent = this._tripEventComponent;
+    const oldTripEventFormComponent = this._tripEventFormComponent;
+
     this._tripEventComponent = new TripEventComponent(this._tripEvent);
     this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent, this._tripEvent.counter);
 
@@ -36,17 +46,34 @@ export default class TripEventController {
     this._tripEventFormComponent.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
     this._tripEventFormComponent.setFavoritesButtonClickHandler(this._tripEventFormComponentFavoritesButtonClickHandler);
 
-    render(this._container, this._tripEventComponent);
+    if (oldTripEventFormComponent && oldTripEventComponent) {
+      replace(this._tripEventComponent, oldTripEventComponent);
+      replace(this._tripEventFormComponent, oldTripEventFormComponent);
+    } else {
+      render(this._container, this._tripEventComponent);
+    }
 
     return this._container;
   }
 
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceEditFormToTripEvent();
+    }
+  }
+
   _replaceTripEventToEditForm() {
+    this._viewChangeHandler();
     replace(this._tripEventFormComponent, this._tripEventComponent);
+
+    this._mode = Mode.EDIT;
   }
 
   _replaceEditFormToTripEvent() {
+    this._tripEventFormComponent.getElement().reset();
     replace(this._tripEventComponent, this._tripEventFormComponent);
+
+    this._mode = Mode.DEFAULT;
   }
 
   _tripEventComponentClickHandler() {

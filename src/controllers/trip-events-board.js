@@ -19,6 +19,7 @@ export default class TripEventsBoardController {
 
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
     this._dataChangeHandler = this._dataChangeHandler.bind(this);
+    this._viewChangeHandler = this._viewChangeHandler.bind(this);
   }
 
   render(tripEvents) {
@@ -41,7 +42,7 @@ export default class TripEventsBoardController {
   _renderTripEvents() {
     this._renderedTripEvents = this._sortedTripEvents.map((tripEvent) => {
       const tripEventWrapper = new TripEventWrapperComponent().getElement();
-      const tripEventController = new TripEventController(tripEventWrapper, tripEvent, this._dataChangeHandler);
+      const tripEventController = new TripEventController(tripEventWrapper, tripEvent, this._dataChangeHandler, this._viewChangeHandler);
 
       return tripEventController;
     });
@@ -81,6 +82,10 @@ export default class TripEventsBoardController {
     this._renderSortedTripEvents();
   }
 
+  _viewChangeHandler() {
+    this._renderedTripEvents.forEach((renderedTripEvent) => renderedTripEvent.setDefaultView());
+  }
+
   _dataChangeHandler(oldTripEvent, updatedTripEvent) {
     const index = this._sortedTripEvents.findIndex((tripEvent) => tripEvent === oldTripEvent);
 
@@ -91,7 +96,7 @@ export default class TripEventsBoardController {
     this._sortedTripEvents = [].concat(this._sortedTripEvents.slice(0, index), updatedTripEvent, this._sortedTripEvents.slice(index + 1));
 
     const tripEventWrapper = new TripEventWrapperComponent().getElement();
-    this._renderedTripEvents[index] = new TripEventController(tripEventWrapper, this._sortedTripEvents[index], this._dataChangeHandler);
+    this._renderedTripEvents[index] = new TripEventController(tripEventWrapper, this._sortedTripEvents[index], this._dataChangeHandler, this._viewChangeHandler);
 
     this._renderedTripEvents[index].render();
     this._renderSortedTripEvents();

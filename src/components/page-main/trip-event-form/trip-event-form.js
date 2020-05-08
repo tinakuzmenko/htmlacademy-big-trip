@@ -1,5 +1,5 @@
 import {eventDestinations, eventTypes} from '../../../mocks/trip-event-mocks.js';
-import AbstractComponent from '../../abstract-component.js';
+import AbstractSmartComponent from '../../abstract-smart-component.js';
 import {getDateAndTimeFormFormat} from './get-date-and-time-form-format.js';
 
 const renderEventOffers = (offers) => {
@@ -75,7 +75,7 @@ const renderTripEventForm = (tripEvent, id) => {
 
   const eventOffers = offers !== null ? renderOffers(offers) : ``;
 
-  return (`<form class="trip-events__item  event  event--edit" action="#" method="post">
+  return (`<form class="trip-events__item event event--edit" action="#" method="post">
             <header class="event__header">
               <div class="event__type-wrapper">
                 <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
@@ -165,7 +165,7 @@ const renderTripEventForm = (tripEvent, id) => {
           </form>`);
 };
 
-export default class TripEventForm extends AbstractComponent {
+export default class TripEventForm extends AbstractSmartComponent {
   constructor(tripEvent, id) {
     super();
     this._tripEvent = tripEvent;
@@ -176,15 +176,33 @@ export default class TripEventForm extends AbstractComponent {
     return renderTripEventForm(this._tripEvent, this._id);
   }
 
+  recoveryListeners() {
+    this.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
+    this.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);
+    this.setFavoritesButtonClickHandler(this._tripEventFormComponentFavoritesButtonClickHandler);
+    this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
   setSubmitHandler(handler) {
     this.getElement().addEventListener(`submit`, handler);
+    this._tripEventFormComponentSubmitHandler = handler;
   }
 
   setButtonRollUpHandler(handler) {
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
+    this._tripEventFormComponentRollUpHandler = handler;
   }
 
   setFavoritesButtonClickHandler(handler) {
     this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`change`, handler);
+    this._tripEventFormComponentFavoritesButtonClickHandler = handler;
+  }
+
+  _subscribeOnEvents() {
+
   }
 }
