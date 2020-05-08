@@ -1,5 +1,6 @@
 import TripEventComponent from '../components/page-main/trip-events/trip-event.js';
 import TripEventFormComponent from '../components/page-main/trip-event-form/trip-event-form.js';
+import TripEventWrapperComponent from '../components/page-main/trip-events/trip-event-wrapper.js';
 import {Keycode} from '../helpers/constants.js';
 import {render, replace} from "../helpers/render.js";
 
@@ -9,8 +10,7 @@ const Mode = {
 };
 
 export default class TripEventController {
-  constructor(container, tripEvent, dataChangeHandler, viewChangeHandler) {
-    this._container = container;
+  constructor(tripEvent, dataChangeHandler, viewChangeHandler) {
     this._tripEvent = tripEvent;
     this._dataChangeHandler = dataChangeHandler;
     this._viewChangeHandler = viewChangeHandler;
@@ -18,6 +18,7 @@ export default class TripEventController {
 
     this._tripEventComponent = null;
     this._tripEventFormComponent = null;
+    this._tripEventWrapper = new TripEventWrapperComponent();
 
     this._tripEventComponentClickHandler = this._tripEventComponentClickHandler.bind(this);
     this._tripEventFormComponentRollUpHandler = this._tripEventFormComponentRollUpHandler.bind(this);
@@ -34,7 +35,11 @@ export default class TripEventController {
     return this._tripEvent.start;
   }
 
-  render() {
+  getElement() {
+    return render();
+  }
+
+  render(container) {
     const oldTripEventComponent = this._tripEventComponent;
     const oldTripEventFormComponent = this._tripEventFormComponent;
 
@@ -50,10 +55,9 @@ export default class TripEventController {
       replace(this._tripEventComponent, oldTripEventComponent);
       replace(this._tripEventFormComponent, oldTripEventFormComponent);
     } else {
-      render(this._container, this._tripEventComponent);
+      render(this._tripEventWrapper.getElement(), this._tripEventComponent);
+      render(container.getElement(), this._tripEventWrapper);
     }
-
-    return this._container;
   }
 
   setDefaultView() {

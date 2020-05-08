@@ -1,21 +1,46 @@
-import TripDaysContainer from '../trip-days/trip-days-container.js';
 import TripDay from '../trip-days/trip-day.js';
 import TripEventsContainerComponent from './trip-events-container.js';
 import {TimeInMs} from '../../../helpers/constants.js';
 import {render} from '../../../helpers/render.js';
 
 export default class TripEventsGroupedByDays {
-  constructor(tripEventsControllers) {
+  constructor(container, tripEventsControllers) {
+    this._container = container;
     this._tripEventsControllers = tripEventsControllers;
-    this._markup = new TripDaysContainer().getElement();
     this._tripDayObject = null;
     this._daysDifference = 0;
     this._daysContainerCount = 1;
   }
 
   getElement() {
-    this._renderEventsInDays();
-    return this._markup;
+    this._tripEventsControllers.forEach((tripEventsController) => {
+      const parsedStartDate = tripEventsController.getParsedStartDate();
+
+      if (!this._tripDayObject) {
+        this.getTripDayObject(tripEventsController);
+        this._renderEventsGroup();
+      }
+
+      if (parsedStartDate !== this._tripDayObject.parsedDate) {
+        this._oldParsedDate = this._tripDayObject.parsedDate;
+
+        this.getTripDayObject(tripEventsController);
+        this.getDayContainerCount();
+        this._renderEventsGroup();
+      }
+
+      tripEventsController.render(this._tripEventsContainer);
+    });
+
+    return this._container;
+  }
+
+  _renderEventsGroup() {
+    this._tripDay = new TripDay(this._tripDayObject);
+    this._tripEventsContainer = new TripEventsContainerComponent();
+
+    render(this._container, this._tripDay);
+    render(this._tripDay.getElement(), this._tripEventsContainer);
   }
 
   getTripDayObject(tripEventsController) {
@@ -35,32 +60,5 @@ export default class TripEventsGroupedByDays {
     this._tripDayObject.counter = this._daysContainerCount;
   }
 
-  _renderEventsGroup() {
-    this._tripDay = new TripDay(this._tripDayObject);
-    this._tripEventsContainer = new TripEventsContainerComponent();
 
-    render(this._markup, this._tripDay);
-    render(this._tripDay.getElement(), this._tripEventsContainer);
-  }
-
-  _renderEventsInDays() {
-    this._tripEventsControllers.forEach((tripEventsController) => {
-      const parsedStartDate = tripEventsController.getParsedStartDate();
-
-      if (!this._tripDayObject) {
-        this.getTripDayObject(tripEventsController);
-        this._renderEventsGroup();
-      }
-
-      if (parsedStartDate !== this._tripDayObject.parsedDate) {
-        this._oldParsedDate = this._tripDayObject.parsedDate;
-
-        this.getTripDayObject(tripEventsController);
-        this.getDayContainerCount();
-        this._renderEventsGroup();
-      }
-
-      this._tripEventsContainer.getElement().append(tripEventsController.render());
-    });
-  }
 }
