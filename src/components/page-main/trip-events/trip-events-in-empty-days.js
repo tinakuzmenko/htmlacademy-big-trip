@@ -5,10 +5,13 @@ import TripEventController from '../../../controllers/trip-event.js';
 import {render} from '../../../helpers/render.js';
 
 export default class TripEventsInEmptyDays extends AbstractViewComponent {
-  constructor(container, sortedTripEvents) {
+  constructor(container, sortedTripEvents, dataChangeHandler) {
     super();
     this._container = container;
     this._sortedTripEvents = sortedTripEvents;
+    this._dataChangeHandler = dataChangeHandler;
+
+    this._dataChangeHandler = this._dataChangeHandler.bind(this);
   }
 
   getElement() {

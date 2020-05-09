@@ -6,10 +6,11 @@ import {render} from '../../../helpers/render.js';
 import {TimeInMs} from '../../../helpers/constants.js';
 
 export default class TripEventsGroupedByDays extends AbstractViewComponent {
-  constructor(container, sortedTripEvents) {
+  constructor(container, sortedTripEvents, dataChangeHandler) {
     super();
     this._container = container;
     this._sortedTripEvents = sortedTripEvents;
+    this._dataChangeHandler = dataChangeHandler;
     this._tripDayObject = null;
     this._daysDifference = 0;
     this._daysContainerCount = 1;

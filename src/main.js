@@ -8,7 +8,7 @@ import {RenderPosition} from "./helpers/constants.js";
 import {render} from './helpers/render.js';
 import {createTripEvents} from './mocks/generate-trip-events.js';
 
-const EVENTS_AMOUNT = 20;
+const EVENTS_AMOUNT = 1;
 const tripEventsObjects = createTripEvents(EVENTS_AMOUNT);
 
 const tripMain = document.querySelector(`.trip-main`);

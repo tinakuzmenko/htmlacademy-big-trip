@@ -17,6 +17,7 @@ export default class TripEventsBoardController {
     this._tripDaysContainer = new TripDaysContainer().getElement();
     this._sortType = SortType.EVENT;
 
+    this._dataChangeHandler = this._dataChangeHandler.bind(this);
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
@@ -37,12 +38,12 @@ export default class TripEventsBoardController {
   }
 
   _renderTripEventsGroupedByDays() {
-    const tripEventsGroupedByDays = new TripEventsGroupedByDays(this._tripDaysContainer, this._sortedTripEvents);
+    const tripEventsGroupedByDays = new TripEventsGroupedByDays(this._tripDaysContainer, this._sortedTripEvents, this._dataChangeHandler);
     render(this._container, tripEventsGroupedByDays);
   }
 
   _renderTripEventsInEmptyDays() {
-    const tripEventsInEmptyDays = new TripEventsInEmptyDays(this._tripDaysContainer, this._sortedTripEvents);
+    const tripEventsInEmptyDays = new TripEventsInEmptyDays(this._tripDaysContainer, this._sortedTripEvents, this._dataChangeHandler);
     render(this._container, tripEventsInEmptyDays);
   }
 
@@ -67,5 +68,16 @@ export default class TripEventsBoardController {
     this._sortedTripEvents = getSortedTripEvents(this._sortedTripEvents, sortType);
     this._sortType = sortType;
     this._renderSortedTripEvents();
+  }
+
+  _dataChangeHandler(tripEventController, oldTripEvent, updatedTripEvent) {
+    const index = this._sortedTripEvents.findIndex((tripEvent) => tripEvent === oldTripEvent);
+
+    if (index === -1) {
+      return;
+    }
+
+    this._sortedTripEvents = [].concat(this._sortedTripEvents.slice(0, index), updatedTripEvent, this._sortedTripEvents.slice(index + 1));
+    tripEventController.render(this._sortedTripEvents[index]);
   }
 }
