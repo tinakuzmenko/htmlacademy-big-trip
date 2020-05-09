@@ -1,11 +1,13 @@
 import {eventDestinations, eventTypes} from '../../../mocks/trip-event-mocks.js';
 import AbstractSmartComponent from '../../abstract-smart-component.js';
 import {getDateAndTimeFormFormat} from './get-date-and-time-form-format.js';
+import {eventActionsMap, eventOffers} from '../../../mocks/trip-event-mocks.js';
+import {getRandomOffers} from '../../../mocks/get-random-offers.js';
+import {getRandomDescription} from '../../../mocks/get-random-description.js';
 
 const renderEventOffers = (offers) => {
   return offers.map((offer, index) => {
-    const {id, title, price} = offer;
-    const isChecked = Math.random() > 0.5;
+    const {id, title, price, isChecked} = offer;
 
     return (
       `<div class="event__offer-selector">
@@ -24,12 +26,12 @@ const renderEventOffers = (offers) => {
 };
 
 const renderOffers = (offers) => {
-  const eventOffers = renderEventOffers(offers);
+  const tripEventOffers = renderEventOffers(offers);
   return (
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
-        ${eventOffers}
+        ${tripEventOffers}
       </div>
     </section>`.trim()
   );
@@ -73,7 +75,7 @@ const renderTripEventForm = (tripEvent, id) => {
   const startTime = getDateAndTimeFormFormat(start);
   const endTime = getDateAndTimeFormFormat(end);
 
-  const eventOffers = offers !== null ? renderOffers(offers) : ``;
+  const tripEventOffers = offers !== null ? renderOffers(offers) : ``;
 
   return (`<form class="trip-events__item event event--edit" action="#" method="post">
             <header class="event__header">
@@ -150,7 +152,7 @@ const renderTripEventForm = (tripEvent, id) => {
             </header>
 
             <section class="event__details">
-              ${eventOffers}
+              ${tripEventOffers}
               <section class="event__section  event__section--destination">
                 <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                 <p class="event__destination-description">${description}</p>
@@ -170,6 +172,8 @@ export default class TripEventForm extends AbstractSmartComponent {
     super();
     this._tripEvent = tripEvent;
     this._id = id;
+
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
@@ -203,6 +207,41 @@ export default class TripEventForm extends AbstractSmartComponent {
   }
 
   _subscribeOnEvents() {
+    const element = this.getElement();
+    const typeListElement = element.querySelector(`.event__type-list`);
+    const destinationInputElement = element.querySelector(`.event__input--destination`);
+    const saveButtonElement = element.querySelector(`.event__save-btn`);
 
+    typeListElement.addEventListener(`click`, (evt) => {
+      if (evt.target.tagName === `LABEL`) {
+        const inputTypeListElement = typeListElement.querySelector(`#` + evt.target.htmlFor);
+
+        this._tripEvent.type = inputTypeListElement.value;
+        this._tripEvent.action = eventActionsMap[this._tripEvent.type];
+        this._tripEvent.offers = getRandomOffers(eventOffers);
+      }
+
+      this.rerender();
+    });
+
+    destinationInputElement.addEventListener(`click`, () => {
+      destinationInputElement.value = ``;
+      saveButtonElement.disabled = true;
+    });
+
+    destinationInputElement.addEventListener(`input`, () => {
+      this._tripEvent.city = destinationInputElement.value;
+
+      const isInOptions = eventDestinations.find((destination) => destination === this._tripEvent.city);
+
+      if (!isInOptions) {
+        return;
+      }
+
+      saveButtonElement.disabled = false;
+      this._tripEvent.description = getRandomDescription();
+
+      this.rerender();
+    });
   }
 }

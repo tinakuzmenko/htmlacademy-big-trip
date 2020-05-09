@@ -38,5 +38,10 @@ const SortType = {
   PRICE: `sort-price`,
 };
 
+const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
+};
 
-export {TimeInMs, RenderPosition, MONTHS, MONTHS_DAYS, Keycode, SortType};
+
+export {TimeInMs, RenderPosition, MONTHS, MONTHS_DAYS, Keycode, SortType, Mode};

@@ -1,13 +1,8 @@
 import TripEventComponent from '../components/page-main/trip-events/trip-event.js';
 import TripEventFormComponent from '../components/page-main/trip-event-form/trip-event-form.js';
 import TripEventWrapperComponent from '../components/page-main/trip-events/trip-event-wrapper.js';
-import {Keycode} from '../helpers/constants.js';
+import {Keycode, Mode} from '../helpers/constants.js';
 import {render, replace} from "../helpers/render.js";
-
-const Mode = {
-  DEFAULT: `default`,
-  EDIT: `edit`,
-};
 
 export default class TripEventController {
   constructor(tripEventContainer, dataChangeHandler, viewChangeHandler) {
@@ -98,7 +93,5 @@ export default class TripEventController {
       isFavorite: !this._tripEvent.isFavorite,
     });
     this._dataChangeHandler(this, this._tripEvent, updatedTripEvent);
-    // console.log(this._tripEvent, updatedTripEvent);
-    // this._tripEventFormComponent.rerender();
   }
 }
