@@ -10,12 +10,13 @@ const Mode = {
 };
 
 export default class TripEventController {
-  constructor(tripEvent, dataChangeHandler, viewChangeHandler) {
-    this._tripEvent = tripEvent;
+  constructor(tripEventContainer, dataChangeHandler, viewChangeHandler) {
+    this._tripEventContainer = tripEventContainer;
     this._dataChangeHandler = dataChangeHandler;
     this._viewChangeHandler = viewChangeHandler;
     this._mode = Mode.DEFAULT;
 
+    this._tripEvent = null;
     this._tripEventComponent = null;
     this._tripEventFormComponent = null;
     this._tripEventWrapper = new TripEventWrapperComponent();
@@ -27,19 +28,9 @@ export default class TripEventController {
     this._tripEventFormComponentFavoritesButtonClickHandler = this._tripEventFormComponentFavoritesButtonClickHandler.bind(this);
   }
 
-  getParsedStartDate() {
-    return this._tripEvent.parsedStartDate;
-  }
+  render(tripEvent) {
+    this._tripEvent = tripEvent;
 
-  getStartDate() {
-    return this._tripEvent.start;
-  }
-
-  getElement() {
-    return render();
-  }
-
-  render(container) {
     const oldTripEventComponent = this._tripEventComponent;
     const oldTripEventFormComponent = this._tripEventFormComponent;
 
@@ -56,7 +47,7 @@ export default class TripEventController {
       replace(this._tripEventFormComponent, oldTripEventFormComponent);
     } else {
       render(this._tripEventWrapper.getElement(), this._tripEventComponent);
-      render(container.getElement(), this._tripEventWrapper);
+      render(this._tripEventContainer.getElement(), this._tripEventWrapper);
     }
   }
 
@@ -106,6 +97,8 @@ export default class TripEventController {
     const updatedTripEvent = Object.assign({}, this._tripEvent, {
       isFavorite: !this._tripEvent.isFavorite,
     });
-    this._dataChangeHandler(this._tripEvent, updatedTripEvent);
+    this._dataChangeHandler(this, this._tripEvent, updatedTripEvent);
+    // console.log(this._tripEvent, updatedTripEvent);
+    // this._tripEventFormComponent.rerender();
   }
 }
