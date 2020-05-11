@@ -30,7 +30,7 @@ export default class TripEventController {
     const oldTripEventFormComponent = this._tripEventFormComponent;
 
     this._tripEventComponent = new TripEventComponent(this._tripEvent);
-    this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent, this._tripEvent.counter);
+    this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent);
 
     this._tripEventComponent.setClickHandler(this._tripEventComponentClickHandler);
     this._tripEventFormComponent.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);

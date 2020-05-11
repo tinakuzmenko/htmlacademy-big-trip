@@ -11,6 +11,19 @@ const RenderPosition = {
   BEFOREEND: `beforeend`
 };
 
+const eventActionsMap = {
+  'Taxi': `to`,
+  'Bus': `to`,
+  'Train': `to`,
+  'Ship': `to`,
+  'Transport': `to`,
+  'Drive': `to`,
+  'Flight': `to`,
+  'Check-in': `in`,
+  'Sightseeing': `in`,
+  'Restaurant': `in`,
+};
+
 const MONTHS = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
 
 const MONTHS_DAYS = {
@@ -44,4 +57,4 @@ const Mode = {
 };
 
 
-export {TimeInMs, RenderPosition, MONTHS, MONTHS_DAYS, Keycode, SortType, Mode};
+export {TimeInMs, RenderPosition, eventActionsMap, MONTHS, MONTHS_DAYS, Keycode, SortType, Mode};
