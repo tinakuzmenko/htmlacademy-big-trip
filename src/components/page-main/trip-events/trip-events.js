@@ -1,17 +1,16 @@
-import AbstractViewComponent from '../../abstract-view-component.js';
 import EmptyTripDayComponent from '../trip-days/trip-day-empty.js';
 import TripEventsContainerComponent from './trip-events-container.js';
 import TripEventController from '../../../controllers/trip-event.js';
 import {render} from '../../../helpers/render.js';
 
-export default class TripEventsInEmptyDays extends AbstractViewComponent {
+export default class TripEvents {
   constructor(container, sortedTripEvents, dataChangeHandler) {
-    super();
     this._container = container;
     this._sortedTripEvents = sortedTripEvents;
     this._dataChangeHandler = dataChangeHandler;
+    this._tripEventsControllers = [];
 
-    this._dataChangeHandler = this._dataChangeHandler.bind(this);
+    this._viewChangeHandler = this._viewChangeHandler.bind(this);
   }
 
   getElement() {
@@ -29,5 +28,9 @@ export default class TripEventsInEmptyDays extends AbstractViewComponent {
     });
 
     return this._container;
+  }
+
+  _viewChangeHandler() {
+    this._tripEventsControllers.forEach((renderedTripEvent) => renderedTripEvent.setDefaultView());
   }
 }

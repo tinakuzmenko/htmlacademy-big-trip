@@ -1,19 +1,37 @@
-import AbstractViewComponent from '../../abstract-view-component.js';
 import TripDayComponent from '../trip-days/trip-day.js';
 import TripEventsContainerComponent from '../trip-events/trip-events-container.js';
 import TripEventController from '../../../controllers/trip-event.js';
 import {render} from '../../../helpers/render.js';
 import {TimeInMs} from '../../../helpers/constants.js';
 
-export default class TripEventsGroupedByDays extends AbstractViewComponent {
+export default class TripEventsGroupedByDays {
   constructor(container, sortedTripEvents, dataChangeHandler) {
-    super();
     this._container = container;
     this._sortedTripEvents = sortedTripEvents;
     this._dataChangeHandler = dataChangeHandler;
     this._tripDayObject = null;
     this._daysDifference = 0;
     this._daysContainerCount = 1;
+    this._tripEventsControllers = [];
+
+    this._viewChangeHandler = this._viewChangeHandler.bind(this);
+  }
+
+  getTripDayObject(sortedTripEvent) {
+    this._tripEventStartDate = sortedTripEvent.start;
+    this._tripDay = new Date(this._tripEventStartDate.getFullYear(), this._tripEventStartDate.getMonth(), this._tripEventStartDate.getDate());
+
+    this._tripDayObject = {
+      counter: this._daysContainerCount,
+      date: this._tripDay,
+      parsedDate: Date.parse(this._tripDay)
+    };
+  }
+
+  getDayContainerCount() {
+    const daysDifference = (this._tripDayObject.parsedDate - this._oldParsedDate) / TimeInMs.DAY;
+    this._daysContainerCount = this._daysContainerCount + daysDifference;
+    this._tripDayObject.counter = this._daysContainerCount;
   }
 
   getElement() {
@@ -50,20 +68,7 @@ export default class TripEventsGroupedByDays extends AbstractViewComponent {
     render(this._tripDay.getElement(), this._tripEventsContainer);
   }
 
-  getTripDayObject(sortedTripEvent) {
-    this._tripEventStartDate = sortedTripEvent.start;
-    this._tripDay = new Date(this._tripEventStartDate.getFullYear(), this._tripEventStartDate.getMonth(), this._tripEventStartDate.getDate());
-
-    this._tripDayObject = {
-      counter: this._daysContainerCount,
-      date: this._tripDay,
-      parsedDate: Date.parse(this._tripDay)
-    };
-  }
-
-  getDayContainerCount() {
-    const daysDifference = (this._tripDayObject.parsedDate - this._oldParsedDate) / TimeInMs.DAY;
-    this._daysContainerCount = this._daysContainerCount + daysDifference;
-    this._tripDayObject.counter = this._daysContainerCount;
+  _viewChangeHandler() {
+    this._tripEventsControllers.forEach((renderedTripEvent) => renderedTripEvent.setDefaultView());
   }
 }

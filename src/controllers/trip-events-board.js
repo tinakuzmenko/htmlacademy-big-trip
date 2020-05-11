@@ -1,7 +1,7 @@
 import NoTripEventsComponent from '../components/page-main/trip-events/no-trip-events.js';
 import TripDaysContainer from '../components/page-main/trip-days/trip-days-container.js';
 import TripEventsGroupedByDays from '../components/page-main/trip-events/trip-events-grouped-by-days.js';
-import TripEventsInEmptyDays from '../components/page-main/trip-events/trip-events-in-empty-days.js';
+import TripEvents from '../components/page-main/trip-events/trip-events.js';
 import TripSortComponent from '../components/page-main/trip-sort/trip-sort.js';
 import {SortType} from '../helpers/constants.js';
 import {render} from '../helpers/render.js';
@@ -42,9 +42,9 @@ export default class TripEventsBoardController {
     render(this._container, tripEventsGroupedByDays);
   }
 
-  _renderTripEventsInEmptyDays() {
-    const tripEventsInEmptyDays = new TripEventsInEmptyDays(this._tripDaysContainer, this._sortedTripEvents, this._dataChangeHandler);
-    render(this._container, tripEventsInEmptyDays);
+  _renderTripEvents() {
+    const tripEvents = new TripEvents(this._tripDaysContainer, this._sortedTripEvents, this._dataChangeHandler);
+    render(this._container, tripEvents);
   }
 
   _renderSortedTripEvents() {
@@ -59,7 +59,7 @@ export default class TripEventsBoardController {
       default:
         this._container.querySelector(`.trip-days`).innerHTML = ``;
         this._tripSortItemDay.textContent = ``;
-        this._renderTripEventsInEmptyDays();
+        this._renderTripEvents();
         break;
     }
   }
