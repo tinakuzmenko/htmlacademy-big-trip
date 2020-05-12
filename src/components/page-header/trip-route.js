@@ -6,7 +6,7 @@ const MAXIMUM_CITIES_SHOWN = 3;
 
 const getTripRoute = (tripEvents) => {
   const tripEventsSortedByDate = getSortedTripEvents(tripEvents);
-  const tripEventsCities = tripEventsSortedByDate.map((tripEvent) => tripEvent.city);
+  const tripEventsCities = tripEventsSortedByDate.map((tripEvent) => tripEvent.destination.name);
 
   return tripEventsCities.length <= MAXIMUM_CITIES_SHOWN ? tripEventsCities.join(` — `) : tripEventsCities.slice(0, 1) + ` — … — ` + tripEventsCities.slice(tripEventsCities.length - 1);
 };
