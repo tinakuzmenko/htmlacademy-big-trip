@@ -17,19 +17,18 @@ const renderTripEventOffers = (offers) => {
 };
 
 const renderTripEvent = (tripEvent) => {
-  const {type, city, basePrice, offers, action, start, end, timeDiff} = tripEvent;
+  const {type, destination, basePrice, activeOffers, action, start, end, timeDiff} = tripEvent;
 
-  const eventOffers = offers !== null ? renderTripEventOffers(offers) : ``;
+  const eventOffers = activeOffers ? renderTripEventOffers(activeOffers) : ``;
 
   const startTime = getEventTimeFormat(start);
   const endTime = getEventTimeFormat(end);
 
-  return (`<li class="trip-events__item">
-            <div class="event">
+  return (`<div class="event">
               <div class="event__type">
                 <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event ${type.toLowerCase()} icon">
               </div>
-              <h3 class="event__title">${type} ${action} ${city}</h3>
+              <h3 class="event__title">${type} ${action} ${destination.name}</h3>
 
               <div class="event__schedule">
                 <p class="event__time">
@@ -52,8 +51,7 @@ const renderTripEvent = (tripEvent) => {
               <button class="event__rollup-btn" type="button">
                 <span class="visually-hidden">Open event</span>
               </button>
-            </div>
-          </li>`.trim()
+            </div>`.trim()
   );
 };
 
@@ -69,6 +67,6 @@ export default class TripEvent extends AbstractComponent {
 
   setClickHandler(handler) {
     this.getElement().querySelector(`.event__rollup-btn`)
-    .addEventListener(`click`, handler);
+      .addEventListener(`click`, handler);
   }
 }

@@ -3,14 +3,15 @@ import PageHeaderContainerComponent from './components/page-header/page-header-c
 import PageNavigationComponent from './components/page-header/page-navigation.js';
 import TripCostComponent from './components/page-header/trip-cost.js';
 import TripRouteComponent from './components/page-header/trip-route.js';
-import TripEventsContainerComponent from './components/page-main/trip-events/trip-events-container.js';
-import TripEventsBoardController from './controllers/trip-events.js';
+import TripEventsBoardController from './controllers/trip-events-board.js';
 import {RenderPosition} from "./helpers/constants.js";
+import {getSortedTripEvents} from './helpers/utils.js';
 import {render} from './helpers/render.js';
 import {createTripEvents} from './mocks/generate-trip-events.js';
 
-const EVENTS_AMOUNT = 20;
+const EVENTS_AMOUNT = 22;
 const tripEventsObjects = createTripEvents(EVENTS_AMOUNT);
+const sortedTripEvents = getSortedTripEvents(tripEventsObjects);
 
 const tripMain = document.querySelector(`.trip-main`);
 const tripEventsSection = document.querySelector(`.trip-events`);
@@ -29,8 +30,7 @@ render(tripInfoContainer, new TripCostComponent(tripEventsObjects));
 render(firstTitle, new PageNavigationComponent(), RenderPosition.AFTEREND);
 render(secondTitle, new PageFilterComponent(), RenderPosition.AFTEREND);
 
-const tripEventsContainerComponent = new TripEventsContainerComponent();
-const tripEventsBoardComponent = new TripEventsBoardController(tripEventsContainerComponent);
 
-render(tripEventsSection, tripEventsContainerComponent);
-tripEventsBoardComponent.render(tripEventsObjects);
+const tripEventsBoardComponent = new TripEventsBoardController(tripEventsSection);
+
+tripEventsBoardComponent.render(sortedTripEvents);

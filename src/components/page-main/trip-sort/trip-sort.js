@@ -42,7 +42,7 @@ export default class TripSort extends AbstractComponent {
   }
 
   getTemplate() {
-    return renderTripSort(this._task);
+    return renderTripSort(this._sort);
   }
 
   getSortType() {
