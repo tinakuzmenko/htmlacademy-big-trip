@@ -16,15 +16,6 @@ const getRandomArrayItem = (array) => {
   return array[randomIndex];
 };
 
-const parseDate = (date) => {
-  const dateValue = date.getDate();
-  const monthValue = date.getMonth();
-  const yearValue = date.getFullYear();
-
-  const roundDate = new Date(yearValue, monthValue, dateValue);
-  return Date.parse(roundDate);
-};
-
 const getSortedTripEvents = (tripEvents, sortType = SortType.EVENT) => {
   let sortedTripEvents = [];
   const tripEventsCopy = tripEvents.slice();
@@ -44,10 +35,4 @@ const getSortedTripEvents = (tripEvents, sortType = SortType.EVENT) => {
   return sortedTripEvents;
 };
 
-const getTripEventsDates = (tripEvents) => {
-  return tripEvents.map((tripEvent) => {
-    return new Date(tripEvent.start.getFullYear(), tripEvent.start.getMonth(), tripEvent.start.getDate());
-  });
-};
-
-export {increaseCounter, getRandomIntegerNumber, getRandomArrayItem, parseDate, getSortedTripEvents, getTripEventsDates};
+export {increaseCounter, getRandomIntegerNumber, getRandomArrayItem, getSortedTripEvents};

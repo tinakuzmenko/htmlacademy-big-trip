@@ -24,8 +24,6 @@ const eventActionsMap = {
   'Restaurant': `in`,
 };
 
-const MONTHS = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
-
 const MONTHS_DAYS = {
   '0': 31,
   '1': 28,
@@ -57,4 +55,4 @@ const Mode = {
 };
 
 
-export {TimeInMs, RenderPosition, eventActionsMap, MONTHS, MONTHS_DAYS, Keycode, SortType, Mode};
+export {TimeInMs, RenderPosition, eventActionsMap, MONTHS_DAYS, Keycode, SortType, Mode};
