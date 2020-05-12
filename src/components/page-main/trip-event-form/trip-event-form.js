@@ -2,6 +2,9 @@ import {eventDestinations, eventOffers, eventTypes} from '../../../mocks/trip-ev
 import AbstractSmartComponent from '../../abstract-smart-component.js';
 import {eventActionsMap} from '../../../helpers/constants.js';
 import {getDateAndTimeFormFormat} from './get-date-and-time-form-format.js';
+import flatpickr from "flatpickr";
+
+import "flatpickr/dist/flatpickr.min.css";
 
 const checkIsOfferChecked = (offer, activeOffers) => {
   let isChecked = false;
@@ -182,23 +185,16 @@ export default class TripEventForm extends AbstractSmartComponent {
     super();
     this._tripEvent = tripEvent;
     this._id = this._tripEvent.id;
+    this._flatpickrFrom = null;
+    this._flatpickrTo = null;
+    this._tripEvent.start = tripEvent.start;
 
+    this._applyFlatpickr();
     this._subscribeOnEvents();
   }
 
   getTemplate() {
     return renderTripEventForm(this._tripEvent, this._id);
-  }
-
-  recoveryListeners() {
-    this.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
-    this.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);
-    this.setFavoritesButtonClickHandler(this._tripEventFormComponentFavoritesButtonClickHandler);
-    this._subscribeOnEvents();
-  }
-
-  rerender() {
-    super.rerender();
   }
 
   setSubmitHandler(handler) {
@@ -214,6 +210,51 @@ export default class TripEventForm extends AbstractSmartComponent {
   setFavoritesButtonClickHandler(handler) {
     this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`change`, handler);
     this._tripEventFormComponentFavoritesButtonClickHandler = handler;
+  }
+
+  recoveryListeners() {
+    this.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
+    this.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);
+    this.setFavoritesButtonClickHandler(this._tripEventFormComponentFavoritesButtonClickHandler);
+    this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
+
+    this._applyFlatpickr();
+  }
+
+  _applyFlatpickr() {
+    if (this._flatpickrFrom) {
+      this._flatpickrFrom.destroy();
+      this._flatpickrFrom = null;
+    }
+
+    if (this._flatpickrTo) {
+      this._flatpickrTo.destroy();
+      this._flatpickrTo = null;
+    }
+
+    const dateFromElement = this.getElement().querySelector(`[name="event-start-time"]`);
+    const dateToElement = this.getElement().querySelector(`[name="event-end-time"]`);
+
+    this._flatpickrFrom = flatpickr(dateFromElement, {
+      altInput: true,
+      altFormat: `d/m/y H:i`,
+      defaultDate: this._tripEvent.start,
+      [`time_24hr`]: true,
+      enableTime: true
+    });
+
+    this._flatpickrTo = flatpickr(dateToElement, {
+      altInput: true,
+      altFormat: `d/m/y H:i`,
+      defaultDate: this._tripEvent.end,
+      minDate: this._tripEvent.start,
+      [`time_24hr`]: true,
+      enableTime: true
+    });
   }
 
   _subscribeOnEvents() {
