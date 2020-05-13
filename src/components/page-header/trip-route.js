@@ -1,32 +1,38 @@
-import {MONTHS} from '../../helpers/constants.js';
-import {getSortedTripEvents, getTripEventsDates} from '../../helpers/utils.js';
+import {getSortedTripEvents} from '../../helpers/utils.js';
 import AbstractComponent from '../abstract-component.js';
+import moment from 'moment';
 
 const MAXIMUM_CITIES_SHOWN = 3;
 
 const getTripRoute = (tripEvents) => {
   const tripEventsSortedByDate = getSortedTripEvents(tripEvents);
-  const tripEventsCities = tripEventsSortedByDate.map((tripEvent) => tripEvent.city);
+  const tripEventsCities = tripEventsSortedByDate.map((tripEvent) => tripEvent.destination.name);
 
   return tripEventsCities.length <= MAXIMUM_CITIES_SHOWN ? tripEventsCities.join(` — `) : tripEventsCities.slice(0, 1) + ` — … — ` + tripEventsCities.slice(tripEventsCities.length - 1);
 };
 
+const getTripEventsDates = (tripEvents) => {
+  const tripEventsStartDates = tripEvents.map((tripEvent) => {
+    return moment(tripEvent.start).startOf(`date`);
+  }).sort((a, b) => a - b);
+
+  const tripEventsEndDates = tripEvents.map((tripEvent) => {
+    return moment(tripEvent.end).startOf(`date`);
+  }).sort((a, b) => a - b);
+
+  return [tripEventsStartDates[0], tripEventsEndDates[tripEventsEndDates.length - 1]];
+};
+
 const getTripDates = (startDate, endDate) => {
-  const startMonth = startDate.getMonth();
-  const startDay = startDate.getDate();
+  const sameMonthString = `${moment(startDate).format(`MMM`)} ${moment(startDate).format(`D`)} &nbsp;&mdash;&nbsp; ${moment(endDate).format(`D`)}`;
+  const differentMonthesString = `${moment(startDate).format(`MMM`)} ${moment(startDate).format(`D`)} &nbsp;&mdash;&nbsp; ${moment(endDate).format(`MMM`)} ${moment(endDate).format(`D`)}`;
 
-  const endMonth = endDate.getMonth();
-  const endDay = endDate.getDate();
-
-  const sameMonthString = `${MONTHS[startMonth]} ${startDay} &nbsp;&mdash;&nbsp; ${endDay}`;
-  const differentMonthesString = `${MONTHS[startMonth]} ${startDay} &nbsp;&mdash;&nbsp; ${endMonth} ${endDay}`;
-
-  return startMonth === endMonth ? sameMonthString : differentMonthesString;
+  return moment(startDate).format(`MMM`) === moment(endDate).format(`MMM`) ? sameMonthString : differentMonthesString;
 };
 
 const renderTripRoute = (tripEventsList) => {
   const title = getTripRoute(tripEventsList);
-  const tripDates = getTripEventsDates(tripEventsList).sort((a, b) => a - b);
+  const tripDates = getTripEventsDates(tripEventsList);
   const tripDatesString = getTripDates(tripDates[0], tripDates[tripDates.length - 1]);
 
   return `<div class="trip-info__main">

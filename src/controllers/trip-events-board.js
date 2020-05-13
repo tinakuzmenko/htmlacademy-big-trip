@@ -36,6 +36,8 @@ export default class TripEventsBoardController {
 
     if (this._container.querySelector(`.trip-days`)) {
       this._container.querySelector(`.trip-days`).innerHTML = ``;
+      const flatpickers = document.querySelectorAll(`.flatpickr-calendar`);
+      flatpickers.forEach((flatpicker) => flatpicker.remove());
     }
 
     switch (this._sortType) {

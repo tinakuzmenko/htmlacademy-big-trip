@@ -1,5 +1,5 @@
 import AbstractComponent from '../../abstract-component.js';
-import {getEventTimeFormat} from './get-event-time-format.js';
+import moment from 'moment';
 
 const renderTripEventOffers = (offers) => {
   return offers.map((offer) => {
@@ -21,8 +21,8 @@ const renderTripEvent = (tripEvent) => {
 
   const eventOffers = activeOffers ? renderTripEventOffers(activeOffers) : ``;
 
-  const startTime = getEventTimeFormat(start);
-  const endTime = getEventTimeFormat(end);
+  const startTime = moment(start).format(`HH:mm`);
+  const endTime = moment(end).format(`HH:mm`);
 
   return (`<div class="event">
               <div class="event__type">

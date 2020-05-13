@@ -1,7 +1,8 @@
+import moment from 'moment';
 import {getTimeDifference} from '../components/page-main/trip-events/get-time-difference.js';
 import {getPhotos} from './get-photos.js';
 import {getRandomDescription} from './get-random-description.js';
-import {getRandomArrayItem, getRandomIntegerNumber, increaseCounter, parseDate} from '../helpers/utils.js';
+import {getRandomArrayItem, getRandomIntegerNumber, increaseCounter} from '../helpers/utils.js';
 import {eventActionsMap} from '../helpers/constants.js';
 import {generateEndDate, generateStartDate} from './generate-dates.js';
 import {getRandomOffers} from './get-random-offers.js';
@@ -29,7 +30,7 @@ const generateTripEvent = () => {
     isFavorite,
     activeOffers,
     action: eventActionsMap[type],
-    parsedStartDate: parseDate(start),
+    parsedStartDate: Date.parse(moment(start).startOf(`date`)),
     basePrice: getRandomIntegerNumber(10, 500),
     destination: generateTripEventDestination(),
     offers: eventOffers[type.toLowerCase()],
