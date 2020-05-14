@@ -8,9 +8,10 @@ import {render} from '../helpers/render.js';
 import {getSortedTripEvents} from '../helpers/utils.js';
 
 export default class TripEventsBoardController {
-  constructor(container) {
+  constructor(container, tripEventsModel) {
     this._container = container;
-    this._tripEvents = [];
+    this._tripEventsModel = tripEventsModel;
+    this._tripEvents = this._tripEventsModel.getTripEvents();
 
     this._noTasksComponent = new NoTripEventsComponent();
     this._sortComponent = new TripSortComponent();
@@ -21,9 +22,7 @@ export default class TripEventsBoardController {
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 
-  render(tripEvents) {
-    this._tripEvents = tripEvents;
-
+  render() {
     if (!this._tripEvents.length) {
       render(this._container, this._noTasksComponent);
       return;
@@ -36,6 +35,7 @@ export default class TripEventsBoardController {
 
     if (this._container.querySelector(`.trip-days`)) {
       this._container.querySelector(`.trip-days`).innerHTML = ``;
+
       const flatpickers = document.querySelectorAll(`.flatpickr-calendar`);
       flatpickers.forEach((flatpicker) => flatpicker.remove());
     }
@@ -44,12 +44,16 @@ export default class TripEventsBoardController {
       case SortType.TIME:
       case SortType.PRICE:
         this._tripSortItemDay.textContent = ``;
+
         const showedTripEvents = new TripEvents(this._tripDaysContainer, this._tripEvents, this._dataChangeHandler);
+
         render(this._container, showedTripEvents);
         break;
       default:
         this._tripSortItemDay.textContent = `Day`;
+
         const tripEventsGroupedByDays = new TripEventsGroupedByDays(this._tripDaysContainer, this._tripEvents, this._dataChangeHandler);
+
         render(this._container, tripEventsGroupedByDays);
         break;
     }
@@ -62,13 +66,10 @@ export default class TripEventsBoardController {
   }
 
   _dataChangeHandler(tripEventController, oldTripEvent, updatedTripEvent) {
-    const index = this._tripEvents.findIndex((tripEvent) => tripEvent === oldTripEvent);
+    const isSuccess = this._tripEventsModel.updateTripEvent(oldTripEvent.id, updatedTripEvent);
 
-    if (index === -1) {
-      return;
+    if (isSuccess) {
+      tripEventController.render(updatedTripEvent);
     }
-
-    this._tripEvents = [].concat(this._tripEvents.slice(0, index), updatedTripEvent, this._tripEvents.slice(index + 1));
-    tripEventController.render(this._tripEvents[index]);
   }
 }
