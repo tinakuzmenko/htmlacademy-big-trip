@@ -24,10 +24,11 @@ const getTripEventsDates = (tripEvents) => {
 };
 
 const getTripDates = (startDate, endDate) => {
-  const sameMonthString = `${moment(startDate).format(`MMM`)} ${moment(startDate).format(`D`)} &nbsp;&mdash;&nbsp; ${moment(endDate).format(`D`)}`;
-  const differentMonthesString = `${moment(startDate).format(`MMM`)} ${moment(startDate).format(`D`)} &nbsp;&mdash;&nbsp; ${moment(endDate).format(`MMM`)} ${moment(endDate).format(`D`)}`;
-
-  return moment(startDate).format(`MMM`) === moment(endDate).format(`MMM`) ? sameMonthString : differentMonthesString;
+  if (moment(startDate).format(`MMM`) === moment(endDate).format(`MMM`)) {
+    return `${moment(startDate).format(`MMM D`)} &nbsp;&mdash;&nbsp; ${moment(endDate).format(`D`)}`;
+  } else {
+    return `${moment(startDate).format(`MMM D`)} &nbsp;&mdash;&nbsp; ${moment(endDate).format(`MMM D`)}`;
+  }
 };
 
 const renderTripRoute = (tripEventsList) => {

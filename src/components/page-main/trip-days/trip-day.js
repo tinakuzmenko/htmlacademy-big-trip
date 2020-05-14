@@ -7,7 +7,7 @@ const renderTripDay = (dayObject) => {
   return `<li class="trip-days__item  day">
               <div class="day__info">
                 <span class="day__counter">${counter}</span>
-                <time class="day__date" datetime="${moment(date).format(`Y`)}-${moment(date).format(`M`)}-${moment(date).format(`D`)}">${moment(date).format(`MMM`)} ${moment(date).format(`D`)}</time>
+                <time class="day__date" datetime="${moment(date).toISOString()}">${moment(date).format(`MMM D`)}</time>
               </div>
           </li>`;
 };
