@@ -202,6 +202,11 @@ export default class TripEventForm extends AbstractSmartComponent {
     this._tripEventFormComponentSubmitHandler = handler;
   }
 
+  setDeleteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, handler);
+    this._deleteButtonClickHandler = handler;
+  }
+
   setButtonRollUpHandler(handler) {
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
     this._tripEventFormComponentRollUpHandler = handler;
@@ -214,6 +219,7 @@ export default class TripEventForm extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
+    this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
     this.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);
     this.setFavoritesButtonClickHandler(this._tripEventFormComponentFavoritesButtonClickHandler);
     this._subscribeOnEvents();

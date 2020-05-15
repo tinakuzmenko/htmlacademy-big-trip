@@ -75,10 +75,15 @@ export default class TripEventsBoardController {
   }
 
   _dataChangeHandler(tripEventController, oldTripEvent, updatedTripEvent) {
-    const isSuccess = this._tripEventsModel.updateTripEvent(oldTripEvent.id, updatedTripEvent);
+    if (updatedTripEvent === null) {
+      this._tripEventsModel.removeTripEvent(oldTripEvent.id);
+      this.render();
+    } else {
+      const isSuccess = this._tripEventsModel.updateTripEvent(oldTripEvent.id, updatedTripEvent);
 
-    if (isSuccess) {
-      tripEventController.render(updatedTripEvent);
+      if (isSuccess) {
+        tripEventController.render(updatedTripEvent);
+      }
     }
   }
 }

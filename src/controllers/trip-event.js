@@ -20,6 +20,7 @@ export default class TripEventController {
     this._tripEventFormComponentRollUpHandler = this._tripEventFormComponentRollUpHandler.bind(this);
     this._documentEscKeydownHandler = this._documentEscKeydownHandler.bind(this);
     this._tripEventFormComponentSubmitHandler = this._tripEventFormComponentSubmitHandler.bind(this);
+    this._tripEventFormComponentDeleteHandler = this._tripEventFormComponentDeleteHandler.bind(this);
     this._tripEventFormComponentFavoritesButtonClickHandler = this._tripEventFormComponentFavoritesButtonClickHandler.bind(this);
   }
 
@@ -35,6 +36,7 @@ export default class TripEventController {
     this._tripEventComponent.setClickHandler(this._tripEventComponentClickHandler);
     this._tripEventFormComponent.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);
     this._tripEventFormComponent.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
+    this._tripEventFormComponent.setDeleteButtonClickHandler(this._tripEventFormComponentDeleteHandler);
     this._tripEventFormComponent.setFavoritesButtonClickHandler(this._tripEventFormComponentFavoritesButtonClickHandler);
 
     if (oldTripEventFormComponent && oldTripEventComponent) {
@@ -86,6 +88,10 @@ export default class TripEventController {
   _tripEventFormComponentSubmitHandler(evt) {
     evt.preventDefault();
     this._tripEventFormComponentRollUpHandler();
+  }
+
+  _tripEventFormComponentDeleteHandler() {
+    this._dataChangeHandler(this, this._tripEvent, null);
   }
 
   _tripEventFormComponentFavoritesButtonClickHandler() {
