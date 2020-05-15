@@ -1,4 +1,4 @@
-import PageFilterComponent from './components/page-header/page-filter.js';
+import FilterController from './controllers/filter.js';
 import PageHeaderContainerComponent from './components/page-header/page-header-container.js';
 import PageNavigationComponent from './components/page-header/page-navigation.js';
 import TripCostComponent from './components/page-header/trip-cost.js';
@@ -10,9 +10,10 @@ import {getSortedTripEvents} from './helpers/utils.js';
 import {render} from './helpers/render.js';
 import {createTripEvents} from './mocks/generate-trip-events.js';
 
-const EVENTS_AMOUNT = 25;
+const EVENTS_AMOUNT = 3;
 const tripEventsObjects = createTripEvents(EVENTS_AMOUNT);
 const sortedTripEvents = getSortedTripEvents(tripEventsObjects);
+
 const tripEventsModel = new TripEventsModel();
 tripEventsModel.setTripEvents(sortedTripEvents);
 
@@ -23,7 +24,7 @@ render(tripMain, new PageHeaderContainerComponent(), RenderPosition.AFTERBEGIN);
 
 const tripInfoContainer = tripMain.querySelector(`.trip-info`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
-const [firstTitle, secondTitle] = tripControls.querySelectorAll(`h2`);
+const firstTitle = tripControls.querySelector(`h2`);
 
 if (tripEventsObjects.length > 0) {
   render(tripInfoContainer, new TripRouteComponent(tripEventsObjects));
@@ -31,9 +32,9 @@ if (tripEventsObjects.length > 0) {
 
 render(tripInfoContainer, new TripCostComponent(tripEventsObjects));
 render(firstTitle, new PageNavigationComponent(), RenderPosition.AFTEREND);
-render(secondTitle, new PageFilterComponent(), RenderPosition.AFTEREND);
 
+const filterController = new FilterController(tripControls, tripEventsModel);
+filterController.render();
 
-const tripEventsBoardComponent = new TripEventsBoardController(tripEventsSection, tripEventsModel);
-
-tripEventsBoardComponent.render(sortedTripEvents);
+const tripEventsBoardController = new TripEventsBoardController(tripEventsSection, tripEventsModel);
+tripEventsBoardController.render();

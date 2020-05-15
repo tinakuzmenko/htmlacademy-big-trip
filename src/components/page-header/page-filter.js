@@ -1,28 +1,54 @@
 import AbstractComponent from '../abstract-component.js';
 
-const renderPageFilter = () => {
-  return `<form class="trip-filters" action="#" method="get">
-            <div class="trip-filters__filter">
-              <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked>
-              <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
-            </div>
-
-            <div class="trip-filters__filter">
-              <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
-              <label class="trip-filters__filter-label" for="filter-future">Future</label>
-            </div>
-
-            <div class="trip-filters__filter">
-              <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past">
-              <label class="trip-filters__filter-label" for="filter-past">Past</label>
-            </div>
-
-            <button class="visually-hidden" type="submit">Accept filter</button>
-          </form>`;
-};
-
 export default class PageFilter extends AbstractComponent {
-  getTemplate() {
-    return renderPageFilter();
+  constructor(filters) {
+    super();
+
+    this._filters = filters;
+    this._FILTER_ID_PREFIX = `filter-`;
   }
+
+  getTemplate() {
+    return this._renderPageFilter(this._filters);
+  }
+
+  setFilterChangeHandler(handler) {
+    this.getElement().addEventListener(`change`, (evt) => {
+      const filterName = this._getFilterNameById(evt.target.id);
+      handler(filterName);
+    });
+  }
+
+  _getFilterNameById(id) {
+    return id.substring(this._FILTER_ID_PREFIX.length);
+  }
+
+  _renderPageFilter() {
+    const filtersMarkup = this._filters.map((filter) => this._createFilterMarkup(filter, filter.checked)).join(`\n`);
+
+    return `<form class="trip-filters" action="#" method="get">
+              ${filtersMarkup}
+
+              <button class="visually-hidden" type="submit">Accept filter</button>
+            </form>`;
+  }
+
+  _createFilterMarkup(filter, isChecked) {
+    const {name, count} = filter;
+    const isActive = count > 0 ? `` : `disabled`;
+
+    return `<div class="trip-filters__filter">
+              <input
+                id="filter-${name}"
+                class="trip-filters__filter-input visually-hidden"
+                type="radio"
+                name="trip-filter"
+                value="${name}"
+                ${isChecked ? `checked` : ``}
+                ${isActive}>
+              <label class="trip-filters__filter-label" for="filter-${name}">${name}</label>
+            </div>`;
+  }
+
+
 }

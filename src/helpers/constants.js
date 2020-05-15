@@ -54,5 +54,11 @@ const Mode = {
   EDIT: `edit`,
 };
 
+const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`,
+};
 
-export {TimeInMs, RenderPosition, eventActionsMap, MONTHS_DAYS, Keycode, SortType, Mode};
+
+export {TimeInMs, RenderPosition, eventActionsMap, MONTHS_DAYS, Keycode, SortType, Mode, FilterType};
