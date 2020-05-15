@@ -70,7 +70,7 @@ export default class TripEventsBoardController {
   }
 
   _filterTypeChangeHandler() {
-    this._sortType = SortType.EVENT;
+    this._sortComponent.rerender();
     this.render();
   }
 
