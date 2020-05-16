@@ -1,3 +1,4 @@
+import ButtonAddNewEvent from './components/page-header/add-new-event.js';
 import FilterController from './controllers/filter.js';
 import PageHeaderContainerComponent from './components/page-header/page-header-container.js';
 import PageNavigationComponent from './components/page-header/page-navigation.js';
@@ -6,16 +7,14 @@ import TripRouteComponent from './components/page-header/trip-route.js';
 import TripEventsModel from './models/trip-events.js';
 import TripEventsBoardController from './controllers/trip-events-board.js';
 import {RenderPosition} from "./helpers/constants.js";
-import {getSortedTripEvents} from './helpers/utils.js';
 import {render} from './helpers/render.js';
 import {createTripEvents} from './mocks/generate-trip-events.js';
 
 const EVENTS_AMOUNT = 3;
 const tripEventsObjects = createTripEvents(EVENTS_AMOUNT);
-const sortedTripEvents = getSortedTripEvents(tripEventsObjects);
 
 const tripEventsModel = new TripEventsModel();
-tripEventsModel.setTripEvents(sortedTripEvents);
+tripEventsModel.setTripEvents(tripEventsObjects);
 
 const tripMain = document.querySelector(`.trip-main`);
 const tripEventsSection = document.querySelector(`.trip-events`);
@@ -36,5 +35,8 @@ render(firstTitle, new PageNavigationComponent(), RenderPosition.AFTEREND);
 const filterController = new FilterController(tripControls, tripEventsModel);
 filterController.render();
 
-const tripEventsBoardController = new TripEventsBoardController(tripEventsSection, tripEventsModel);
+const buttonAddNewEvent = new ButtonAddNewEvent();
+render(tripMain, buttonAddNewEvent);
+
+const tripEventsBoardController = new TripEventsBoardController(tripEventsSection, tripEventsModel, buttonAddNewEvent);
 tripEventsBoardController.render();

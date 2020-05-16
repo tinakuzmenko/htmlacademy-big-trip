@@ -28,6 +28,10 @@ export default class TripEvents {
     this._callHandlers(this._filterChangeHandlers);
   }
 
+  getFilter() {
+    return this._activeFilterType;
+  }
+
   removeTripEvent(id) {
     const index = this._tripEvents.findIndex((tripEvent) => tripEvent.id === id);
 

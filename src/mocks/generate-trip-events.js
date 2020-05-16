@@ -10,8 +10,8 @@ import {eventOffers, eventTypes, eventDestinations} from './trip-event-mocks.js'
 
 const generateTripEventDestination = () => {
   return {
-    description: getRandomDescription(),
     name: getRandomArrayItem(eventDestinations),
+    description: getRandomDescription(),
     photos: getPhotos()
   };
 };

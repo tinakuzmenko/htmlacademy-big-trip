@@ -15,6 +15,7 @@ export default class FilterController {
     this._filterChangeHandler = this._filterChangeHandler.bind(this);
 
     this._tripEventsModel.setDataChangeHandler(this._dataChangeHandler);
+    this._tripEventsModel.setFilterChangeHandler(this._dataChangeHandler);
   }
 
   render() {
@@ -40,12 +41,12 @@ export default class FilterController {
   }
 
   _filterChangeHandler(filterType) {
-    console.log(`Сработал filterChangeHandler!`);
     this._tripEventsModel.setFilter(filterType);
     this._activeFilterType = filterType;
   }
 
   _dataChangeHandler() {
+    this._activeFilterType = this._tripEventsModel.getFilter();
     this.render();
   }
 }

@@ -2,15 +2,17 @@ import NoTripEventsComponent from '../components/page-main/trip-events/no-trip-e
 import TripDaysContainer from '../components/page-main/trip-days/trip-days-container.js';
 import TripEventsGroupedByDaysView from '../components/page-main/trip-events/trip-events-grouped-by-days.js';
 import TripEventsView from '../components/page-main/trip-events/trip-events.js';
+import TripEventFormComponent from '../components/page-main/trip-event-form/trip-event-form.js';
 import TripSortComponent from '../components/page-main/trip-sort/trip-sort.js';
-import {SortType} from '../helpers/constants.js';
+import {SortType, FilterType, RenderPosition} from '../helpers/constants.js';
 import {render} from '../helpers/render.js';
 import {getSortedTripEvents} from '../helpers/utils.js';
 
 export default class TripEventsBoardController {
-  constructor(container, tripEventsModel) {
+  constructor(container, tripEventsModel, buttonAddNewEvent) {
     this._container = container;
     this._tripEventsModel = tripEventsModel;
+    this._buttonAddNewEvent = buttonAddNewEvent;
 
     this._noTasksComponent = new NoTripEventsComponent();
     this._tripDaysContainer = new TripDaysContainer().getElement();
@@ -19,17 +21,20 @@ export default class TripEventsBoardController {
 
     this._dataChangeHandler = this._dataChangeHandler.bind(this);
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
+    this._buttonAddNewEventClickHandler = this._buttonAddNewEventClickHandler.bind(this);
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
 
     this._sortComponent.setSortTypeChangeHandler(this._sortTypeChangeHandler);
+    this._buttonAddNewEvent.setClickHandler(this._buttonAddNewEventClickHandler);
     this._tripEventsModel.setFilterChangeHandler(this._filterTypeChangeHandler);
   }
 
   render() {
-    const tripEvents = this._tripEventsModel.getTripEvents();
+    const sortedTripEvents = getSortedTripEvents(this._tripEventsModel.getTripEvents(), this._sortType);
+
     this._clearTripEvents();
 
-    if (!tripEvents.length) {
+    if (!sortedTripEvents.length) {
       render(this._container, this._noTasksComponent);
       return;
     }
@@ -38,23 +43,7 @@ export default class TripEventsBoardController {
 
     this._tripSortItemDay = this._sortComponent.getElement().querySelector(`.trip-sort__item--day`);
 
-    const tripEventsGroupedByDays = new TripEventsGroupedByDaysView(this._tripDaysContainer, tripEvents, this._dataChangeHandler);
-
-    render(this._container, tripEventsGroupedByDays);
-  }
-
-  _clearTripEvents() {
-    if (this._container.querySelector(`.trip-days`)) {
-      this._container.querySelector(`.trip-days`).innerHTML = ``;
-    }
-  }
-
-  _sortTypeChangeHandler(sortType) {
-    const sortedTripEvents = getSortedTripEvents(this._tripEventsModel.getTripEvents(), sortType);
-    this._sortType = sortType;
-    this._clearTripEvents();
-
-    switch (sortType) {
+    switch (this._sortType) {
       case SortType.TIME:
       case SortType.PRICE:
         this._tripSortItemDay.textContent = ``;
@@ -69,13 +58,40 @@ export default class TripEventsBoardController {
     }
   }
 
+  _clearTripEvents() {
+    if (this._container.querySelector(`.trip-days`)) {
+      this._container.querySelector(`.trip-days`).innerHTML = ``;
+    }
+
+    if (this._container.querySelector(`.trip-events__msg`)) {
+      this._container.querySelector(`.trip-events__msg`).remove();
+    }
+  }
+
+  _sortTypeChangeHandler(sortType) {
+    this._sortType = sortType;
+    this.render();
+  }
+
   _filterTypeChangeHandler() {
     this._sortComponent.rerender();
     this.render();
   }
 
+  _buttonAddNewEventClickHandler() {
+    const newTripEventForm = new TripEventFormComponent(null);
+
+    this._sortType = SortType.EVENT;
+    this._tripEventsModel.setFilter(FilterType.EVERYTHING);
+
+    this.render();
+    render(this._sortComponent.getElement(), newTripEventForm, RenderPosition.AFTEREND);
+  }
+
   _dataChangeHandler(tripEventController, oldTripEvent, updatedTripEvent) {
-    if (updatedTripEvent === null) {
+    if (oldTripEvent === null) {
+      this._tripEventsModel.addTripEvent(updatedTripEvent);
+    } else if (updatedTripEvent === null) {
       this._tripEventsModel.removeTripEvent(oldTripEvent.id);
       this.render();
     } else {
