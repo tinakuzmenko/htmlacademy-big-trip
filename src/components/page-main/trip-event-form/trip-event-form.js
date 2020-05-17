@@ -4,6 +4,7 @@ import {eventActionsMap, Mode} from '../../../helpers/constants.js';
 import {getDateAndTimeFormFormat} from './get-date-and-time-form-format.js';
 import {getTimeDifference} from '../trip-events/get-time-difference.js';
 import flatpickr from 'flatpickr';
+import {encode} from "he";
 import moment from 'moment';
 
 import "flatpickr/dist/flatpickr.min.css";
@@ -16,8 +17,7 @@ export default class TripEventForm extends AbstractSmartComponent {
     this._viewChangeHandler = viewChangeHandler;
     this._tripEventFormMode = mode;
 
-    this._flatpickrFrom = null;
-    this._flatpickrTo = null;
+    this._flatpickr = null;
 
     this._tripEventId = this._tripEvent.id;
     this._tripEventType = this._tripEvent.type;
@@ -35,7 +35,6 @@ export default class TripEventForm extends AbstractSmartComponent {
     this._typesActivitiesList = this._renderTripTypesList(eventTypes.slice(7, 10));
     this._tripEventCitiesDatalist = this._renderOptions(eventDestinations);
 
-    // this._applyFlatpickr();
     this._dataChangeHandler = this._dataChangeHandler ? this._dataChangeHandler.bind(this) : null;
     this._subscribeOnEvents();
   }
@@ -170,10 +169,6 @@ export default class TripEventForm extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
-  disableForm() {
-
-  }
-
   removeElement() {
     if (this._flatpickr) {
       this._flatpickr.destroy();
@@ -185,13 +180,13 @@ export default class TripEventForm extends AbstractSmartComponent {
 
   createNewTripEventObject() {
     const tripEventType = this._tripEventType;
-    const tripEventStartTime = new Date();
-    const tripEventEndTime = new Date();
+    const tripEventStartTime = new Date(moment(this._tripEventStartTime, `DD/MM/YY HH:mm`).format());
+    const tripEndTime = new Date(moment(this._tripEventEndTime, `DD/MM/YY HH:mm`).format());
 
     this._tripEvent = {
       type: tripEventType,
       start: tripEventStartTime,
-      end: tripEventEndTime,
+      end: tripEndTime,
       isFavorite: false,
       activeOffers: this._tripEventActiveOffers,
       action: eventActionsMap[tripEventType],
@@ -199,48 +194,46 @@ export default class TripEventForm extends AbstractSmartComponent {
       basePrice: this._tripEventBasePrice,
       destination: this._tripEventDestination,
       offers: eventOffers[tripEventType.toLowerCase()],
-      timeDiff: getTimeDifference(tripEventStartTime, tripEventEndTime),
+      timeDiff: getTimeDifference(tripEventStartTime, tripEndTime),
     };
+
+    if (this._flatpickrEnd) {
+      this._flatpickrEnd.destroy();
+      this._flatpickrEnd = null;
+    }
+
+    if (this._flatpickrStart) {
+      this._flatpickrStart.destroy();
+      this._flatpickrStart = null;
+    }
 
     return this._tripEvent;
   }
 
   rerender() {
     super.rerender();
-
-    // this._applyFlatpickr();
   }
 
-  _applyFlatpickr() {
-    if (this._flatpickrFrom) {
-      this._flatpickrFrom.destroy();
-      this._flatpickrFrom = null;
-    }
-
-    if (this._flatpickrTo) {
-      this._flatpickrTo.destroy();
-      this._flatpickrTo = null;
-    }
-
-    const dateFromElement = this.getElement().querySelector(`[name="event-start-time"]`);
-    const dateToElement = this.getElement().querySelector(`[name="event-end-time"]`);
-
-    this._flatpickrFrom = flatpickr(dateFromElement, {
+  _applyFlatpickr(element, time) {
+    const flatpickrInstance = flatpickr(element, {
       altInput: true,
+      dateFormat: `d/m/y H:i`,
       altFormat: `d/m/y H:i`,
-      defaultDate: this._tripEventStartTime,
-      [`time_24hr`]: true,
-      enableTime: true
-    });
-
-    this._flatpickrTo = flatpickr(dateToElement, {
-      altInput: true,
-      altFormat: `d/m/y H:i`,
-      defaultDate: this._tripEventEndTime,
+      defaultDate: `today`,
       minDate: this._tripEventStartTime,
       [`time_24hr`]: true,
-      enableTime: true
+      enableTime: true,
     });
+
+    if (time === `start`) {
+      this._flatpickrStart = flatpickrInstance;
+      this._flatpickrStart.open();
+    }
+
+    if (time === `end`) {
+      this._flatpickrEnd = flatpickrInstance;
+      this._flatpickrEnd.open();
+    }
   }
 
   _subscribeOnEvents() {
@@ -250,6 +243,25 @@ export default class TripEventForm extends AbstractSmartComponent {
     const destinationInputElement = element.querySelector(`.event__input--destination`);
     const saveButtonElement = element.querySelector(`.event__save-btn`);
     const availableOffersElement = element.querySelector(`.event__available-offers`);
+    const inputBasePriceElement = element.querySelector(`.event__input--price`);
+    const inputEventStartTimeElement = element.querySelector(`[name="event-start-time"]`);
+    const inputEventEndTimeElement = element.querySelector(`[name="event-end-time"]`);
+
+    inputEventStartTimeElement.addEventListener(`focus`, () => {
+      this._applyFlatpickr(inputEventStartTimeElement, `start`);
+    });
+
+    inputEventStartTimeElement.addEventListener(`change`, () => {
+      this._tripEventStartTime = inputEventStartTimeElement.value;
+    });
+
+    inputEventEndTimeElement.addEventListener(`focus`, () => {
+      this._applyFlatpickr(inputEventEndTimeElement, `end`);
+    });
+
+    inputEventEndTimeElement.addEventListener(`change`, () => {
+      this._tripEventEndTime = inputEventEndTimeElement.value;
+    });
 
     typeListElement.addEventListener(`click`, (evt) => {
       if (evt.target.tagName === `LABEL`) {
@@ -266,6 +278,11 @@ export default class TripEventForm extends AbstractSmartComponent {
     destinationInputElement.addEventListener(`click`, () => {
       destinationInputElement.value = ``;
       saveButtonElement.disabled = true;
+    });
+
+    inputBasePriceElement.addEventListener(`input`, () => {
+      inputBasePriceElement.value = inputBasePriceElement.value.replace(/[^\d]/g, ``);
+      this._tripEventBasePrice = encode(inputBasePriceElement.value);
     });
 
     destinationInputElement.addEventListener(`input`, () => {

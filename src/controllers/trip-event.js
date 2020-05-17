@@ -122,7 +122,6 @@ export default class TripEventController {
     const newTripEvent = this._tripEventFormComponent.createNewTripEventObject();
     this._dataChangeHandler(this, this._tripEvent, newTripEvent);
     document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
-    this._tripEventFormComponent.disableForm();
 
     if (this._tripEventComponent) {
       this._replaceEditFormToTripEvent();
