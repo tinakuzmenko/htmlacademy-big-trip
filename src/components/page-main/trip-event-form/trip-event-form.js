@@ -2,40 +2,41 @@ import {eventDestinations, eventOffers, eventTypes, eventDestinationsObjects} fr
 import AbstractSmartComponent from '../../abstract-smart-component.js';
 import {eventActionsMap, Mode} from '../../../helpers/constants.js';
 import {getDateAndTimeFormFormat} from './get-date-and-time-form-format.js';
-import flatpickr from "flatpickr";
+import {getTimeDifference} from '../trip-events/get-time-difference.js';
+import flatpickr from 'flatpickr';
+import moment from 'moment';
 
 import "flatpickr/dist/flatpickr.min.css";
 
 export default class TripEventForm extends AbstractSmartComponent {
-  constructor(tripEvent) {
+  constructor(tripEvent, dataChangeHandler, viewChangeHandler, mode = Mode.EDIT) {
     super();
     this._tripEvent = tripEvent;
+    this._dataChangeHandler = dataChangeHandler;
+    this._viewChangeHandler = viewChangeHandler;
+    this._tripEventFormMode = mode;
+
     this._flatpickrFrom = null;
     this._flatpickrTo = null;
 
-    this._tripEventFormMode = this._tripEvent ? Mode.EDIT : Mode.DEFAULT;
-
-    this._tripEventId = this._tripEvent && this._tripEvent.id ? this._tripEvent.id : ``;
-    this._tripEventType = this._tripEvent && this._tripEvent.type ? this._tripEvent.type : `Taxi`;
-    this._tripEventDestination = this._tripEvent && this._tripEvent.destination ? this._tripEvent.destination : {
-      name: ``,
-      description: ``,
-      photos: []
-    };
-    this._tripEventAction = this._tripEvent && this._tripEvent.action ? this._tripEvent.action : `to`;
-    this._tripEventOffers = this._tripEvent && this._tripEvent.offers ? this._tripEvent.offers : [];
-    this._tripEventActiveOffers = this._tripEvent && this._tripEvent.activeOffers ? this._tripEvent.activeOffers : [];
-    this._tripEventStartTime = this._tripEvent ? getDateAndTimeFormFormat(this._tripEvent.start) : getDateAndTimeFormFormat(new Date());
-    this._tripEventEndTime = this._tripEvent ? getDateAndTimeFormFormat(this._tripEvent.end) : getDateAndTimeFormFormat(new Date());
-    this._tripEventBasePrice = this._tripEvent && this._tripEvent.basePrice ? this._tripEvent.basePrice : ``;
-    this._tripEventIsFavorite = this._tripEvent && this._tripEvent.isFavorite ? this._tripEvent.isFavorite : false;
+    this._tripEventId = this._tripEvent.id;
+    this._tripEventType = this._tripEvent.type;
+    this._tripEventDestination = this._tripEvent.destination;
+    this._tripEventAction = this._tripEvent.action;
+    this._tripEventOffers = this._tripEvent.offers;
+    this._tripEventActiveOffers = this._tripEvent.activeOffers;
+    this._tripEventStartTime = getDateAndTimeFormFormat(this._tripEvent.start);
+    this._tripEventEndTime = getDateAndTimeFormFormat(this._tripEvent.end);
+    this._tripEventBasePrice = this._tripEvent.basePrice;
+    this._tripEventIsFavorite = this._tripEvent.isFavorite;
+    this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.photos);
 
     this._typesTransferList = this._renderTripTypesList(eventTypes.slice(0, 7));
     this._typesActivitiesList = this._renderTripTypesList(eventTypes.slice(7, 10));
-    this._tripEventOptions = this._renderOptions(eventDestinations);
-    this._tripEventPhotos = this._tripEvent && this._renderPhotos(this._tripEventDestination.photos);
+    this._tripEventCitiesDatalist = this._renderOptions(eventDestinations);
 
     // this._applyFlatpickr();
+    this._dataChangeHandler = this._dataChangeHandler ? this._dataChangeHandler.bind(this) : null;
     this._subscribeOnEvents();
   }
 
@@ -76,7 +77,7 @@ export default class TripEventForm extends AbstractSmartComponent {
                   </label>
                   <input class="event__input  event__input--destination" id="event-destination-${this._tripEventId}" type="text" name="event-destination" value="${this._tripEventDestination.name}" list="destination-list-${this._tripEventId}">
                   <datalist id="destination-list-${this._tripEventId}">
-                    ${this._tripEventOptions}
+                    ${this._tripEventCitiesDatalist}
                   </datalist>
                 </div>
 
@@ -165,7 +166,12 @@ export default class TripEventForm extends AbstractSmartComponent {
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
     this.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);
     this.setFavoritesButtonClickHandler(this._tripEventFormComponentFavoritesButtonClickHandler);
+
     this._subscribeOnEvents();
+  }
+
+  disableForm() {
+
   }
 
   removeElement() {
@@ -175,6 +181,28 @@ export default class TripEventForm extends AbstractSmartComponent {
     }
 
     super.removeElement();
+  }
+
+  createNewTripEventObject() {
+    const tripEventType = this._tripEventType;
+    const tripEventStartTime = new Date();
+    const tripEventEndTime = new Date();
+
+    this._tripEvent = {
+      type: tripEventType,
+      start: tripEventStartTime,
+      end: tripEventEndTime,
+      isFavorite: false,
+      activeOffers: this._tripEventActiveOffers,
+      action: eventActionsMap[tripEventType],
+      parsedStartDate: Date.parse(moment(tripEventStartTime).startOf(`date`)),
+      basePrice: this._tripEventBasePrice,
+      destination: this._tripEventDestination,
+      offers: eventOffers[tripEventType.toLowerCase()],
+      timeDiff: getTimeDifference(tripEventStartTime, tripEventEndTime),
+    };
+
+    return this._tripEvent;
   }
 
   rerender() {
@@ -217,10 +245,10 @@ export default class TripEventForm extends AbstractSmartComponent {
 
   _subscribeOnEvents() {
     const element = this.getElement();
+
     const typeListElement = element.querySelector(`.event__type-list`);
     const destinationInputElement = element.querySelector(`.event__input--destination`);
     const saveButtonElement = element.querySelector(`.event__save-btn`);
-
     const availableOffersElement = element.querySelector(`.event__available-offers`);
 
     typeListElement.addEventListener(`click`, (evt) => {
@@ -241,7 +269,6 @@ export default class TripEventForm extends AbstractSmartComponent {
     });
 
     destinationInputElement.addEventListener(`input`, () => {
-
       const isInOptions = eventDestinations.some((destination) => destination === destinationInputElement.value);
 
       if (!isInOptions) {

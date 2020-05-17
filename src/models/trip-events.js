@@ -5,7 +5,9 @@ export default class TripEvents {
   constructor() {
     this._tripEvents = [];
     this._activeFilterType = FilterType.EVERYTHING;
+    this._isCreatingMode = false;
 
+    this._modeChangeHandlers = [];
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
   }
@@ -32,6 +34,15 @@ export default class TripEvents {
     return this._activeFilterType;
   }
 
+  getIsCreatingMode() {
+    return this._isCreatingMode;
+  }
+
+  setIsCreatingMode(mode = false) {
+    this._isCreatingMode = mode;
+    this._callHandlers(this._modeChangeHandlers);
+  }
+
   removeTripEvent(id) {
     const index = this._tripEvents.findIndex((tripEvent) => tripEvent.id === id);
 
@@ -45,7 +56,6 @@ export default class TripEvents {
 
     return true;
   }
-
 
   updateTripEvent(id, tripEvent) {
     const index = this._tripEvents.findIndex((tripEventItem) => tripEventItem.id === id);
@@ -64,6 +74,10 @@ export default class TripEvents {
   addTripEvent(tripEvent) {
     this._tripEvents = [].concat(tripEvent, this._tripEvents);
     this._callHandlers(this._dataChangeHandlers);
+  }
+
+  setModeChangeHandler(handler) {
+    this._modeChangeHandlers.push(handler);
   }
 
   setDataChangeHandler(handler) {

@@ -5,10 +5,12 @@ import {render} from '../../../helpers/render.js';
 import {TimeInMs} from '../../../helpers/constants.js';
 
 export default class TripEventsGroupedByDays {
-  constructor(container, sortedTripEvents, dataChangeHandler) {
+  constructor(container, sortedTripEvents, dataChangeHandler, tripEventsModel) {
     this._container = container;
     this._sortedTripEvents = sortedTripEvents;
     this._dataChangeHandler = dataChangeHandler;
+    this._tripEventsModel = tripEventsModel;
+
     this._tripDayObject = null;
     this._daysDifference = 0;
     this._daysContainerCount = 1;
@@ -60,6 +62,12 @@ export default class TripEventsGroupedByDays {
     return this._container;
   }
 
+  createNewEventForm() {
+    this._viewChangeHandler();
+    this._newTripEventController = new TripEventController(this._container, this._dataChangeHandler, this._viewChangeHandler);
+    this._newTripEventController.render(null);
+  }
+
   _renderEventsGroup() {
     this._tripDay = new TripDayComponent(this._tripDayObject);
     this._tripEventsContainer = new TripEventsContainerComponent();
@@ -70,5 +78,11 @@ export default class TripEventsGroupedByDays {
 
   _viewChangeHandler() {
     this._tripEventsControllers.forEach((renderedTripEvent) => renderedTripEvent.setDefaultView());
+
+    if (this._newTripEventController) {
+      this._newTripEventController.destroy();
+      this._newTripEventController = null;
+      this._tripEventsModel.setIsCreatingMode(false);
+    }
   }
 }

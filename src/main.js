@@ -35,8 +35,9 @@ render(firstTitle, new PageNavigationComponent(), RenderPosition.AFTEREND);
 const filterController = new FilterController(tripControls, tripEventsModel);
 filterController.render();
 
-const buttonAddNewEvent = new ButtonAddNewEvent();
+const buttonAddNewEvent = new ButtonAddNewEvent(tripEventsModel);
 render(tripMain, buttonAddNewEvent);
+buttonAddNewEvent.setClickHandler();
 
-const tripEventsBoardController = new TripEventsBoardController(tripEventsSection, tripEventsModel, buttonAddNewEvent);
+const tripEventsBoardController = new TripEventsBoardController(tripEventsSection, tripEventsModel);
 tripEventsBoardController.render();
