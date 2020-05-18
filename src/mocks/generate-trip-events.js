@@ -22,7 +22,7 @@ const generateTripEvent = () => {
   const start = new Date(generateStartDate());
   const end = generateEndDate(start);
   const activeOffers = eventOffers[type.toLowerCase()] ? getRandomOffers(eventOffers[type.toLowerCase()]) : null;
-  const id = Date.parse(new Date());
+  const id = Date.parse(new Date()) + Math.random();
 
   return {
     type,

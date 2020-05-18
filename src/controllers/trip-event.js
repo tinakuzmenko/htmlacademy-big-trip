@@ -133,7 +133,6 @@ export default class TripEventController {
   _tripEventFormComponentDeleteHandler() {
     document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
     this._viewChangeHandler();
-    this._tripEventFormComponent.disableForm();
 
     if (this._tripEventComponent) {
       this._dataChangeHandler(this, this._tripEvent, null);
