@@ -1,8 +1,9 @@
 import TripEventComponent from '../components/page-main/trip-events/trip-event.js';
 import TripEventFormComponent from '../components/page-main/trip-event-form/trip-event-form.js';
 import TripEventWrapperComponent from '../components/page-main/trip-events/trip-event-wrapper.js';
-import {Keycode, Mode} from '../helpers/constants.js';
-import {render, replace} from "../helpers/render.js";
+import {createEmptyTripEvent} from '../helpers/utils.js';
+import {Keycode, RenderPosition, Mode} from '../helpers/constants.js';
+import {render, replace, remove} from "../helpers/render.js";
 
 export default class TripEventController {
   constructor(tripEventContainer, dataChangeHandler, viewChangeHandler) {
@@ -20,10 +21,26 @@ export default class TripEventController {
     this._tripEventFormComponentRollUpHandler = this._tripEventFormComponentRollUpHandler.bind(this);
     this._documentEscKeydownHandler = this._documentEscKeydownHandler.bind(this);
     this._tripEventFormComponentSubmitHandler = this._tripEventFormComponentSubmitHandler.bind(this);
+    this._tripEventFormComponentDeleteHandler = this._tripEventFormComponentDeleteHandler.bind(this);
     this._tripEventFormComponentFavoritesButtonClickHandler = this._tripEventFormComponentFavoritesButtonClickHandler.bind(this);
   }
 
   render(tripEvent) {
+    if (!tripEvent) {
+      const emptyTripEventObject = createEmptyTripEvent();
+
+      this._tripEventFormComponent = new TripEventFormComponent(emptyTripEventObject, this._dataChangeHandler, this._viewChangeHandler, Mode.DEFAULT);
+      this._mode = Mode.EDIT;
+
+      render(this._tripEventContainer, this._tripEventFormComponent, RenderPosition.BEFOREBEGIN);
+      document.addEventListener(`keydown`, this._documentEscKeydownHandler);
+
+      this._tripEventFormComponent.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
+      this._tripEventFormComponent.setDeleteButtonClickHandler(this._tripEventFormComponentDeleteHandler);
+
+      return;
+    }
+
     this._tripEvent = tripEvent;
 
     const oldTripEventComponent = this._tripEventComponent;
@@ -35,6 +52,7 @@ export default class TripEventController {
     this._tripEventComponent.setClickHandler(this._tripEventComponentClickHandler);
     this._tripEventFormComponent.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);
     this._tripEventFormComponent.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
+    this._tripEventFormComponent.setDeleteButtonClickHandler(this._tripEventFormComponentDeleteHandler);
     this._tripEventFormComponent.setFavoritesButtonClickHandler(this._tripEventFormComponentFavoritesButtonClickHandler);
 
     if (oldTripEventFormComponent && oldTripEventComponent) {
@@ -50,6 +68,16 @@ export default class TripEventController {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceEditFormToTripEvent();
     }
+  }
+
+  destroy() {
+    if (this._tripEventComponent) {
+      remove(this._tripEventComponent);
+    }
+
+    remove(this._tripEventFormComponent);
+
+    document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
   }
 
   _replaceTripEventToEditForm() {
@@ -74,7 +102,13 @@ export default class TripEventController {
 
   _documentEscKeydownHandler(evt) {
     if (evt.key === Keycode.ESCAPE) {
-      this._tripEventFormComponentRollUpHandler();
+      document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
+
+      if (this._tripEventComponent) {
+        this._replaceEditFormToTripEvent();
+      } else {
+        this.destroy();
+      }
     }
   }
 
@@ -85,7 +119,26 @@ export default class TripEventController {
 
   _tripEventFormComponentSubmitHandler(evt) {
     evt.preventDefault();
-    this._tripEventFormComponentRollUpHandler();
+    const newTripEvent = this._tripEventFormComponent.createNewTripEventObject();
+    this._dataChangeHandler(this, this._tripEvent, newTripEvent);
+    document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
+
+    if (this._tripEventComponent) {
+      this._replaceEditFormToTripEvent();
+    } else {
+      this.destroy();
+    }
+  }
+
+  _tripEventFormComponentDeleteHandler() {
+    document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
+    this._viewChangeHandler();
+
+    if (this._tripEventComponent) {
+      this._dataChangeHandler(this, this._tripEvent, null);
+    } else {
+      this.destroy();
+    }
   }
 
   _tripEventFormComponentFavoritesButtonClickHandler() {

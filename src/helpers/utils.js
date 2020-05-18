@@ -1,10 +1,5 @@
 import {SortType} from './constants.js';
-
-let counter = 1;
-
-const increaseCounter = () => {
-  return counter++;
-};
+import {getTimeDifference} from '../components/page-main/trip-events/get-time-difference.js';
 
 const getRandomIntegerNumber = (min, max) => {
   return min + Math.floor(Math.random() * (max - min));
@@ -35,4 +30,27 @@ const getSortedTripEvents = (tripEvents, sortType = SortType.EVENT) => {
   return sortedTripEvents;
 };
 
-export {increaseCounter, getRandomIntegerNumber, getRandomArrayItem, getSortedTripEvents};
+const createEmptyTripEvent = () => {
+  const newDate = new Date();
+
+  return {
+    type: `Taxi`,
+    start: newDate,
+    end: newDate,
+    isFavorite: false,
+    activeOffers: [],
+    action: `to`,
+    parsedStartDate: ``,
+    basePrice: ``,
+    destination: {
+      name: ``,
+      description: ``,
+      photos: []
+    },
+    offers: [],
+    timeDiff: getTimeDifference(newDate, newDate),
+    id: Date.parse(newDate)
+  };
+};
+
+export {getRandomIntegerNumber, getRandomArrayItem, getSortedTripEvents, createEmptyTripEvent};
