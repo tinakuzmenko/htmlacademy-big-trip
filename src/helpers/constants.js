@@ -67,4 +67,17 @@ const TripDataTab = {
 
 const HIDDEN_CLASS = `visually-hidden`;
 
-export {TimeInMs, RenderPosition, eventActionsMap, MONTHS_DAYS, Keycode, SortType, Mode, FilterType, TripDataTab, HIDDEN_CLASS};
+const ChartTypeLabelsMap = {
+  'Taxi': `🚕 TAXI`,
+  'Bus': `🚌 BUS`,
+  'Train': `🚂 TRAIN`,
+  'Ship': `🛳 SHIP`,
+  'Transport': `🚊 TRANSPORT`,
+  'Drive': `🚗 DRIVE`,
+  'Flight': `✈️ FLIGHT`,
+  'Check-in': `🏨 CHECK-IN`,
+  'Sightseeing': `🏛 SIGHTSEEING`,
+  'Restaurant': `🍴 RESTAURANT`,
+};
+
+export {TimeInMs, RenderPosition, eventActionsMap, MONTHS_DAYS, Keycode, SortType, Mode, FilterType, TripDataTab, HIDDEN_CLASS, ChartTypeLabelsMap};

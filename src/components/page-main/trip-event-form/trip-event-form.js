@@ -1,7 +1,6 @@
 import {eventDestinations, eventOffers, eventTypes, eventDestinationsObjects} from '../../../mocks/trip-event-mocks.js';
 import AbstractSmartComponent from '../../abstract-smart-component.js';
 import {eventActionsMap, Mode} from '../../../helpers/constants.js';
-import {getDateAndTimeFormFormat} from './get-date-and-time-form-format.js';
 import {getTimeDifference} from '../trip-events/get-time-difference.js';
 import flatpickr from 'flatpickr';
 import {encode} from "he";
@@ -25,8 +24,8 @@ export default class TripEventForm extends AbstractSmartComponent {
     this._tripEventAction = this._tripEvent.action;
     this._tripEventOffers = this._tripEvent.offers;
     this._tripEventActiveOffers = this._tripEvent.activeOffers;
-    this._tripEventStartTime = getDateAndTimeFormFormat(this._tripEvent.start);
-    this._tripEventEndTime = getDateAndTimeFormFormat(this._tripEvent.end);
+    this._tripEventStartTime = this._getDateAndTimeFormFormat(this._tripEvent.start);
+    this._tripEventEndTime = this._getDateAndTimeFormFormat(this._tripEvent.end);
     this._tripEventBasePrice = this._tripEvent.basePrice;
     this._tripEventIsFavorite = this._tripEvent.isFavorite;
     this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.photos);
@@ -212,6 +211,18 @@ export default class TripEventForm extends AbstractSmartComponent {
 
   rerender() {
     super.rerender();
+  }
+
+  _getDateAndTimeFormFormat(date) {
+    const dateYear = date.getFullYear().toString().slice(2, 4);
+
+    const dateValues = Array.of(date.getDate(), date.getMonth() + 1, date.getHours(), date.getMinutes()).map((value) => {
+      return value < 10 ? `0` + value : value;
+    });
+
+    const [dateDay, dateMonth, dateHours, dateMinutes] = dateValues;
+
+    return dateDay + `/` + dateMonth + `/` + dateYear + ` ` + dateHours + `:` + dateMinutes;
   }
 
   _applyFlatpickr(element, time) {

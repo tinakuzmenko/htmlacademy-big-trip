@@ -49,7 +49,7 @@ render(pageBodyContainer, tripEventsBoardComponent);
 const tripEventsBoardController = new TripEventsBoardController(tripEventsBoardComponent, tripEventsModel);
 tripEventsBoardController.render();
 
-const tripStatistics = new TripStatisticsComponent();
+const tripStatistics = new TripStatisticsComponent(tripEventsObjects);
 render(pageBodyContainer, tripStatistics);
 tripStatistics.hide();
 
