@@ -74,7 +74,7 @@ export default class TripEventForm extends AbstractSmartComponent {
                   <label class="event__label  event__type-output" for="event-destination-${this._tripEventId}">
                     ${this._tripEventType} ${this._tripEventAction}
                   </label>
-                  <input class="event__input  event__input--destination" id="event-destination-${this._tripEventId}" type="text" name="event-destination" value="${this._tripEventDestination.name}" list="destination-list-${this._tripEventId}">
+                  <input class="event__input  event__input--destination" id="event-destination-${this._tripEventId}" type="text" name="event-destination" value="${this._tripEventDestination.name}" list="destination-list-${this._tripEventId}" required>
                   <datalist id="destination-list-${this._tripEventId}">
                     ${this._tripEventCitiesDatalist}
                   </datalist>
@@ -97,7 +97,7 @@ export default class TripEventForm extends AbstractSmartComponent {
                     <span class="visually-hidden">Price</span>
                     &euro;
                   </label>
-                  <input class="event__input  event__input--price" this._tripEventId="event-price-${this._tripEventId}" type="text" name="event-price" value="${this._tripEventBasePrice}">
+                  <input class="event__input  event__input--price" this._tripEventId="event-price-${this._tripEventId}" type="text" name="event-price" value="${this._tripEventBasePrice}" required>
                 </div>
 
                 <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>

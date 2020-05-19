@@ -60,5 +60,11 @@ const FilterType = {
   PAST: `past`,
 };
 
+const TripDataTab = {
+  TABLE: `table`,
+  STATS: `stats`,
+};
 
-export {TimeInMs, RenderPosition, eventActionsMap, MONTHS_DAYS, Keycode, SortType, Mode, FilterType};
+const HIDDEN_CLASS = `visually-hidden`;
+
+export {TimeInMs, RenderPosition, eventActionsMap, MONTHS_DAYS, Keycode, SortType, Mode, FilterType, TripDataTab, HIDDEN_CLASS};

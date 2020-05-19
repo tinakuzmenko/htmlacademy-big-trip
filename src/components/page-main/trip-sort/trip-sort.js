@@ -8,39 +8,7 @@ export default class TripSort extends AbstractSmartComponent {
     this._currentSortType = SortType.EVENT;
   }
 
-  rerender() {
-    super.rerender();
-  }
-
-  recoveryListeners() {
-    this.setSortTypeChangeHandler(this._sortTypeChangeHandler);
-  }
-
   getTemplate() {
-    return this._renderTripSort();
-  }
-
-  setSortTypeChangeHandler(handler) {
-    this.getElement().addEventListener(`click`, (evt) => {
-      if (evt.target.tagName !== `LABEL`) {
-        return;
-      }
-
-      const sortType = evt.target.htmlFor;
-
-      if (this._currentSortType === sortType) {
-        return;
-      }
-
-      this._currentSortType = sortType;
-
-      handler(this._currentSortType);
-    });
-
-    this._sortTypeChangeHandler = handler;
-  }
-
-  _renderTripSort() {
     return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
               <span class="trip-sort__item  trip-sort__item--day">Day</span>
 
@@ -71,5 +39,33 @@ export default class TripSort extends AbstractSmartComponent {
 
               <span class="trip-sort__item  trip-sort__item--offers">Offers</span>
             </form>`.trim();
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  recoveryListeners() {
+    this.setSortTypeChangeHandler(this._sortTypeChangeHandler);
+  }
+
+  setSortTypeChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      if (evt.target.tagName !== `LABEL`) {
+        return;
+      }
+
+      const sortType = evt.target.htmlFor;
+
+      if (this._currentSortType === sortType) {
+        return;
+      }
+
+      this._currentSortType = sortType;
+
+      handler(this._currentSortType);
+    });
+
+    this._sortTypeChangeHandler = handler;
   }
 }
