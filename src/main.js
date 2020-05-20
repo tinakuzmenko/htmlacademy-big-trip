@@ -1,4 +1,4 @@
-import ButtonAddNewEvent from './components/page-header/add-new-event.js';
+import ButtonAddNewEvent from './components/page-header/new-event-button.js';
 import FilterController from './controllers/filter.js';
 import PageHeaderContainerComponent from './components/page-header/page-header-container.js';
 import PageNavigationComponent from './components/page-header/page-navigation.js';

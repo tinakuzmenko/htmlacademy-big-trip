@@ -1,7 +1,7 @@
 import {eventDestinations, eventOffers, eventTypes, eventDestinationsObjects} from '../../../mocks/trip-event-mocks.js';
 import AbstractSmartComponent from '../../abstract-smart-component.js';
 import {eventActionsMap, Mode} from '../../../helpers/constants.js';
-import {getTimeDifference} from '../trip-events/get-time-difference.js';
+import {getTimeDifference} from '../../../helpers/utils.js';
 import flatpickr from 'flatpickr';
 import {encode} from "he";
 import moment from 'moment';
