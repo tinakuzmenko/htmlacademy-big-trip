@@ -82,4 +82,20 @@ const ChartTypeLabelsMap = {
 
 const TRANSPORT_TYPE = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
 
-export {TimeInMs, RenderPosition, eventActionsMap, MONTHS_DAYS, Keycode, SortType, Mode, FilterType, TripDataTab, HIDDEN_CLASS, ChartTypeLabelsMap, TRANSPORT_TYPE};
+const ChartConfiguration = {
+  BAR_HEIGHT: 55,
+  BACKGROUND_COLOR: `#ffffff`,
+  FONT_COLOR: `#000000`,
+  CHART_TYPE: `horizontalBar`,
+  CHART_PADDING_LEFT: 100,
+  FONT_SIZE: 13,
+  TITLE_FONT_SIZE: 23,
+  SCALE_Y_AXES_TICKS_PADDING: 5,
+  BAR_THICKNESS: 44,
+  MIN_BAR_LENGTH: 50,
+  MONEY_CHART_TEXT: `MONEY`,
+  TRANSPORT_CHART_TEXT: `TRANSPORT`,
+  TIME_SPEND_TEXT: `TIME-SPEND`,
+};
+
+export {TimeInMs, RenderPosition, eventActionsMap, MONTHS_DAYS, Keycode, SortType, Mode, FilterType, TripDataTab, HIDDEN_CLASS, ChartTypeLabelsMap, TRANSPORT_TYPE, ChartConfiguration};

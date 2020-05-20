@@ -190,7 +190,7 @@ export default class TripEventForm extends AbstractSmartComponent {
       activeOffers: this._tripEventActiveOffers,
       action: eventActionsMap[tripEventType],
       parsedStartDate: Date.parse(moment(tripEventStartTime).startOf(`date`)),
-      basePrice: this._tripEventBasePrice,
+      basePrice: parseInt(this._tripEventBasePrice, 10),
       destination: this._tripEventDestination,
       offers: eventOffers[tripEventType.toLowerCase()],
       timeDiff: getTimeDifference(tripEventStartTime, tripEndTime),

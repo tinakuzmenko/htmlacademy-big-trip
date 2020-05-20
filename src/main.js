@@ -12,7 +12,7 @@ import {RenderPosition, TripDataTab} from "./helpers/constants.js";
 import {render} from './helpers/render.js';
 import {createTripEvents} from './mocks/generate-trip-events.js';
 
-const EVENTS_AMOUNT = 25;
+const EVENTS_AMOUNT = 3;
 const tripEventsObjects = createTripEvents(EVENTS_AMOUNT);
 
 const tripEventsModel = new TripEventsModel();
@@ -49,7 +49,7 @@ render(pageBodyContainer, tripEventsBoardComponent);
 const tripEventsBoardController = new TripEventsBoardController(tripEventsBoardComponent, tripEventsModel);
 tripEventsBoardController.render();
 
-const tripStatistics = new TripStatisticsComponent(tripEventsModel.getAllTripEvents());
+const tripStatistics = new TripStatisticsComponent(tripEventsModel);
 render(pageBodyContainer, tripStatistics);
 tripStatistics.hide();
 
