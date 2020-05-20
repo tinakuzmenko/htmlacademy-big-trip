@@ -80,4 +80,6 @@ const ChartTypeLabelsMap = {
   'Restaurant': `🍴 RESTAURANT`,
 };
 
-export {TimeInMs, RenderPosition, eventActionsMap, MONTHS_DAYS, Keycode, SortType, Mode, FilterType, TripDataTab, HIDDEN_CLASS, ChartTypeLabelsMap};
+const TRANSPORT_TYPE = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
+
+export {TimeInMs, RenderPosition, eventActionsMap, MONTHS_DAYS, Keycode, SortType, Mode, FilterType, TripDataTab, HIDDEN_CLASS, ChartTypeLabelsMap, TRANSPORT_TYPE};

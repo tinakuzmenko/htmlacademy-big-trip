@@ -1,16 +1,57 @@
 import AbstractComponent from "../../abstract-component";
-import {ChartTypeLabelsMap} from '../../../helpers/constants.js';
-import {getTimeDifference} from '../trip-events/get-time-difference.js';
+import {ChartTypeLabelsMap, TimeInMs, TRANSPORT_TYPE} from '../../../helpers/constants.js';
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import moment from 'moment';
+
+const ChartConfiguration = {
+  BAR_HEIGHT: 55,
+  BACKGROUND_COLOR: `#ffffff`,
+  FONT_COLOR: `#000000`,
+  CHART_TYPE: `horizontalBar`,
+  CHART_PADDING_LEFT: 100,
+  FONT_SIZE: 13,
+  TITLE_FONT_SIZE: 23,
+  SCALE_Y_AXES_TICKS_PADDING: 5,
+  BAR_THICKNESS: 44,
+  MIN_BAR_LENGTH: 50,
+  MONEY_CHART_TEXT: `MONEY`,
+  TRANSPORT_CHART_TEXT: `TRANSPORT`,
+  TIME_SPEND_TEXT: `TIME-SPEND`,
+};
 
 export default class TripStatistics extends AbstractComponent {
   constructor(tripEvents) {
     super();
 
     this._tripEvents = tripEvents;
-    this.renderChart();
+    this.renderCharts();
+  }
+
+  renderCharts() {
+    this._tripEventsTypes = this._getTripEventsTypes();
+    this._tripEventsChartData = this._getTripEventsChartData();
+    this._transportEvents = this._getTransportEventsCounts();
+
+    this._moneyChart = this._renderMoneyChart();
+    this._transportChart = this._renderTransportChart();
+    this._timeSpendChart = this._renderTimeSpendChart();
+  }
+
+  destroyCharts() {
+    if (this._moneyChart) {
+      this._moneyChart.destroy();
+      this._moneyChart = null;
+    }
+
+    if (this._transportChart) {
+      this._transportChart.destroy();
+      this._transportChart = null;
+    }
+
+    if (this._timeSpendChart) {
+      this._timeSpendChart.destroy();
+      this._timeSpendChart = null;
+    }
   }
 
   getTemplate() {
@@ -31,22 +72,259 @@ export default class TripStatistics extends AbstractComponent {
             </section>`;
   }
 
+  _renderMoneyChart() {
+    const moneyCtx = this.getElement().querySelector(`.statistics__chart--money`);
+    moneyCtx.height = ChartConfiguration.BAR_HEIGHT * this._tripEventsTypes.length;
+
+    this._moneyChart = new Chart(moneyCtx, {
+      plugins: [ChartDataLabels],
+      type: ChartConfiguration.CHART_TYPE,
+      data: {
+        labels: this._tripEventsChartData.map((item) => item.label),
+        datasets: [{
+          data: this._tripEventsChartData.map((item) => item.money),
+          backgroundColor: ChartConfiguration.BACKGROUND_COLOR,
+          hoverBackgroundColor: ChartConfiguration.BACKGROUND_COLOR,
+          anchor: `start`
+        }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            font: {
+              size: ChartConfiguration.FONT_SIZE
+            },
+            color: ChartConfiguration.FONT_COLOR,
+            anchor: `end`,
+            align: `start`,
+            formatter: (val) => `€ ${val}`
+          }
+        },
+        title: {
+          display: true,
+          text: ChartConfiguration.MONEY_CHART_TEXT,
+          fontColor: ChartConfiguration.FONT_COLOR,
+          fontSize: ChartConfiguration.TITLE_FONT_SIZE,
+          position: `left`,
+        },
+        layout: {
+          padding: {
+            left: ChartConfiguration.CHART_PADDING_LEFT
+          }
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              fontColor: ChartConfiguration.FONT_COLOR,
+              padding: ChartConfiguration.SCALE_Y_AXES_TICKS_PADDING,
+              fontSize: ChartConfiguration.FONT_SIZE,
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+            barThickness: ChartConfiguration.BAR_THICKNESS,
+          }],
+          xAxes: [{
+            ticks: {
+              display: false,
+              beginAtZero: true,
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+            minBarLength: ChartConfiguration.MIN_BAR_LENGTH
+          }],
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          enabled: false,
+        }
+      }
+    });
+  }
+
+  _renderTransportChart() {
+    const transportCtx = this.getElement().querySelector(`.statistics__chart--transport`);
+    transportCtx.height = ChartConfiguration.BAR_HEIGHT * Object.keys(this._transportEvents).length;
+
+    this._transportChart = new Chart(transportCtx, {
+      plugins: [ChartDataLabels],
+      type: ChartConfiguration.CHART_TYPE,
+      data: {
+        labels: Object.keys(this._transportEvents).map((transportEvent) => ChartTypeLabelsMap[transportEvent]),
+        datasets: [{
+          data: Object.values(this._transportEvents),
+          backgroundColor: ChartConfiguration.BACKGROUND_COLOR,
+          hoverBackgroundColor: ChartConfiguration.BACKGROUND_COLOR,
+          anchor: `start`
+        }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            font: {
+              size: ChartConfiguration.FONT_SIZE
+            },
+            color: ChartConfiguration.FONT_COLOR,
+            anchor: `end`,
+            align: `start`,
+            formatter: (val) => `${val}x`
+          }
+        },
+        title: {
+          display: true,
+          text: ChartConfiguration.TRANSPORT_CHART_TEXT,
+          fontColor: ChartConfiguration.FONT_COLOR,
+          fontSize: ChartConfiguration.TITLE_FONT_SIZE,
+          position: `left`,
+        },
+        layout: {
+          padding: {
+            left: ChartConfiguration.CHART_PADDING_LEFT
+          }
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              fontColor: ChartConfiguration.FONT_COLOR,
+              padding: ChartConfiguration.SCALE_Y_AXES_TICKS_PADDING,
+              fontSize: ChartConfiguration.FONT_SIZE,
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+            barThickness: ChartConfiguration.BAR_THICKNESS,
+          }],
+          xAxes: [{
+            ticks: {
+              display: false,
+              beginAtZero: true,
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+            minBarLength: ChartConfiguration.MIN_BAR_LENGTH
+          }],
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          enabled: false,
+        }
+      }
+    });
+  }
+
+  _renderTimeSpendChart() {
+    const timeSpendCtx = this.getElement().querySelector(`.statistics__chart--time`);
+    timeSpendCtx.height = ChartConfiguration.BAR_HEIGHT * this._tripEventsTypes.length;
+
+    this._timeSpendChart = new Chart(timeSpendCtx, {
+      plugins: [ChartDataLabels],
+      type: ChartConfiguration.CHART_TYPE,
+      data: {
+        labels: this._tripEventsChartData.map((item) => item.label),
+        datasets: [{
+          data: this._tripEventsChartData.map((item) => item.timeSpend),
+          backgroundColor: ChartConfiguration.BACKGROUND_COLOR,
+          hoverBackgroundColor: ChartConfiguration.BACKGROUND_COLOR,
+          anchor: `start`
+        }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            font: {
+              size: ChartConfiguration.FONT_SIZE
+            },
+            color: ChartConfiguration.FONT_COLOR,
+            anchor: `end`,
+            align: `start`,
+            formatter: (val) => `${val}H`
+          }
+        },
+        title: {
+          display: true,
+          text: ChartConfiguration.TIME_SPEND_TEXT,
+          fontColor: ChartConfiguration.FONT_COLOR,
+          fontSize: ChartConfiguration.TITLE_FONT_SIZE,
+          position: `left`,
+        },
+        layout: {
+          padding: {
+            left: ChartConfiguration.CHART_PADDING_LEFT
+          }
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              fontColor: ChartConfiguration.FONT_COLOR,
+              padding: ChartConfiguration.SCALE_Y_AXES_TICKS_PADDING,
+              fontSize: ChartConfiguration.FONT_SIZE,
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+            barThickness: ChartConfiguration.BAR_THICKNESS,
+          }],
+          xAxes: [{
+            ticks: {
+              display: false,
+              beginAtZero: true,
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+            minBarLength: ChartConfiguration.MIN_BAR_LENGTH
+          }],
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          enabled: false,
+        }
+      }
+    });
+  }
+
+  _filterTripEventTypes(tripEventType) {
+    const tripEventTypes = this._tripEvents.filter((tripEvent) => tripEventType === tripEvent.type);
+    return tripEventTypes;
+  }
+
+  _getTripEventsChartData() {
+    const tripEventsChartData = this._tripEventsTypes.map((tripEvent) => {
+      return {
+        type: tripEvent,
+        label: ChartTypeLabelsMap[tripEvent],
+        money: this._getMoneyValues(tripEvent),
+        timeSpend: this._getTimeSpend(tripEvent),
+      };
+    });
+
+    return tripEventsChartData;
+  }
+
   _getTripEventsTypes() {
-    let types = [];
+    let tripEventChartData = [];
 
     this._tripEvents.forEach((tripEvent) => {
-      if (types.indexOf(tripEvent.type) === -1) {
-        types.push(tripEvent.type);
+      if (tripEventChartData.indexOf(tripEvent.type) === -1) {
+        tripEventChartData.push(tripEvent.type);
       }
     });
 
-    return types;
-  }
-
-  _getTripEventsLabels() {
-    return this._tripEventsTypes.map((tripEvent) => {
-      return ChartTypeLabelsMap[tripEvent];
-    });
+    return tripEventChartData;
   }
 
   _getMoneyValues(tripEventType) {
@@ -56,249 +334,35 @@ export default class TripStatistics extends AbstractComponent {
 
   _getTimeSpend(tripEventType) {
     const allTripEventsTypes = this._filterTripEventTypes(tripEventType);
-    return allTripEventsTypes.reduce((totalTimeDifference, tripEvent) => totalTimeDifference + (tripEvent.end - tripEvent.start), 0);
+    const totalDifference = allTripEventsTypes.reduce((totalTimeDifference, tripEvent) => {
+      return totalTimeDifference + (tripEvent.end - tripEvent.start);
+    }, 0);
+    let differenceInHours = Math.round(totalDifference / TimeInMs.HOUR);
+
+    return differenceInHours;
   }
 
-  // _getTimeSpendFormat() {
-  //   return this._tripEventsTypes.map((eventType) => {
-
-  //     const days = Math.trunc(difference / TimeInMs.DAY);
-  //     const daysString = createTimeString(days, `D`);
-
-  //     const hours = Math.trunc((difference % TimeInMs.DAY) / TimeInMs.HOUR);
-  //     const hoursString = createTimeString(hours, `H`);
-  //   });
-  // }
-
-  _filterTripEventTypes(tripEventType) {
-    return this._tripEvents.filter((tripEvent) => {
-      return tripEventType === tripEvent.type;
+  _getTransportEvents() {
+    const transportEvents = [];
+    TRANSPORT_TYPE.forEach((type) => {
+      this._tripEvents.forEach((tripEvent) => {
+        if (tripEvent.type === type) {
+          transportEvents.push(tripEvent.type);
+        }
+      });
     });
+
+    return transportEvents;
   }
 
-  renderChart() {
-    const moneyCtx = this.getElement().querySelector(`.statistics__chart--money`);
-    const transportCtx = this.getElement().querySelector(`.statistics__chart--transport`);
-    const timeSpendCtx = this.getElement().querySelector(`.statistics__chart--time`);
+  _getTransportEventsCounts() {
+    const transportEvents = this._getTransportEvents();
 
-    // console.log(this._tripEvents);
-    this._tripEventsTypes = this._getTripEventsTypes();
-    this._tripEventsTypeLabels = this._getTripEventsLabels();
-    // this._tripEventsTimeSpends = this._getTimeSpendFormat();
+    const transportEventCounts = transportEvents.reduce((count, tripEvent) => {
+      count[tripEvent] = (count[tripEvent] || 0) + 1;
+      return count;
+    }, {});
 
-    const BAR_HEIGHT = 55;
-    moneyCtx.height = BAR_HEIGHT * this._tripEventsTypeLabels.length;
-    transportCtx.height = BAR_HEIGHT * this._tripEventsTypeLabels.length;
-    timeSpendCtx.height = BAR_HEIGHT * this._tripEventsTypeLabels.length;
-
-    this._moneyChart = new Chart(moneyCtx, {
-      plugins: [ChartDataLabels],
-      type: `horizontalBar`,
-      data: {
-        labels: this._tripEventsTypeLabels,
-        datasets: [{
-          data: this._tripEventsTypes.map((eventType) => this._getMoneyValues(eventType)),
-          backgroundColor: `#ffffff`,
-          hoverBackgroundColor: `#ffffff`,
-          anchor: `start`
-        }]
-      },
-      options: {
-        plugins: {
-          datalabels: {
-            font: {
-              size: 13
-            },
-            color: `#000000`,
-            anchor: `end`,
-            align: `start`,
-            formatter: (val) => `€ ${val}`
-          }
-        },
-        title: {
-          display: true,
-          text: `MONEY`,
-          fontColor: `#000000`,
-          fontSize: 23,
-          position: `left`,
-        },
-        layout: {
-          padding: {
-            left: 100
-          }
-        },
-        scales: {
-          yAxes: [{
-            ticks: {
-              fontColor: `#000000`,
-              padding: 5,
-              fontSize: 13,
-            },
-            gridLines: {
-              display: false,
-              drawBorder: false
-            },
-            barThickness: 44,
-          }],
-          xAxes: [{
-            ticks: {
-              display: false,
-              beginAtZero: true,
-            },
-            gridLines: {
-              display: false,
-              drawBorder: false
-            },
-            minBarLength: 50
-          }],
-        },
-        legend: {
-          display: false
-        },
-        tooltips: {
-          enabled: false,
-        }
-      }
-    });
-
-    this._transportChart = new Chart(transportCtx, {
-      plugins: [ChartDataLabels],
-      type: `horizontalBar`,
-      data: {
-        labels: this._tripEventsTypeLabels,
-        datasets: [{
-          data: [4, 2, 1],
-          backgroundColor: `#ffffff`,
-          hoverBackgroundColor: `#ffffff`,
-          anchor: `start`
-        }]
-      },
-      options: {
-        plugins: {
-          datalabels: {
-            font: {
-              size: 13
-            },
-            color: `#000000`,
-            anchor: `end`,
-            align: `start`,
-            formatter: (val) => `${val}x`
-          }
-        },
-        title: {
-          display: true,
-          text: `TRANSPORT`,
-          fontColor: `#000000`,
-          fontSize: 23,
-          position: `left`,
-        },
-        layout: {
-          padding: {
-            left: 100
-          }
-        },
-        scales: {
-          yAxes: [{
-            ticks: {
-              fontColor: `#000000`,
-              padding: 5,
-              fontSize: 13,
-            },
-            gridLines: {
-              display: false,
-              drawBorder: false
-            },
-            barThickness: 44,
-          }],
-          xAxes: [{
-            ticks: {
-              display: false,
-              beginAtZero: true,
-            },
-            gridLines: {
-              display: false,
-              drawBorder: false
-            },
-            minBarLength: 50
-          }],
-        },
-        legend: {
-          display: false
-        },
-        tooltips: {
-          enabled: false,
-        }
-      }
-    });
-
-    this._timeSpendChart = new Chart(timeSpendCtx, {
-      plugins: [ChartDataLabels],
-      type: `horizontalBar`,
-      data: {
-        labels: this._tripEventsTypeLabels,
-        datasets: [{
-          data: [],
-          backgroundColor: `#ffffff`,
-          hoverBackgroundColor: `#ffffff`,
-          anchor: `start`
-        }]
-      },
-      options: {
-        plugins: {
-          datalabels: {
-            font: {
-              size: 13
-            },
-            color: `#000000`,
-            anchor: `end`,
-            align: `start`,
-            formatter: (val) => `${val}x`
-          }
-        },
-        title: {
-          display: true,
-          text: `TIME-SPEND`,
-          fontColor: `#000000`,
-          fontSize: 23,
-          position: `left`,
-        },
-        layout: {
-          padding: {
-            left: 100
-          }
-        },
-        scales: {
-          yAxes: [{
-            ticks: {
-              fontColor: `#000000`,
-              padding: 5,
-              fontSize: 13,
-            },
-            gridLines: {
-              display: false,
-              drawBorder: false
-            },
-            barThickness: 44,
-          }],
-          xAxes: [{
-            ticks: {
-              display: false,
-              beginAtZero: true,
-            },
-            gridLines: {
-              display: false,
-              drawBorder: false
-            },
-            minBarLength: 50
-          }],
-        },
-        legend: {
-          display: false
-        },
-        tooltips: {
-          enabled: false,
-        }
-      }
-    });
+    return transportEventCounts;
   }
 }
