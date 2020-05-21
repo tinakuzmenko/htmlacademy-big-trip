@@ -9,9 +9,10 @@ import {getSortedTripEvents} from '../helpers/utils.js';
 
 export default class TripEventsBoardController {
   constructor(container, tripEventsModel) {
-    this._container = container;
+    this._containerComponent = container;
     this._tripEventsModel = tripEventsModel;
 
+    this._container = this._containerComponent.getElement();
     this._noTasksComponent = new NoTripEventsComponent();
     this._tripDaysContainer = new TripDaysContainer().getElement();
     this._sortComponent = new TripSortComponent();
@@ -25,6 +26,17 @@ export default class TripEventsBoardController {
     this._sortComponent.setSortTypeChangeHandler(this._sortTypeChangeHandler);
     this._tripEventsModel.setFilterChangeHandler(this._filterTypeChangeHandler);
     this._tripEventsModel.setModeChangeHandler(this._creatingNewEventModeChangeHandler);
+  }
+
+  hide() {
+    this._containerComponent.hide();
+    this._setDefaultBoardMode();
+  }
+
+  show() {
+    this._containerComponent.show();
+    this._sortComponent.rerender();
+    this.render();
   }
 
   render() {
@@ -55,6 +67,11 @@ export default class TripEventsBoardController {
     }
   }
 
+  _setDefaultBoardMode() {
+    this._sortType = SortType.EVENT;
+    this._tripEventsModel.setFilter(FilterType.EVERYTHING);
+  }
+
   _clearTripEvents() {
     if (this._container.querySelector(`.trip-days`)) {
       this._container.querySelector(`.trip-days`).innerHTML = ``;
@@ -71,6 +88,7 @@ export default class TripEventsBoardController {
   }
 
   _filterTypeChangeHandler() {
+    this._sortType = SortType.EVERYTHING;
     this._sortComponent.rerender();
     this.render();
   }
@@ -80,8 +98,7 @@ export default class TripEventsBoardController {
       return;
     }
 
-    this._sortType = SortType.EVENT;
-    this._tripEventsModel.setFilter(FilterType.EVERYTHING);
+    this._setDefaultBoardMode();
     this._tripEventsView.createNewEventForm();
   }
 

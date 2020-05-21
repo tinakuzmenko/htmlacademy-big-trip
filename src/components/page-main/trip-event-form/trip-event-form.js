@@ -1,8 +1,7 @@
 import {eventDestinations, eventOffers, eventTypes, eventDestinationsObjects} from '../../../mocks/trip-event-mocks.js';
 import AbstractSmartComponent from '../../abstract-smart-component.js';
 import {eventActionsMap, Mode} from '../../../helpers/constants.js';
-import {getDateAndTimeFormFormat} from './get-date-and-time-form-format.js';
-import {getTimeDifference} from '../trip-events/get-time-difference.js';
+import {getTimeDifference} from '../../../helpers/utils.js';
 import flatpickr from 'flatpickr';
 import {encode} from "he";
 import moment from 'moment';
@@ -25,8 +24,8 @@ export default class TripEventForm extends AbstractSmartComponent {
     this._tripEventAction = this._tripEvent.action;
     this._tripEventOffers = this._tripEvent.offers;
     this._tripEventActiveOffers = this._tripEvent.activeOffers;
-    this._tripEventStartTime = getDateAndTimeFormFormat(this._tripEvent.start);
-    this._tripEventEndTime = getDateAndTimeFormFormat(this._tripEvent.end);
+    this._tripEventStartTime = this._getDateAndTimeFormFormat(this._tripEvent.start);
+    this._tripEventEndTime = this._getDateAndTimeFormFormat(this._tripEvent.end);
     this._tripEventBasePrice = this._tripEvent.basePrice;
     this._tripEventIsFavorite = this._tripEvent.isFavorite;
     this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.photos);
@@ -74,7 +73,7 @@ export default class TripEventForm extends AbstractSmartComponent {
                   <label class="event__label  event__type-output" for="event-destination-${this._tripEventId}">
                     ${this._tripEventType} ${this._tripEventAction}
                   </label>
-                  <input class="event__input  event__input--destination" id="event-destination-${this._tripEventId}" type="text" name="event-destination" value="${this._tripEventDestination.name}" list="destination-list-${this._tripEventId}">
+                  <input class="event__input  event__input--destination" id="event-destination-${this._tripEventId}" type="text" name="event-destination" value="${this._tripEventDestination.name}" list="destination-list-${this._tripEventId}" required>
                   <datalist id="destination-list-${this._tripEventId}">
                     ${this._tripEventCitiesDatalist}
                   </datalist>
@@ -97,7 +96,7 @@ export default class TripEventForm extends AbstractSmartComponent {
                     <span class="visually-hidden">Price</span>
                     &euro;
                   </label>
-                  <input class="event__input  event__input--price" this._tripEventId="event-price-${this._tripEventId}" type="text" name="event-price" value="${this._tripEventBasePrice}">
+                  <input class="event__input  event__input--price" this._tripEventId="event-price-${this._tripEventId}" type="text" name="event-price" value="${this._tripEventBasePrice}" required>
                 </div>
 
                 <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -191,7 +190,7 @@ export default class TripEventForm extends AbstractSmartComponent {
       activeOffers: this._tripEventActiveOffers,
       action: eventActionsMap[tripEventType],
       parsedStartDate: Date.parse(moment(tripEventStartTime).startOf(`date`)),
-      basePrice: this._tripEventBasePrice,
+      basePrice: parseInt(this._tripEventBasePrice, 10),
       destination: this._tripEventDestination,
       offers: eventOffers[tripEventType.toLowerCase()],
       timeDiff: getTimeDifference(tripEventStartTime, tripEndTime),
@@ -212,6 +211,18 @@ export default class TripEventForm extends AbstractSmartComponent {
 
   rerender() {
     super.rerender();
+  }
+
+  _getDateAndTimeFormFormat(date) {
+    const dateYear = date.getFullYear().toString().slice(2, 4);
+
+    const dateValues = Array.of(date.getDate(), date.getMonth() + 1, date.getHours(), date.getMinutes()).map((value) => {
+      return value < 10 ? `0` + value : value;
+    });
+
+    const [dateDay, dateMonth, dateHours, dateMinutes] = dateValues;
+
+    return dateDay + `/` + dateMonth + `/` + dateYear + ` ` + dateHours + `:` + dateMinutes;
   }
 
   _applyFlatpickr(element, time) {

@@ -1,8 +1,7 @@
 import moment from 'moment';
-import {getTimeDifference} from '../components/page-main/trip-events/get-time-difference.js';
 import {getPhotos} from './get-photos.js';
 import {getRandomDescription} from './get-random-description.js';
-import {getRandomArrayItem, getRandomIntegerNumber} from '../helpers/utils.js';
+import {getRandomArrayItem, getRandomIntegerNumber, getTimeDifference} from '../helpers/utils.js';
 import {eventActionsMap} from '../helpers/constants.js';
 import {generateEndDate, generateStartDate} from './generate-dates.js';
 import {getRandomOffers} from './get-random-offers.js';

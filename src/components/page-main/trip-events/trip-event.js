@@ -1,30 +1,19 @@
 import AbstractComponent from '../../abstract-component.js';
 import moment from 'moment';
 
-const renderTripEventOffers = (offers) => {
-  return offers.map((offer) => {
-    const {title, price} = offer;
+export default class TripEvent extends AbstractComponent {
+  constructor(tripEvent) {
+    super();
+    this._tripEvent = tripEvent;
+  }
 
-    return (
-      `<li class="event__offer">
-        <span class="event__offer-title">${title}</span>
-        &plus;
-        &euro;&nbsp;<span class="event__offer-price">${price}</span>
-      </li>`.trim()
-    );
-  })
-  .join(`\n`);
-};
+  getTemplate() {
+    const {type, destination, basePrice, activeOffers, action, start, end, timeDiff} = this._tripEvent;
+    const eventOffers = activeOffers ? this._renderTripEventOffers(activeOffers) : ``;
+    const startTime = moment(start).format(`HH:mm`);
+    const endTime = moment(end).format(`HH:mm`);
 
-const renderTripEvent = (tripEvent) => {
-  const {type, destination, basePrice, activeOffers, action, start, end, timeDiff} = tripEvent;
-
-  const eventOffers = activeOffers ? renderTripEventOffers(activeOffers) : ``;
-
-  const startTime = moment(start).format(`HH:mm`);
-  const endTime = moment(end).format(`HH:mm`);
-
-  return (`<div class="event">
+    return (`<div class="event">
               <div class="event__type">
                 <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event ${type.toLowerCase()} icon">
               </div>
@@ -52,17 +41,22 @@ const renderTripEvent = (tripEvent) => {
                 <span class="visually-hidden">Open event</span>
               </button>
             </div>`.trim()
-  );
-};
-
-export default class TripEvent extends AbstractComponent {
-  constructor(tripEvent) {
-    super();
-    this._tripEvent = tripEvent;
+    );
   }
 
-  getTemplate() {
-    return renderTripEvent(this._tripEvent);
+  _renderTripEventOffers(offers) {
+    return offers.map((offer) => {
+      const {title, price} = offer;
+
+      return (
+        `<li class="event__offer">
+          <span class="event__offer-title">${title}</span>
+          &plus;
+          &euro;&nbsp;<span class="event__offer-price">${price}</span>
+        </li>`.trim()
+      );
+    })
+    .join(`\n`);
   }
 
   setClickHandler(handler) {
