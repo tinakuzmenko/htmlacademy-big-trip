@@ -77,7 +77,7 @@ const createEmptyTripEvent = () => {
     },
     offers: [],
     timeDiff: getTimeDifference(newDate, newDate),
-    id: Date.parse(newDate)
+    id: Date.parse(new Date()) + Math.random()
   };
 };
 

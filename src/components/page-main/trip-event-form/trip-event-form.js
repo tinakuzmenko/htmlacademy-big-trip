@@ -194,6 +194,7 @@ export default class TripEventForm extends AbstractSmartComponent {
       destination: this._tripEventDestination,
       offers: eventOffers[tripEventType.toLowerCase()],
       timeDiff: getTimeDifference(tripEventStartTime, tripEndTime),
+      id: this._tripEventId,
     };
 
     if (this._flatpickrEnd) {
