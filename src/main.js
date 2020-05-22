@@ -11,7 +11,9 @@ import TripEventsBoardController from './controllers/trip-events-board.js';
 import TripStatisticsComponent from './components/page-main/trip-statistics/trip-statistics.js';
 import {RenderPosition, TripDataTab} from "./helpers/constants.js";
 import {render} from './helpers/render.js';
-// import {createTripEvents} from './mocks/generate-trip-events.js';
+
+const AUTHORIZATION = `Basic y2StXBzjFLjS38cFEPo8wj4HcxPg7rjm`;
+const SERVER_URL = `https://11.ecmascript.pages.academy/big-trip/points/`;
 
 const tripMain = document.querySelector(`.trip-main`);
 const pageBodyContainer = document.querySelector(`main .page-body__container`);
@@ -19,7 +21,7 @@ const tripControls = tripMain.querySelector(`.trip-controls`);
 // const tripInfoContainer = tripMain.querySelector(`.trip-info`);
 const firstTitle = tripControls.querySelector(`h2`);
 
-const api = new API();
+const api = new API(AUTHORIZATION, SERVER_URL);
 const tripEventsModel = new TripEventsModel();
 const pageHeaderContainerComponent = new PageHeaderContainerComponent();
 const pageNavigationComponent = new PageNavigationComponent();

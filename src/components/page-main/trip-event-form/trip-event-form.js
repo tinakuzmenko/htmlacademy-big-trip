@@ -1,6 +1,6 @@
-import {eventDestinations, eventOffers, eventTypes, eventDestinationsObjects} from '../../../mocks/trip-event-mocks.js';
+import {eventDestinations, eventOffers} from '../../../mocks/trip-event-mocks.js';
 import AbstractSmartComponent from '../../abstract-smart-component.js';
-import {eventActionsMap, Mode} from '../../../helpers/constants.js';
+import {EVENT_TYPES, eventActionsMap, Mode} from '../../../helpers/constants.js';
 import {getTimeDifference} from '../../../helpers/utils.js';
 import flatpickr from 'flatpickr';
 import {encode} from "he";
@@ -30,8 +30,8 @@ export default class TripEventForm extends AbstractSmartComponent {
     this._tripEventIsFavorite = this._tripEvent.isFavorite;
     this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.photos);
 
-    this._typesTransferList = this._renderTripTypesList(eventTypes.slice(0, 7));
-    this._typesActivitiesList = this._renderTripTypesList(eventTypes.slice(7, 10));
+    this._typesTransferList = this._renderTripTypesList(EVENT_TYPES.slice(0, 7));
+    this._typesActivitiesList = this._renderTripTypesList(EVENT_TYPES.slice(7, 10));
     this._tripEventCitiesDatalist = this._renderOptions(eventDestinations);
 
     this._dataChangeHandler = this._dataChangeHandler ? this._dataChangeHandler.bind(this) : null;
@@ -304,7 +304,7 @@ export default class TripEventForm extends AbstractSmartComponent {
         return;
       }
 
-      this._tripEventDestination = eventDestinationsObjects.find((eventDestinationObject) => eventDestinationObject.name === destinationInputElement.value);
+      // this._tripEventDestination = eventDestinationsObjects.find((eventDestinationObject) => eventDestinationObject.name === destinationInputElement.value);
       this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.photos);
 
       saveButtonElement.disabled = false;
@@ -413,7 +413,7 @@ export default class TripEventForm extends AbstractSmartComponent {
     if (photos.length > 0) {
       return photos.map((photo) => {
         return (
-          `<img class="event__photo" src="${photo}" alt="Event photo">`.trim()
+          `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`.trim()
         );
       }).join(`\n`);
     }

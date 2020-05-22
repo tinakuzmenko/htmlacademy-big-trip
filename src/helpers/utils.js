@@ -1,15 +1,5 @@
 import {SortType, TimeInMs} from './constants.js';
 
-const getRandomIntegerNumber = (min, max) => {
-  return min + Math.floor(Math.random() * (max - min));
-};
-
-const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomIntegerNumber(0, array.length);
-
-  return array[randomIndex];
-};
-
 const getSortedTripEvents = (tripEvents, sortType = SortType.EVENT) => {
   let sortedTripEvents = [];
   const tripEventsCopy = tripEvents.slice();
@@ -81,4 +71,4 @@ const createEmptyTripEvent = () => {
   };
 };
 
-export {getRandomIntegerNumber, getRandomArrayItem, getSortedTripEvents, createEmptyTripEvent, getTimeDifference};
+export {getSortedTripEvents, createEmptyTripEvent, getTimeDifference};

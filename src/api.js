@@ -1,8 +1,17 @@
-const SERVER_URL = `https://11.ecmascript.pages.academy/big-trip/`;
-// const AUTH_KEY = `Basic y2StXBzjFLjS38cFEPo8wj4HcxPg7rjm`;
+import TripEventAdapter from './models/trip-event.js';
 
 export default class API {
+  constructor(authorization, serverURL) {
+    this._authorization = authorization;
+    this._SERVER_URL = serverURL;
+  }
+
   getTripEvents() {
-    return fetch(SERVER_URL, {});
+    const headers = new Headers();
+    headers.append(`Authorization`, this._authorization);
+
+    return fetch(this._SERVER_URL, {headers})
+      .then((response) => response.json())
+      .then(TripEventAdapter.parseTripEvents);
   }
 }

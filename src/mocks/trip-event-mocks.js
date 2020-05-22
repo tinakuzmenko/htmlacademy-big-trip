@@ -1,42 +1,4 @@
-import {getPhotos} from './get-photos.js';
-import {getRandomDescription} from './get-random-description.js';
-
-const eventTypes = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
-
 const eventDestinations = [`Copenhagen`, `Longyearbyen`, `Tromsø`, `Reykjavík`, `Nuuk`, `Moscow`, `Tórshavn`];
-
-const eventDestinationsObjects = [
-  {
-    name: `Copenhagen`,
-    description: getRandomDescription(),
-    photos: getPhotos()
-  },
-  {
-    name: `Longyearbyen`,
-    description: getRandomDescription(),
-    photos: getPhotos()
-  },
-  {
-    name: `Tromsø`,
-    description: getRandomDescription(),
-    photos: getPhotos()},
-  {
-    name: `Reykjavík`,
-    description: getRandomDescription(),
-    photos: getPhotos()},
-  {
-    name: `Nuuk`,
-    description: getRandomDescription(),
-    photos: getPhotos()},
-  {
-    name: `Moscow`,
-    description: getRandomDescription(),
-    photos: getPhotos()},
-  {
-    name: `Tórshavn`,
-    description: getRandomDescription(),
-    photos: getPhotos()}
-];
 
 const eventOffers = {
   'bus': [
@@ -187,4 +149,4 @@ const eventOffers = {
   'transport': null
 };
 
-export {eventTypes, eventDestinations, eventOffers, eventDestinationsObjects};
+export {eventDestinations, eventOffers};
