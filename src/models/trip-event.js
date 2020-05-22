@@ -1,14 +1,6 @@
 import moment from 'moment';
 import {eventActionsMap} from '../helpers/constants.js';
-import {getTimeDifference} from "../helpers/utils.js";
-
-const getCapitalizedString = (string) => {
-  if (!string) {
-    return string;
-  }
-
-  return string[0].toUpperCase() + string.slice(1);
-};
+import {getTimeDifference, getCapitalizedString} from "../helpers/utils.js";
 
 export default class TripEventAdapter {
   constructor(data) {

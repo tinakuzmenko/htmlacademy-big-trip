@@ -12,7 +12,7 @@ import TripStatisticsComponent from './components/page-main/trip-statistics/trip
 import {RenderPosition, TripDataTab} from "./helpers/constants.js";
 import {render} from './helpers/render.js';
 
-const AUTHORIZATION = `Basic y2StXBzjFLjS38cFEPo8wj4HcxPg7rjm`;
+const AUTHORIZATION = `Basic y2StXBzjFLjS38cFEPo8wk4HcxPg7rjm`;
 const SERVER_URL = `https://11.ecmascript.pages.academy/big-trip/points/`;
 
 const tripMain = document.querySelector(`.trip-main`);
