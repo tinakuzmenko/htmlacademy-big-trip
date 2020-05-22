@@ -1,6 +1,7 @@
 import API from './api.js';
 import ButtonAddNewEventComponent from './components/page-header/new-event-button.js';
 import FilterController from './controllers/filter.js';
+import LoadingComponent from './components/loading.js';
 import PageHeaderContainerComponent from './components/page-header/page-header-container.js';
 import PageNavigationComponent from './components/page-header/page-navigation.js';
 // import TripCostComponent from './components/page-header/trip-cost.js';
@@ -10,9 +11,9 @@ import TripEventsBoardComponent from './components/page-main/trip-events/trip-ev
 import TripEventsBoardController from './controllers/trip-events-board.js';
 import TripStatisticsComponent from './components/page-main/trip-statistics/trip-statistics.js';
 import {RenderPosition, TripDataTab} from "./helpers/constants.js";
-import {render} from './helpers/render.js';
+import {render, remove} from './helpers/render.js';
 
-const AUTHORIZATION = `Basic y2StXBzjFLjS38cFEPo8wk4HcxPg7rjm`;
+const AUTHORIZATION = `Basic y2StXBzjFLjS38cFEPo8wl4HcxPg7rjm`;
 const SERVER_URL = `https://11.ecmascript.pages.academy/big-trip/points/`;
 
 const tripMain = document.querySelector(`.trip-main`);
@@ -25,6 +26,7 @@ const api = new API(AUTHORIZATION, SERVER_URL);
 const tripEventsModel = new TripEventsModel();
 const pageHeaderContainerComponent = new PageHeaderContainerComponent();
 const pageNavigationComponent = new PageNavigationComponent();
+const loadingComponent = new LoadingComponent();
 const filterController = new FilterController(tripControls, tripEventsModel);
 const buttonAddNewEventComponent = new ButtonAddNewEventComponent(tripEventsModel);
 const tripEventsBoardComponent = new TripEventsBoardComponent();
@@ -36,6 +38,7 @@ const tripStatisticsComponent = new TripStatisticsComponent(tripEventsModel);
 render(tripMain, pageHeaderContainerComponent, RenderPosition.AFTERBEGIN);
 render(firstTitle, pageNavigationComponent, RenderPosition.AFTEREND);
 render(tripMain, buttonAddNewEventComponent);
+render(pageBodyContainer, loadingComponent);
 render(pageBodyContainer, tripEventsBoardComponent);
 render(pageBodyContainer, tripStatisticsComponent);
 
@@ -67,5 +70,6 @@ pageNavigationComponent.setChangeHandler((menuItem) => {
 api.getTripEvents()
   .then((tripEvents) => {
     tripEventsModel.setTripEvents(tripEvents);
+    remove(loadingComponent);
     tripEventsBoardController.render();
   });
