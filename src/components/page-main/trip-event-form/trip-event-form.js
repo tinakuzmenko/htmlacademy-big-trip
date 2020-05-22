@@ -186,7 +186,7 @@ export default class TripEventForm extends AbstractSmartComponent {
       type: tripEventType,
       start: tripEventStartTime,
       end: tripEndTime,
-      isFavorite: false,
+      isFavorite: this._tripEventFormMode === Mode.EDIT ? this._tripEventIsFavorite : false,
       activeOffers: this._tripEventActiveOffers,
       action: eventActionsMap[tripEventType],
       parsedStartDate: Date.parse(moment(tripEventStartTime).startOf(`date`)),
