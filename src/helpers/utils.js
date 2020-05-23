@@ -1,4 +1,4 @@
-import {SortType, TimeInMs} from './constants.js';
+import {SortType, TimeInMs, FilterType} from './constants.js';
 
 const getSortedTripEvents = (tripEvents, sortType = SortType.EVENT) => {
   let sortedTripEvents = [];
@@ -17,6 +17,19 @@ const getSortedTripEvents = (tripEvents, sortType = SortType.EVENT) => {
   }
 
   return sortedTripEvents;
+};
+
+const getTripEventsByFilter = (tripEvents, filterType) => {
+  const nowDate = new Date();
+
+  switch (filterType) {
+    case FilterType.FUTURE:
+      return tripEvents.filter((tripEvent) => tripEvent.start > nowDate);
+    case FilterType.PAST:
+      return tripEvents.filter((tripEvent) => tripEvent.start < nowDate);
+    default:
+      return tripEvents;
+  }
 };
 
 const createTimeString = (value, signString) => {
@@ -82,4 +95,4 @@ const getCapitalizedString = (string) => {
   return string[0].toUpperCase() + string.slice(1);
 };
 
-export {getSortedTripEvents, createEmptyTripEvent, getTimeDifference, getCapitalizedString};
+export {getSortedTripEvents, getTripEventsByFilter, createEmptyTripEvent, getTimeDifference, getCapitalizedString};

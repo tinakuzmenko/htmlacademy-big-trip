@@ -1,4 +1,4 @@
-import {getTripEventsByFilter} from '../helpers/filter.js';
+import {getTripEventsByFilter} from '../helpers/utils.js';
 import {FilterType} from "../helpers/constants.js";
 
 export default class TripEvents {

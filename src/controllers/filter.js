@@ -1,6 +1,6 @@
 import PageFilterComponent from '../components/page-header/page-filter.js';
 import {FilterType} from '../helpers/constants.js';
-import {getTripEventsByFilter} from '../helpers/filter.js';
+import {getTripEventsByFilter} from '../helpers/utils.js';
 import {render, replace} from '../helpers/render.js';
 
 export default class FilterController {
