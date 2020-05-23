@@ -4,7 +4,7 @@ import TripEventController from '../../../controllers/trip-event.js';
 import {render} from '../../../helpers/render.js';
 
 export default class TripEvents {
-  constructor(container, sortedTripEvents, offers, destinations, dataChangeHandler) {
+  constructor(container, sortedTripEvents, offers, destinations, dataChangeHandler, api) {
     this._container = container;
     this._sortedTripEvents = sortedTripEvents;
     this._offers = offers;

@@ -1,6 +1,6 @@
 import moment from 'moment';
 import {eventActionsMap} from '../helpers/constants.js';
-import {getTimeDifference, getCapitalizedString} from "../helpers/utils.js";
+import {getTimeDifference, getCapitalizedString} from '../helpers/utils.js';
 
 export default class TripEventAdapter {
   constructor(data) {
@@ -20,11 +20,30 @@ export default class TripEventAdapter {
     this.action = eventActionsMap[this.type];
   }
 
+  toRAW(data) {
+    const RAWObj = {
+      'id': data.id,
+      'type': data.type.toLowerCase(),
+      'date_from': moment.parseZone(data.start).utc().format(),
+      'date_to': moment.parseZone(data.end).utc().format(),
+      'is_favorite': data.isFavorite,
+      'base_price': data.basePrice,
+      'offers': data.activeOffers,
+      'destination': data.destination,
+    };
+
+    return RAWObj;
+  }
+
   static parseTripEvent(data) {
     return new TripEventAdapter(data);
   }
 
   static parseTripEvents(data) {
     return data.map(TripEventAdapter.parseTripEvent);
+  }
+
+  static clone(data) {
+    return new TripEventAdapter(data.toRAW());
   }
 }

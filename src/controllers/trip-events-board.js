@@ -8,9 +8,10 @@ import {render} from '../helpers/render.js';
 import {getSortedTripEvents} from '../helpers/utils.js';
 
 export default class TripEventsBoardController {
-  constructor(container, tripEventsModel) {
+  constructor(container, tripEventsModel, api) {
     this._containerComponent = container;
     this._tripEventsModel = tripEventsModel;
+    this._api = api;
 
     this._container = this._containerComponent.getElement();
     this._noTasksComponent = new NoTripEventsComponent();
@@ -70,6 +71,11 @@ export default class TripEventsBoardController {
     }
   }
 
+  updateEvents() {
+    this._clearTripEvents();
+    this.render();
+  }
+
   _setDefaultBoardMode() {
     this._sortType = SortType.EVENT;
     this._tripEventsModel.setFilter(FilterType.EVERYTHING);
@@ -105,7 +111,7 @@ export default class TripEventsBoardController {
     this._tripEventsView.createNewEventForm();
   }
 
-  _dataChangeHandler(tripEventController, oldTripEvent, updatedTripEvent) {
+  _dataChangeHandler(tripEventController, oldTripEvent, updatedTripEvent, isFavorite = false) {
     if (oldTripEvent === null) {
       this._tripEventsModel.addTripEvent(updatedTripEvent);
       this._tripEventsModel.setIsCreatingMode(false);
@@ -114,11 +120,17 @@ export default class TripEventsBoardController {
       this._tripEventsModel.removeTripEvent(oldTripEvent.id);
       this.render();
     } else {
-      const isSuccess = this._tripEventsModel.updateTripEvent(oldTripEvent.id, updatedTripEvent);
+      this._api.updateTripEvent(oldTripEvent.id, updatedTripEvent)
+        .then((tripEventModel) => {
+          const isSuccess = this._tripEventsModel.updateTripEvent(oldTripEvent.id, tripEventModel);
 
-      if (isSuccess) {
-        tripEventController.render(updatedTripEvent);
-      }
+          if (isSuccess) {
+            tripEventController.render(tripEventModel);
+            if (!isFavorite) {
+              this.updateEvents();
+            }
+          }
+        });
     }
   }
 }

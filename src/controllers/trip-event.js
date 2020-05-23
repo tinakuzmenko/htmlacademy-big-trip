@@ -1,6 +1,7 @@
 import TripEventComponent from '../components/page-main/trip-events/trip-event.js';
 import TripEventFormComponent from '../components/page-main/trip-event-form/trip-event-form.js';
 import TripEventWrapperComponent from '../components/page-main/trip-events/trip-event-wrapper.js';
+import TripEventAdapter from '../models/trip-event.js';
 import {createEmptyTripEvent} from '../helpers/utils.js';
 import {Keycode, RenderPosition, Mode} from '../helpers/constants.js';
 import {render, replace, remove} from "../helpers/render.js";
@@ -101,7 +102,6 @@ export default class TripEventController {
     document.addEventListener(`keydown`, this._documentEscKeydownHandler);
   }
 
-
   _documentEscKeydownHandler(evt) {
     if (evt.key === Keycode.ESCAPE) {
       document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
@@ -121,8 +121,11 @@ export default class TripEventController {
 
   _tripEventFormComponentSubmitHandler(evt) {
     evt.preventDefault();
-    const newTripEvent = this._tripEventFormComponent.createNewTripEventObject();
-    this._dataChangeHandler(this, this._tripEvent, newTripEvent);
+    const formData = this._tripEventFormComponent.getData();
+    const data = this._prepareData(formData);
+
+    this._dataChangeHandler(this, this._tripEvent, data);
+
     document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
 
     if (this._tripEventComponent) {
@@ -147,6 +150,16 @@ export default class TripEventController {
     const updatedTripEvent = Object.assign({}, this._tripEvent, {
       isFavorite: !this._tripEvent.isFavorite,
     });
-    this._dataChangeHandler(this, this._tripEvent, updatedTripEvent);
+    const data = this._prepareData(updatedTripEvent);
+    const isFavorite = true;
+
+    this._dataChangeHandler(this, this._tripEvent, data, isFavorite);
+  }
+
+  _prepareData(formData) {
+    const tripEventAdapter = new TripEventAdapter(formData);
+    const data = tripEventAdapter.toRAW(formData);
+
+    return data;
   }
 }

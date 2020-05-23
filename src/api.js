@@ -1,6 +1,11 @@
 import {ServerUrl} from './helpers/constants.js';
 import TripEventAdapter from './models/trip-event.js';
 
+const Method = {
+  GET: `GET`,
+  PUT: `PUT`,
+};
+
 export default class API {
   constructor(authorization) {
     this._authorization = authorization;
@@ -24,8 +29,7 @@ export default class API {
 
   getTripEvents() {
     return this._loadData({
-      url: ServerUrl.POINTS,
-      method: `GET`,
+      url: ServerUrl.POINTS
     })
       .then((response) => response.json())
       .then(TripEventAdapter.parseTripEvents);
@@ -33,33 +37,46 @@ export default class API {
 
   getOffers() {
     return this._loadData({
-      url: ServerUrl.OFFERS,
-      method: `GET`,
+      url: ServerUrl.OFFERS
     })
       .then((response) => response.json());
   }
 
   getDestinations() {
     return this._loadData({
-      url: ServerUrl.DESTINATIONS,
-      method: `GET`,
+      url: ServerUrl.DESTINATIONS
     })
       .then((response) => response.json());
   }
 
-  _loadData({url, method, headers = new Headers()}) {
-    headers.append(`Authorization`, this._authorization);
+  updateTripEvent(id, data) {
+    return this._loadData({
+      url: `${ServerUrl.POINTS}/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(data),
+    })
+    .then(this._checkStatus)
+    .then((response) => response.json())
+    .then(TripEventAdapter.parseTripEvent);
+  }
 
-    return fetch(url, {method, headers})
-      .then((response) => {
-        if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          throw new Error(`${response.status}: ${response.statusText}`);
-        }
-      })
+  _loadData({url, method = Method.GET, body = null, headers = new Headers()}) {
+    headers.append(`Authorization`, this._authorization);
+    headers.append(`Content-Type`, `application/json`);
+
+    return fetch(url, {method, body, headers})
+      .then(this._checkStatus)
       .catch((error) => {
         throw error;
       });
+  }
+
+
+  _checkStatus(response) {
+    if (response.status >= 200 && response.status < 300) {
+      return response;
+    } else {
+      throw new Error(`${response.status}: ${response.statusText}`);
+    }
   }
 }

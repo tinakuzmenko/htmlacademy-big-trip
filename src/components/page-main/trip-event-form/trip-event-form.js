@@ -1,6 +1,5 @@
 import AbstractSmartComponent from '../../abstract-smart-component.js';
 import {EVENT_TYPES, eventActionsMap, Mode} from '../../../helpers/constants.js';
-import {getTimeDifference} from '../../../helpers/utils.js';
 import flatpickr from 'flatpickr';
 import {encode} from "he";
 import moment from 'moment';
@@ -28,7 +27,7 @@ export default class TripEventForm extends AbstractSmartComponent {
     this._tripEventEndTime = this._getDateAndTimeFormFormat(this._tripEvent.end);
     this._tripEventBasePrice = this._tripEvent.basePrice;
     this._tripEventIsFavorite = this._tripEvent.isFavorite;
-    this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.pictures);
+    this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.photos);
 
     this._destinationsNames = this._getDestinationsNames();
 
@@ -179,7 +178,7 @@ export default class TripEventForm extends AbstractSmartComponent {
     super.removeElement();
   }
 
-  createNewTripEventObject() {
+  getData() {
     const tripEventType = this._tripEventType;
     const tripEventStartTime = new Date(moment(this._tripEventStartTime, `DD/MM/YY HH:mm`).format());
     const tripEndTime = new Date(moment(this._tripEventEndTime, `DD/MM/YY HH:mm`).format());
@@ -191,11 +190,8 @@ export default class TripEventForm extends AbstractSmartComponent {
       end: tripEndTime,
       isFavorite: this._tripEventFormMode === Mode.EDIT ? this._tripEventIsFavorite : false,
       activeOffers: this._tripEventActiveOffers,
-      action: eventActionsMap[tripEventType],
-      parsedStartDate: Date.parse(moment(tripEventStartTime).startOf(`date`)),
       basePrice: parseInt(this._tripEventBasePrice, 10),
       destination: this._tripEventDestination,
-      timeDiff: getTimeDifference(tripEventStartTime, tripEndTime),
       id: this._tripEventId,
     };
 
