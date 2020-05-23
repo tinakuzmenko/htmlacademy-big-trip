@@ -53,10 +53,7 @@ export default class TripEventController {
     this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
 
     this._tripEventComponent.setClickHandler(this._tripEventComponentClickHandler);
-    this._tripEventFormComponent.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);
-    this._tripEventFormComponent.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
-    this._tripEventFormComponent.setDeleteButtonClickHandler(this._tripEventFormComponentDeleteHandler);
-    this._tripEventFormComponent.setFavoritesButtonClickHandler(this._tripEventFormComponentFavoritesButtonClickHandler);
+    this._setFormHandlers();
 
     if (oldTripEventFormComponent && oldTripEventComponent) {
       replace(this._tripEventComponent, oldTripEventComponent);
@@ -91,10 +88,17 @@ export default class TripEventController {
   }
 
   _replaceEditFormToTripEvent() {
-    this._tripEventFormComponent.getElement().reset();
     replace(this._tripEventComponent, this._tripEventFormComponent);
-
     this._mode = Mode.DEFAULT;
+    this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
+    this._setFormHandlers();
+  }
+
+  _setFormHandlers() {
+    this._tripEventFormComponent.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);
+    this._tripEventFormComponent.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
+    this._tripEventFormComponent.setDeleteButtonClickHandler(this._tripEventFormComponentDeleteHandler);
+    this._tripEventFormComponent.setFavoritesButtonClickHandler(this._tripEventFormComponentFavoritesButtonClickHandler);
   }
 
   _tripEventComponentClickHandler() {
