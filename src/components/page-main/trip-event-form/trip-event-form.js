@@ -1,4 +1,3 @@
-import {eventDestinations, eventOffers} from '../../../mocks/trip-event-mocks.js';
 import AbstractSmartComponent from '../../abstract-smart-component.js';
 import {EVENT_TYPES, eventActionsMap, Mode} from '../../../helpers/constants.js';
 import {getTimeDifference} from '../../../helpers/utils.js';
@@ -9,9 +8,11 @@ import moment from 'moment';
 import "flatpickr/dist/flatpickr.min.css";
 
 export default class TripEventForm extends AbstractSmartComponent {
-  constructor(tripEvent, dataChangeHandler, viewChangeHandler, mode = Mode.EDIT) {
+  constructor(tripEvent, offers, destinations, dataChangeHandler, viewChangeHandler, mode = Mode.EDIT) {
     super();
     this._tripEvent = tripEvent;
+    this._tripEventOffers = offers;
+    this._allDestinations = destinations;
     this._dataChangeHandler = dataChangeHandler;
     this._viewChangeHandler = viewChangeHandler;
     this._tripEventFormMode = mode;
@@ -22,24 +23,25 @@ export default class TripEventForm extends AbstractSmartComponent {
     this._tripEventType = this._tripEvent.type;
     this._tripEventDestination = this._tripEvent.destination;
     this._tripEventAction = this._tripEvent.action;
-    this._tripEventOffers = this._tripEvent.offers;
     this._tripEventActiveOffers = this._tripEvent.activeOffers;
     this._tripEventStartTime = this._getDateAndTimeFormFormat(this._tripEvent.start);
     this._tripEventEndTime = this._getDateAndTimeFormFormat(this._tripEvent.end);
     this._tripEventBasePrice = this._tripEvent.basePrice;
     this._tripEventIsFavorite = this._tripEvent.isFavorite;
-    this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.photos);
+    this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.pictures);
+
+    this._destinationsNames = this._getDestinationsNames();
 
     this._typesTransferList = this._renderTripTypesList(EVENT_TYPES.slice(0, 7));
     this._typesActivitiesList = this._renderTripTypesList(EVENT_TYPES.slice(7, 10));
-    this._tripEventCitiesDatalist = this._renderOptions(eventDestinations);
+    this._tripEventCitiesDatalist = this._renderOptions(this._allDestinations);
 
     this._dataChangeHandler = this._dataChangeHandler ? this._dataChangeHandler.bind(this) : null;
     this._subscribeOnEvents();
   }
 
   getTemplate() {
-    const renderedOffersSection = this._renderOffersSection(this._tripEventOffers, this._tripEventActiveOffers, this._tripEventId);
+    const renderedOffersSection = this._renderOffersSection(this._tripEventActiveOffers, this._tripEventId);
 
     return (`<form class="trip-events__item event event--edit" action="#" method="post">
               <header class="event__header">
@@ -181,9 +183,10 @@ export default class TripEventForm extends AbstractSmartComponent {
     const tripEventType = this._tripEventType;
     const tripEventStartTime = new Date(moment(this._tripEventStartTime, `DD/MM/YY HH:mm`).format());
     const tripEndTime = new Date(moment(this._tripEventEndTime, `DD/MM/YY HH:mm`).format());
+    const type = tripEventType;
 
     this._tripEvent = {
-      type: tripEventType,
+      type,
       start: tripEventStartTime,
       end: tripEndTime,
       isFavorite: this._tripEventFormMode === Mode.EDIT ? this._tripEventIsFavorite : false,
@@ -192,7 +195,6 @@ export default class TripEventForm extends AbstractSmartComponent {
       parsedStartDate: Date.parse(moment(tripEventStartTime).startOf(`date`)),
       basePrice: parseInt(this._tripEventBasePrice, 10),
       destination: this._tripEventDestination,
-      offers: eventOffers[tripEventType.toLowerCase()],
       timeDiff: getTimeDifference(tripEventStartTime, tripEndTime),
       id: this._tripEventId,
     };
@@ -281,7 +283,6 @@ export default class TripEventForm extends AbstractSmartComponent {
 
         this._tripEventType = inputTypeListElement.value;
         this._tripEventAction = eventActionsMap[this._tripEventType];
-        this._tripEventOffers = eventOffers[this._tripEventType.toLowerCase()];
       }
       this._clearOffers();
       this.rerender();
@@ -298,14 +299,15 @@ export default class TripEventForm extends AbstractSmartComponent {
     });
 
     destinationInputElement.addEventListener(`input`, () => {
-      const isInOptions = eventDestinations.some((destination) => destination === destinationInputElement.value);
+      const isInOptions = this._destinationsNames.some((destination) => destination === destinationInputElement.value);
 
       if (!isInOptions) {
         return;
       }
 
-      // this._tripEventDestination = eventDestinationsObjects.find((eventDestinationObject) => eventDestinationObject.name === destinationInputElement.value);
-      this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.photos);
+      this._tripEventDestination = this._allDestinations.find((eventDestination) => eventDestination.name === destinationInputElement.value);
+
+      this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.pictures);
 
       saveButtonElement.disabled = false;
 
@@ -314,15 +316,15 @@ export default class TripEventForm extends AbstractSmartComponent {
 
     if (availableOffersElement) {
       availableOffersElement.addEventListener(`click`, (evt) => {
+        const allOffers = this._getOffersByType(this._tripEventType).offers;
+
         if (evt.target.tagName === `INPUT` && evt.target.checked) {
           const offerIndex = evt.target.dataset.offerId;
-          const newActiveOffer = eventOffers[this._tripEventType.toLowerCase()][offerIndex];
-
+          const newActiveOffer = allOffers[offerIndex];
           this._addOffer(newActiveOffer);
         } else {
           const offerIndex = evt.target.dataset.offerId;
-          const newActiveOffer = eventOffers[this._tripEventType.toLowerCase()][offerIndex];
-
+          const newActiveOffer = allOffers[offerIndex];
           this._removeOffer(newActiveOffer);
         }
       });
@@ -353,8 +355,8 @@ export default class TripEventForm extends AbstractSmartComponent {
     return isChecked;
   }
 
-  _renderEventOffers(offers, activeOffers) {
-    return offers.map((offer, index) => {
+  _renderEventOffers(tripEventOffers, activeOffers) {
+    return tripEventOffers.offers.map((offer, index) => {
       const {title, price} = offer;
       const isChecked = this._checkIsOfferChecked(offer, activeOffers);
 
@@ -374,14 +376,17 @@ export default class TripEventForm extends AbstractSmartComponent {
   .join(``);
   }
 
-  _renderOffersSection(offers, activeOffers, id) {
-    if (offers && offers.length > 0) {
-      const tripEventOffers = this._renderEventOffers(offers, activeOffers, id);
+  _renderOffersSection(activeOffers) {
+    const tripEventOffers = this._getOffersByType(this._tripEventType);
+
+    if (tripEventOffers.offers.length > 0) {
+      const tripEventOffersElements = this._renderEventOffers(tripEventOffers, activeOffers);
+
       return (
         `<section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
           <div class="event__available-offers">
-            ${tripEventOffers}
+            ${tripEventOffersElements}
           </div>
         </section>`.trim()
       );
@@ -390,8 +395,8 @@ export default class TripEventForm extends AbstractSmartComponent {
     return ``;
   }
 
-  _renderOptions(cities) {
-    return cities.map((city) => {
+  _renderOptions() {
+    return this._destinationsNames.map((city) => {
       return (`<option value="${city}"></option>`.trim());
     })
   .join(`\n`);
@@ -419,5 +424,14 @@ export default class TripEventForm extends AbstractSmartComponent {
     }
 
     return ``;
+  }
+
+  _getDestinationsNames() {
+    return this._allDestinations.map((destination) => destination.name);
+  }
+
+  _getOffersByType(type) {
+    const offersByType = this._tripEventOffers.filter((tripEventOffer) => type.toLowerCase() === tripEventOffer.type);
+    return offersByType[0];
   }
 }

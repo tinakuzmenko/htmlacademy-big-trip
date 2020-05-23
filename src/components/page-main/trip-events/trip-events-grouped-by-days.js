@@ -5,9 +5,11 @@ import {render} from '../../../helpers/render.js';
 import {TimeInMs} from '../../../helpers/constants.js';
 
 export default class TripEventsGroupedByDays {
-  constructor(container, sortedTripEvents, dataChangeHandler, tripEventsModel) {
+  constructor(container, sortedTripEvents, offers, destinations, dataChangeHandler, tripEventsModel) {
     this._container = container;
     this._sortedTripEvents = sortedTripEvents;
+    this._offers = offers;
+    this._destinations = destinations;
     this._dataChangeHandler = dataChangeHandler;
     this._tripEventsModel = tripEventsModel;
 
@@ -53,7 +55,7 @@ export default class TripEventsGroupedByDays {
         this._renderEventsGroup();
       }
 
-      const tripEventController = new TripEventController(this._tripEventsContainer, this._dataChangeHandler, this._viewChangeHandler);
+      const tripEventController = new TripEventController(this._tripEventsContainer, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
 
       this._tripEventsControllers.push(tripEventController);
       tripEventController.render(sortedTripEvent);

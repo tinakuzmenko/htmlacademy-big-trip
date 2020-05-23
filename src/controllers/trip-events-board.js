@@ -41,6 +41,9 @@ export default class TripEventsBoardController {
 
   render() {
     const sortedTripEvents = getSortedTripEvents(this._tripEventsModel.getTripEvents(), this._sortType);
+    const offers = this._tripEventsModel.getOffers();
+    const destinations = this._tripEventsModel.getDestinations();
+
     this._clearTripEvents();
 
     if (!sortedTripEvents.length) {
@@ -56,12 +59,12 @@ export default class TripEventsBoardController {
       case SortType.TIME:
       case SortType.PRICE:
         this._tripSortItemDay.textContent = ``;
-        this._tripEventsView = new TripEventsView(this._tripDaysContainer, sortedTripEvents, this._dataChangeHandler);
+        this._tripEventsView = new TripEventsView(this._tripDaysContainer, sortedTripEvents, offers, destinations, this._dataChangeHandler);
         render(this._container, this._tripEventsView);
         break;
       default:
         this._tripSortItemDay.textContent = `Day`;
-        this._tripEventsView = new TripEventsGroupedByDaysView(this._tripDaysContainer, sortedTripEvents, this._dataChangeHandler, this._tripEventsModel);
+        this._tripEventsView = new TripEventsGroupedByDaysView(this._tripDaysContainer, sortedTripEvents, offers, destinations, this._dataChangeHandler, this._tripEventsModel);
         render(this._container, this._tripEventsView);
         break;
     }

@@ -6,8 +6,10 @@ import {Keycode, RenderPosition, Mode} from '../helpers/constants.js';
 import {render, replace, remove} from "../helpers/render.js";
 
 export default class TripEventController {
-  constructor(tripEventContainer, dataChangeHandler, viewChangeHandler) {
+  constructor(tripEventContainer, offers, destinations, dataChangeHandler, viewChangeHandler) {
     this._tripEventContainer = tripEventContainer;
+    this._offers = offers;
+    this._destinations = destinations;
     this._dataChangeHandler = dataChangeHandler;
     this._viewChangeHandler = viewChangeHandler;
     this._mode = Mode.DEFAULT;
@@ -29,7 +31,7 @@ export default class TripEventController {
     if (!tripEvent) {
       const emptyTripEventObject = createEmptyTripEvent();
 
-      this._tripEventFormComponent = new TripEventFormComponent(emptyTripEventObject, this._dataChangeHandler, this._viewChangeHandler, Mode.DEFAULT);
+      this._tripEventFormComponent = new TripEventFormComponent(emptyTripEventObject, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler, Mode.DEFAULT);
       this._mode = Mode.EDIT;
 
       render(this._tripEventContainer, this._tripEventFormComponent, RenderPosition.BEFOREBEGIN);
@@ -47,7 +49,7 @@ export default class TripEventController {
     const oldTripEventFormComponent = this._tripEventFormComponent;
 
     this._tripEventComponent = new TripEventComponent(this._tripEvent);
-    this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent);
+    this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
 
     this._tripEventComponent.setClickHandler(this._tripEventComponentClickHandler);
     this._tripEventFormComponent.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);

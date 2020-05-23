@@ -85,4 +85,10 @@ const ChartConfiguration = {
   TIME_SPEND_TEXT: `TIME-SPEND`,
 };
 
-export {TimeInMs, RenderPosition, eventActionsMap, Keycode, SortType, Mode, FilterType, TripDataTab, HIDDEN_CLASS, ChartTypeLabelsMap, EVENT_TYPES, TRANSPORT_TYPES, ChartConfiguration};
+const ServerUrl = {
+  POINTS: `https://11.ecmascript.pages.academy/big-trip/points`,
+  OFFERS: `https://11.ecmascript.pages.academy/big-trip/offers`,
+  DESTINATIONS: `https://11.ecmascript.pages.academy/big-trip/destinations`
+};
+
+export {TimeInMs, RenderPosition, eventActionsMap, Keycode, SortType, Mode, FilterType, TripDataTab, HIDDEN_CLASS, ChartTypeLabelsMap, EVENT_TYPES, TRANSPORT_TYPES, ChartConfiguration, ServerUrl};

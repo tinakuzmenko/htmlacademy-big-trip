@@ -13,15 +13,14 @@ import TripStatisticsComponent from './components/page-main/trip-statistics/trip
 import {RenderPosition, TripDataTab} from "./helpers/constants.js";
 import {render, remove} from './helpers/render.js';
 
-const AUTHORIZATION = `Basic y2StXBzjFLjS38cFEPo8wl4HcxPg7rjm`;
-const SERVER_URL = `https://11.ecmascript.pages.academy/big-trip/points/`;
+const AUTHORIZATION = `Basic y2StXBzjFLjS18cFEPo8wl4HcxPg7rjm`;
 
 const tripMain = document.querySelector(`.trip-main`);
 const pageBodyContainer = document.querySelector(`main .page-body__container`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
 const firstTitle = tripControls.querySelector(`h2`);
 
-const api = new API(AUTHORIZATION, SERVER_URL);
+const api = new API(AUTHORIZATION);
 const tripEventsModel = new TripEventsModel();
 const pageHeaderContainerComponent = new PageHeaderContainerComponent();
 const pageNavigationComponent = new PageNavigationComponent();
@@ -40,6 +39,8 @@ render(tripMain, buttonAddNewEventComponent);
 render(pageBodyContainer, loadingComponent);
 render(pageBodyContainer, tripEventsBoardComponent);
 render(pageBodyContainer, tripStatisticsComponent);
+
+const tripInfoContainer = tripMain.querySelector(`.trip-info`);
 
 filterController.render();
 buttonAddNewEventComponent.setClickHandler();
@@ -60,13 +61,14 @@ pageNavigationComponent.setChangeHandler((menuItem) => {
   }
 });
 
-api.getTripEvents()
-  .then((tripEvents) => {
-    tripEventsModel.setTripEvents(tripEvents);
+api.getData()
+  .then((data) => {
+    tripEventsModel.setTripEvents(data.tripEvents);
+    tripEventsModel.setOffers(data.offers);
+    tripEventsModel.setDestinations(data.destinations);
+  })
+  .then(() => {
     remove(loadingComponent);
-
-    const tripInfoContainer = tripMain.querySelector(`.trip-info`);
-
     render(tripInfoContainer, tripRouteComponent);
     render(tripInfoContainer, tripCostComponent);
     tripEventsBoardController.render();
