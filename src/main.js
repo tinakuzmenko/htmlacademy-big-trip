@@ -30,8 +30,6 @@ const buttonAddNewEventComponent = new ButtonAddNewEventComponent(tripEventsMode
 const tripEventsBoardComponent = new TripEventsBoardComponent();
 const tripEventsBoardController = new TripEventsBoardController(tripEventsBoardComponent, tripEventsModel, api);
 const tripStatisticsComponent = new TripStatisticsComponent(tripEventsModel);
-const tripRouteComponent = new TripRouteComponent(tripEventsModel);
-const tripCostComponent = new TripCostComponent(tripEventsModel);
 
 render(tripMain, pageHeaderContainerComponent, RenderPosition.AFTERBEGIN);
 render(firstTitle, pageNavigationComponent, RenderPosition.AFTEREND);
@@ -41,6 +39,8 @@ render(pageBodyContainer, tripEventsBoardComponent);
 render(pageBodyContainer, tripStatisticsComponent);
 
 const tripInfoContainer = tripMain.querySelector(`.trip-info`);
+const tripCostComponent = new TripCostComponent(tripInfoContainer, tripEventsModel);
+const tripRouteComponent = new TripRouteComponent(tripInfoContainer, tripEventsModel);
 
 filterController.render();
 buttonAddNewEventComponent.setClickHandler();
@@ -71,7 +71,7 @@ api.getData()
   .then(() => {
     remove(loadingComponent);
     buttonAddNewEventComponent.getElement().disabled = false;
-    render(tripInfoContainer, tripRouteComponent);
-    render(tripInfoContainer, tripCostComponent);
+    tripRouteComponent.render();
+    tripCostComponent.render();
     tripEventsBoardController.render();
   });

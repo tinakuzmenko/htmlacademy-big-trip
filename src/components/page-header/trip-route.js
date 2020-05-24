@@ -1,13 +1,23 @@
 import {getSortedTripEvents} from '../../helpers/utils.js';
 import AbstractSmartComponent from '../abstract-smart-component.js';
+import {render, remove} from '../../helpers/render.js';
 import moment from 'moment';
 
 export default class TripRoute extends AbstractSmartComponent {
-  constructor(tripEventsModel) {
+  constructor(container, tripEventsModel) {
     super();
+    this._container = container;
     this._tripEventsModel = tripEventsModel;
 
     this._MAXIMUM_CITIES_SHOWN = 3;
+
+    this._dataChangeHandler = this._dataChangeHandler.bind(this);
+    this._tripEventsModel.setDataChangeHandler(this._dataChangeHandler);
+  }
+
+  render() {
+    remove(this);
+    render(this._container, this);
   }
 
   getTemplate() {
@@ -48,5 +58,9 @@ export default class TripRoute extends AbstractSmartComponent {
     } else {
       return `${moment(startDate).format(`MMM D`)} &nbsp;&mdash;&nbsp; ${moment(endDate).format(`MMM D`)}`;
     }
+  }
+
+  _dataChangeHandler() {
+    this.render();
   }
 }

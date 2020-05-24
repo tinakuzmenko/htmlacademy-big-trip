@@ -9,7 +9,13 @@ export default class PageFilter extends AbstractComponent {
   }
 
   getTemplate() {
-    return this._renderPageFilter(this._filters);
+    const filtersMarkup = this._filters.map((filter) => this._createFilterMarkup(filter, filter.checked)).join(`\n`);
+
+    return `<form class="trip-filters" action="#" method="get">
+              ${filtersMarkup}
+
+              <button class="visually-hidden" type="submit">Accept filter</button>
+            </form>`;
   }
 
   setFilterChangeHandler(handler) {
@@ -21,16 +27,6 @@ export default class PageFilter extends AbstractComponent {
 
   _getFilterNameById(id) {
     return id.substring(this._FILTER_ID_PREFIX.length);
-  }
-
-  _renderPageFilter() {
-    const filtersMarkup = this._filters.map((filter) => this._createFilterMarkup(filter, filter.checked)).join(`\n`);
-
-    return `<form class="trip-filters" action="#" method="get">
-              ${filtersMarkup}
-
-              <button class="visually-hidden" type="submit">Accept filter</button>
-            </form>`;
   }
 
   _createFilterMarkup(filter, isChecked) {
