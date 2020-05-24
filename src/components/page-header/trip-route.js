@@ -1,4 +1,5 @@
 import {getSortedTripEvents} from '../../helpers/utils.js';
+import {RenderPosition} from '../../helpers/constants.js';
 import AbstractSmartComponent from '../abstract-smart-component.js';
 import {render, remove} from '../../helpers/render.js';
 import moment from 'moment';
@@ -17,7 +18,7 @@ export default class TripRoute extends AbstractSmartComponent {
 
   render() {
     remove(this);
-    render(this._container, this);
+    render(this._container, this, RenderPosition.AFTERBEGIN);
   }
 
   getTemplate() {
