@@ -1,13 +1,24 @@
 import {getSortedTripEvents} from '../../helpers/utils.js';
-import AbstractComponent from '../abstract-component.js';
+import {RenderPosition} from '../../helpers/constants.js';
+import AbstractSmartComponent from '../abstract-smart-component.js';
+import {render, remove} from '../../helpers/render.js';
 import moment from 'moment';
 
-export default class TripRoute extends AbstractComponent {
-  constructor(tripEvents) {
+export default class TripRoute extends AbstractSmartComponent {
+  constructor(container, tripEventsModel) {
     super();
-    this._tripEvents = tripEvents;
+    this._container = container;
+    this._tripEventsModel = tripEventsModel;
 
     this._MAXIMUM_CITIES_SHOWN = 3;
+
+    this._dataChangeHandler = this._dataChangeHandler.bind(this);
+    this._tripEventsModel.setDataChangeHandler(this._dataChangeHandler);
+  }
+
+  render() {
+    remove(this);
+    render(this._container, this, RenderPosition.AFTERBEGIN);
   }
 
   getTemplate() {
@@ -22,6 +33,8 @@ export default class TripRoute extends AbstractComponent {
   }
 
   _getTripRoute() {
+    this._tripEvents = this._tripEventsModel.getTripEvents();
+
     const tripEventsSortedByDate = getSortedTripEvents(this._tripEvents);
     const tripEventsCities = tripEventsSortedByDate.map((tripEvent) => tripEvent.destination.name);
 
@@ -46,5 +59,9 @@ export default class TripRoute extends AbstractComponent {
     } else {
       return `${moment(startDate).format(`MMM D`)} &nbsp;&mdash;&nbsp; ${moment(endDate).format(`MMM D`)}`;
     }
+  }
+
+  _dataChangeHandler() {
+    this.render();
   }
 }

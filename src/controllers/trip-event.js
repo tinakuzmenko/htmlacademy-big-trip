@@ -1,13 +1,16 @@
 import TripEventComponent from '../components/page-main/trip-events/trip-event.js';
 import TripEventFormComponent from '../components/page-main/trip-event-form/trip-event-form.js';
 import TripEventWrapperComponent from '../components/page-main/trip-events/trip-event-wrapper.js';
+import TripEventAdapter from '../models/trip-event.js';
 import {createEmptyTripEvent} from '../helpers/utils.js';
 import {Keycode, RenderPosition, Mode} from '../helpers/constants.js';
 import {render, replace, remove} from "../helpers/render.js";
 
 export default class TripEventController {
-  constructor(tripEventContainer, dataChangeHandler, viewChangeHandler) {
+  constructor(tripEventContainer, offers, destinations, dataChangeHandler, viewChangeHandler) {
     this._tripEventContainer = tripEventContainer;
+    this._offers = offers;
+    this._destinations = destinations;
     this._dataChangeHandler = dataChangeHandler;
     this._viewChangeHandler = viewChangeHandler;
     this._mode = Mode.DEFAULT;
@@ -29,7 +32,7 @@ export default class TripEventController {
     if (!tripEvent) {
       const emptyTripEventObject = createEmptyTripEvent();
 
-      this._tripEventFormComponent = new TripEventFormComponent(emptyTripEventObject, this._dataChangeHandler, this._viewChangeHandler, Mode.DEFAULT);
+      this._tripEventFormComponent = new TripEventFormComponent(emptyTripEventObject, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler, Mode.DEFAULT);
       this._mode = Mode.EDIT;
 
       render(this._tripEventContainer, this._tripEventFormComponent, RenderPosition.BEFOREBEGIN);
@@ -47,13 +50,10 @@ export default class TripEventController {
     const oldTripEventFormComponent = this._tripEventFormComponent;
 
     this._tripEventComponent = new TripEventComponent(this._tripEvent);
-    this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent);
+    this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
 
     this._tripEventComponent.setClickHandler(this._tripEventComponentClickHandler);
-    this._tripEventFormComponent.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);
-    this._tripEventFormComponent.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
-    this._tripEventFormComponent.setDeleteButtonClickHandler(this._tripEventFormComponentDeleteHandler);
-    this._tripEventFormComponent.setFavoritesButtonClickHandler(this._tripEventFormComponentFavoritesButtonClickHandler);
+    this._setFormHandlers();
 
     if (oldTripEventFormComponent && oldTripEventComponent) {
       replace(this._tripEventComponent, oldTripEventComponent);
@@ -88,17 +88,23 @@ export default class TripEventController {
   }
 
   _replaceEditFormToTripEvent() {
-    this._tripEventFormComponent.getElement().reset();
     replace(this._tripEventComponent, this._tripEventFormComponent);
-
     this._mode = Mode.DEFAULT;
+    this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
+    this._setFormHandlers();
+  }
+
+  _setFormHandlers() {
+    this._tripEventFormComponent.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);
+    this._tripEventFormComponent.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
+    this._tripEventFormComponent.setDeleteButtonClickHandler(this._tripEventFormComponentDeleteHandler);
+    this._tripEventFormComponent.setFavoritesButtonClickHandler(this._tripEventFormComponentFavoritesButtonClickHandler);
   }
 
   _tripEventComponentClickHandler() {
     this._replaceTripEventToEditForm();
     document.addEventListener(`keydown`, this._documentEscKeydownHandler);
   }
-
 
   _documentEscKeydownHandler(evt) {
     if (evt.key === Keycode.ESCAPE) {
@@ -119,8 +125,11 @@ export default class TripEventController {
 
   _tripEventFormComponentSubmitHandler(evt) {
     evt.preventDefault();
-    const newTripEvent = this._tripEventFormComponent.createNewTripEventObject();
-    this._dataChangeHandler(this, this._tripEvent, newTripEvent);
+    const formData = this._tripEventFormComponent.getData();
+    const data = this._prepareData(formData);
+
+    this._dataChangeHandler(this, this._tripEvent, data);
+
     document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
 
     if (this._tripEventComponent) {
@@ -145,6 +154,16 @@ export default class TripEventController {
     const updatedTripEvent = Object.assign({}, this._tripEvent, {
       isFavorite: !this._tripEvent.isFavorite,
     });
-    this._dataChangeHandler(this, this._tripEvent, updatedTripEvent);
+    const data = this._prepareData(updatedTripEvent);
+    const isFavorite = true;
+
+    this._dataChangeHandler(this, this._tripEvent, data, isFavorite);
+  }
+
+  _prepareData(formData) {
+    const tripEventAdapter = new TripEventAdapter(formData);
+    const data = tripEventAdapter.toRAW(formData);
+
+    return data;
   }
 }

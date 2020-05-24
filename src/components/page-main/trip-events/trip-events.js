@@ -4,9 +4,11 @@ import TripEventController from '../../../controllers/trip-event.js';
 import {render} from '../../../helpers/render.js';
 
 export default class TripEvents {
-  constructor(container, sortedTripEvents, dataChangeHandler) {
+  constructor(container, sortedTripEvents, offers, destinations, dataChangeHandler, api) {
     this._container = container;
     this._sortedTripEvents = sortedTripEvents;
+    this._offers = offers;
+    this._destinations = destinations;
     this._dataChangeHandler = dataChangeHandler;
     this._tripEventsControllers = [];
 
@@ -21,7 +23,7 @@ export default class TripEvents {
     render(this._container, this._tripDay);
 
     this._sortedTripEvents.forEach((sortedTripEvent) => {
-      const tripEventController = new TripEventController(this._tripEventsContainer, this._dataChangeHandler, this._viewChangeHandler);
+      const tripEventController = new TripEventController(this._tripEventsContainer, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
 
       this._tripEventsControllers.push(tripEventController);
       tripEventController.render(sortedTripEvent);

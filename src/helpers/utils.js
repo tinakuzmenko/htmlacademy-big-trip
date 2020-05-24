@@ -1,14 +1,4 @@
-import {SortType, TimeInMs} from './constants.js';
-
-const getRandomIntegerNumber = (min, max) => {
-  return min + Math.floor(Math.random() * (max - min));
-};
-
-const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomIntegerNumber(0, array.length);
-
-  return array[randomIndex];
-};
+import {SortType, TimeInMs, FilterType} from './constants.js';
 
 const getSortedTripEvents = (tripEvents, sortType = SortType.EVENT) => {
   let sortedTripEvents = [];
@@ -29,6 +19,19 @@ const getSortedTripEvents = (tripEvents, sortType = SortType.EVENT) => {
   return sortedTripEvents;
 };
 
+const getTripEventsByFilter = (tripEvents, filterType) => {
+  const nowDate = new Date();
+
+  switch (filterType) {
+    case FilterType.FUTURE:
+      return tripEvents.filter((tripEvent) => tripEvent.start > nowDate);
+    case FilterType.PAST:
+      return tripEvents.filter((tripEvent) => tripEvent.start < nowDate);
+    default:
+      return tripEvents;
+  }
+};
+
 const createTimeString = (value, signString) => {
   let timeString = ``;
 
@@ -36,7 +39,7 @@ const createTimeString = (value, signString) => {
     timeString = `0` + value + signString;
   }
 
-  if (value > 10) {
+  if (value >= 10) {
     timeString = value + signString;
   }
 
@@ -45,17 +48,20 @@ const createTimeString = (value, signString) => {
 
 const getTimeDifference = (start, end) => {
   const difference = end - start;
-
   const days = Math.trunc(difference / TimeInMs.DAY);
-  const daysString = createTimeString(days, `D`);
-
   const hours = Math.trunc((difference % TimeInMs.DAY) / TimeInMs.HOUR);
-  const hoursString = createTimeString(hours, `H`);
+  const minutes = Math.round((difference % TimeInMs.HOUR) / TimeInMs.MINUTE);
 
-  const minutes = Math.trunc(((difference % TimeInMs.DAY) % TimeInMs.HOUR) / TimeInMs.MINUTE);
-  const minutesString = createTimeString(minutes, `M`);
+  let string;
 
-  return `${daysString} ${hoursString} ${minutesString}`;
+  if (days > 0) {
+    string = `${createTimeString(days, `D`)} ${createTimeString(hours, `H`)} ${createTimeString(minutes, `M`)}`;
+  } else if (hours > 0) {
+    string = `${createTimeString(hours, `H`)} ${createTimeString(minutes, `M`)}`;
+  } else {
+    string = `${createTimeString(minutes, `M`)}`;
+  }
+  return string;
 };
 
 const createEmptyTripEvent = () => {
@@ -77,8 +83,16 @@ const createEmptyTripEvent = () => {
     },
     offers: [],
     timeDiff: getTimeDifference(newDate, newDate),
-    id: Date.parse(newDate)
+    id: Date.parse(new Date()) + Math.random()
   };
 };
 
-export {getRandomIntegerNumber, getRandomArrayItem, getSortedTripEvents, createEmptyTripEvent, getTimeDifference};
+const getCapitalizedString = (string) => {
+  if (!string) {
+    return string;
+  }
+
+  return string[0].toUpperCase() + string.slice(1);
+};
+
+export {getSortedTripEvents, getTripEventsByFilter, createEmptyTripEvent, getTimeDifference, getCapitalizedString};

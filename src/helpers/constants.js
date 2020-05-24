@@ -24,21 +24,6 @@ const eventActionsMap = {
   'Restaurant': `in`,
 };
 
-const MONTHS_DAYS = {
-  '0': 31,
-  '1': 28,
-  '2': 31,
-  '3': 30,
-  '4': 31,
-  '5': 30,
-  '6': 31,
-  '7': 31,
-  '8': 30,
-  '9': 31,
-  '10': 30,
-  '11': 31,
-};
-
 const Keycode = {
   ESCAPE: `Escape`,
 };
@@ -80,7 +65,9 @@ const ChartTypeLabelsMap = {
   'Restaurant': `🍴 RESTAURANT`,
 };
 
-const TRANSPORT_TYPE = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
+const EVENT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
+
+const TRANSPORT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
 
 const ChartConfiguration = {
   BAR_HEIGHT: 55,
@@ -98,4 +85,10 @@ const ChartConfiguration = {
   TIME_SPEND_TEXT: `TIME-SPEND`,
 };
 
-export {TimeInMs, RenderPosition, eventActionsMap, MONTHS_DAYS, Keycode, SortType, Mode, FilterType, TripDataTab, HIDDEN_CLASS, ChartTypeLabelsMap, TRANSPORT_TYPE, ChartConfiguration};
+const ServerUrl = {
+  POINTS: `https://11.ecmascript.pages.academy/big-trip/points`,
+  OFFERS: `https://11.ecmascript.pages.academy/big-trip/offers`,
+  DESTINATIONS: `https://11.ecmascript.pages.academy/big-trip/destinations`
+};
+
+export {TimeInMs, RenderPosition, eventActionsMap, Keycode, SortType, Mode, FilterType, TripDataTab, HIDDEN_CLASS, ChartTypeLabelsMap, EVENT_TYPES, TRANSPORT_TYPES, ChartConfiguration, ServerUrl};

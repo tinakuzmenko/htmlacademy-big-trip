@@ -1,5 +1,7 @@
-import ButtonAddNewEvent from './components/page-header/new-event-button.js';
+import API from './api.js';
+import ButtonAddNewEventComponent from './components/page-header/new-event-button.js';
 import FilterController from './controllers/filter.js';
+import LoadingComponent from './components/loading.js';
 import PageHeaderContainerComponent from './components/page-header/page-header-container.js';
 import PageNavigationComponent from './components/page-header/page-navigation.js';
 import TripCostComponent from './components/page-header/trip-cost.js';
@@ -9,61 +11,67 @@ import TripEventsBoardComponent from './components/page-main/trip-events/trip-ev
 import TripEventsBoardController from './controllers/trip-events-board.js';
 import TripStatisticsComponent from './components/page-main/trip-statistics/trip-statistics.js';
 import {RenderPosition, TripDataTab} from "./helpers/constants.js";
-import {render} from './helpers/render.js';
-import {createTripEvents} from './mocks/generate-trip-events.js';
+import {render, remove} from './helpers/render.js';
 
-const EVENTS_AMOUNT = 3;
-const tripEventsObjects = createTripEvents(EVENTS_AMOUNT);
-
-const tripEventsModel = new TripEventsModel();
-tripEventsModel.setTripEvents(tripEventsObjects);
+const AUTHORIZATION = `Basic y2StXBzjFLjS18cFElo8wl5HcxPg7rjm`;
 
 const tripMain = document.querySelector(`.trip-main`);
 const pageBodyContainer = document.querySelector(`main .page-body__container`);
-
-render(tripMain, new PageHeaderContainerComponent(), RenderPosition.AFTERBEGIN);
-
-const tripInfoContainer = tripMain.querySelector(`.trip-info`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
 const firstTitle = tripControls.querySelector(`h2`);
 
-if (tripEventsObjects.length > 0) {
-  render(tripInfoContainer, new TripRouteComponent(tripEventsObjects));
-}
-
-render(tripInfoContainer, new TripCostComponent(tripEventsObjects));
-
-const pageNavigation = new PageNavigationComponent();
-render(firstTitle, pageNavigation, RenderPosition.AFTEREND);
-
+const api = new API(AUTHORIZATION);
+const tripEventsModel = new TripEventsModel();
+const pageHeaderContainerComponent = new PageHeaderContainerComponent();
+const pageNavigationComponent = new PageNavigationComponent();
+const loadingComponent = new LoadingComponent();
 const filterController = new FilterController(tripControls, tripEventsModel);
-filterController.render();
-
-const buttonAddNewEvent = new ButtonAddNewEvent(tripEventsModel);
-render(tripMain, buttonAddNewEvent);
-buttonAddNewEvent.setClickHandler();
-
+const buttonAddNewEventComponent = new ButtonAddNewEventComponent(tripEventsModel);
 const tripEventsBoardComponent = new TripEventsBoardComponent();
+const tripEventsBoardController = new TripEventsBoardController(tripEventsBoardComponent, tripEventsModel, api);
+const tripStatisticsComponent = new TripStatisticsComponent(tripEventsModel);
+
+render(tripMain, pageHeaderContainerComponent, RenderPosition.AFTERBEGIN);
+render(firstTitle, pageNavigationComponent, RenderPosition.AFTEREND);
+render(tripMain, buttonAddNewEventComponent);
+render(pageBodyContainer, loadingComponent);
 render(pageBodyContainer, tripEventsBoardComponent);
+render(pageBodyContainer, tripStatisticsComponent);
 
-const tripEventsBoardController = new TripEventsBoardController(tripEventsBoardComponent, tripEventsModel);
-tripEventsBoardController.render();
+const tripInfoContainer = tripMain.querySelector(`.trip-info`);
+const tripCostComponent = new TripCostComponent(tripInfoContainer, tripEventsModel);
+const tripRouteComponent = new TripRouteComponent(tripInfoContainer, tripEventsModel);
 
-const tripStatistics = new TripStatisticsComponent(tripEventsModel);
-render(pageBodyContainer, tripStatistics);
-tripStatistics.hide();
+filterController.render();
+buttonAddNewEventComponent.setClickHandler();
+buttonAddNewEventComponent.getElement().disabled = true;
+tripStatisticsComponent.hide();
 
-pageNavigation.setOnChange((menuItem) => {
+pageNavigationComponent.setChangeHandler((menuItem) => {
   switch (menuItem) {
     case TripDataTab.STATS:
-      pageNavigation.setActiveItem(menuItem);
+      pageNavigationComponent.setActiveItem(menuItem);
       tripEventsBoardController.hide();
-      tripStatistics.show();
+      tripStatisticsComponent.show();
       break;
     case TripDataTab.TABLE:
-      pageNavigation.setActiveItem(menuItem);
-      tripStatistics.hide();
+      pageNavigationComponent.setActiveItem(menuItem);
+      tripStatisticsComponent.hide();
       tripEventsBoardController.show();
       break;
   }
 });
+
+api.getData()
+  .then((data) => {
+    tripEventsModel.setTripEvents(data.tripEvents);
+    tripEventsModel.setOffers(data.offers);
+    tripEventsModel.setDestinations(data.destinations);
+  })
+  .then(() => {
+    remove(loadingComponent);
+    buttonAddNewEventComponent.getElement().disabled = false;
+    tripRouteComponent.render();
+    tripCostComponent.render();
+    tripEventsBoardController.render();
+  });

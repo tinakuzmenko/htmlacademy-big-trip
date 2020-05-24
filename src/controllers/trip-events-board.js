@@ -8,9 +8,10 @@ import {render} from '../helpers/render.js';
 import {getSortedTripEvents} from '../helpers/utils.js';
 
 export default class TripEventsBoardController {
-  constructor(container, tripEventsModel) {
+  constructor(container, tripEventsModel, api) {
     this._containerComponent = container;
     this._tripEventsModel = tripEventsModel;
+    this._api = api;
 
     this._container = this._containerComponent.getElement();
     this._noTasksComponent = new NoTripEventsComponent();
@@ -41,6 +42,9 @@ export default class TripEventsBoardController {
 
   render() {
     const sortedTripEvents = getSortedTripEvents(this._tripEventsModel.getTripEvents(), this._sortType);
+    const offers = this._tripEventsModel.getOffers();
+    const destinations = this._tripEventsModel.getDestinations();
+
     this._clearTripEvents();
 
     if (!sortedTripEvents.length) {
@@ -56,15 +60,20 @@ export default class TripEventsBoardController {
       case SortType.TIME:
       case SortType.PRICE:
         this._tripSortItemDay.textContent = ``;
-        this._tripEventsView = new TripEventsView(this._tripDaysContainer, sortedTripEvents, this._dataChangeHandler);
+        this._tripEventsView = new TripEventsView(this._tripDaysContainer, sortedTripEvents, offers, destinations, this._dataChangeHandler);
         render(this._container, this._tripEventsView);
         break;
       default:
         this._tripSortItemDay.textContent = `Day`;
-        this._tripEventsView = new TripEventsGroupedByDaysView(this._tripDaysContainer, sortedTripEvents, this._dataChangeHandler, this._tripEventsModel);
+        this._tripEventsView = new TripEventsGroupedByDaysView(this._tripDaysContainer, sortedTripEvents, offers, destinations, this._dataChangeHandler, this._tripEventsModel);
         render(this._container, this._tripEventsView);
         break;
     }
+  }
+
+  updateEvents() {
+    this._clearTripEvents();
+    this.render();
   }
 
   _setDefaultBoardMode() {
@@ -102,7 +111,7 @@ export default class TripEventsBoardController {
     this._tripEventsView.createNewEventForm();
   }
 
-  _dataChangeHandler(tripEventController, oldTripEvent, updatedTripEvent) {
+  _dataChangeHandler(tripEventController, oldTripEvent, updatedTripEvent, isFavorite = false) {
     if (oldTripEvent === null) {
       this._tripEventsModel.addTripEvent(updatedTripEvent);
       this._tripEventsModel.setIsCreatingMode(false);
@@ -111,11 +120,17 @@ export default class TripEventsBoardController {
       this._tripEventsModel.removeTripEvent(oldTripEvent.id);
       this.render();
     } else {
-      const isSuccess = this._tripEventsModel.updateTripEvent(oldTripEvent.id, updatedTripEvent);
+      this._api.updateTripEvent(oldTripEvent.id, updatedTripEvent)
+        .then((tripEventModel) => {
+          const isSuccess = this._tripEventsModel.updateTripEvent(oldTripEvent.id, tripEventModel);
 
-      if (isSuccess) {
-        tripEventController.render(updatedTripEvent);
-      }
+          if (isSuccess) {
+            tripEventController.render(tripEventModel);
+            if (!isFavorite) {
+              this.updateEvents();
+            }
+          }
+        });
     }
   }
 }

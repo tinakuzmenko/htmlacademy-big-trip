@@ -15,7 +15,7 @@ export default class PageNavigation extends AbstractComponent {
     checkedItem.classList.add(`trip-tabs__btn--active`);
   }
 
-  setOnChange(handler) {
+  setChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
       const menuTab = evt.target.dataset.tab;

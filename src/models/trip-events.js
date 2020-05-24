@@ -1,4 +1,4 @@
-import {getTripEventsByFilter} from '../helpers/filter.js';
+import {getTripEventsByFilter} from '../helpers/utils.js';
 import {FilterType} from "../helpers/constants.js";
 
 export default class TripEvents {
@@ -20,14 +20,12 @@ export default class TripEvents {
     return this._tripEvents;
   }
 
-  setTripEvents(tripEvents) {
-    this._tripEvents = Array.from(tripEvents);
-    this._callHandlers(this._dataChangeHandlers);
+  getOffers() {
+    return this._offers;
   }
 
-  setFilter(filterType) {
-    this._activeFilterType = filterType;
-    this._callHandlers(this._filterChangeHandlers);
+  getDestinations() {
+    return this._destinations;
   }
 
   getFilter() {
@@ -36,6 +34,24 @@ export default class TripEvents {
 
   getIsCreatingMode() {
     return this._isCreatingMode;
+  }
+
+  setTripEvents(tripEvents) {
+    this._tripEvents = Array.from(tripEvents);
+    this._callHandlers(this._dataChangeHandlers);
+  }
+
+  setOffers(offers) {
+    this._offers = offers;
+  }
+
+  setDestinations(destinations) {
+    this._destinations = destinations;
+  }
+
+  setFilter(filterType) {
+    this._activeFilterType = filterType;
+    this._callHandlers(this._filterChangeHandlers);
   }
 
   setIsCreatingMode(mode = false) {

@@ -44,9 +44,9 @@ export default class TripEvent extends AbstractComponent {
     );
   }
 
-  _renderTripEventOffers(offers) {
-    return offers.map((offer) => {
-      const {title, price} = offer;
+  _renderTripEventOffers(activeOffers) {
+    return activeOffers.map((activeOffer) => {
+      const {title, price} = activeOffer;
 
       return (
         `<li class="event__offer">
