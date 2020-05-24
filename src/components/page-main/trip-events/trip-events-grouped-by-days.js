@@ -66,7 +66,7 @@ export default class TripEventsGroupedByDays {
 
   createNewEventForm() {
     this._viewChangeHandler();
-    this._newTripEventController = new TripEventController(this._container, this._dataChangeHandler, this._viewChangeHandler);
+    this._newTripEventController = new TripEventController(this._container, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
     this._newTripEventController.render(null);
   }
 

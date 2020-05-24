@@ -13,7 +13,7 @@ import TripStatisticsComponent from './components/page-main/trip-statistics/trip
 import {RenderPosition, TripDataTab} from "./helpers/constants.js";
 import {render, remove} from './helpers/render.js';
 
-const AUTHORIZATION = `Basic y2StXBzjFLjS18cFEPo8wl4HcxPg7rjm`;
+const AUTHORIZATION = `Basic y2StXBzjFLjS18cFElo8wl5HcxPg7rjm`;
 
 const tripMain = document.querySelector(`.trip-main`);
 const pageBodyContainer = document.querySelector(`main .page-body__container`);
@@ -44,6 +44,7 @@ const tripInfoContainer = tripMain.querySelector(`.trip-info`);
 
 filterController.render();
 buttonAddNewEventComponent.setClickHandler();
+buttonAddNewEventComponent.getElement().disabled = true;
 tripStatisticsComponent.hide();
 
 pageNavigationComponent.setChangeHandler((menuItem) => {
@@ -69,6 +70,7 @@ api.getData()
   })
   .then(() => {
     remove(loadingComponent);
+    buttonAddNewEventComponent.getElement().disabled = false;
     render(tripInfoContainer, tripRouteComponent);
     render(tripInfoContainer, tripCostComponent);
     tripEventsBoardController.render();
