@@ -27,7 +27,7 @@ export default class TripEventForm extends AbstractSmartComponent {
     this._tripEventEndTime = this._getDateAndTimeFormFormat(this._tripEvent.end);
     this._tripEventBasePrice = this._tripEvent.basePrice;
     this._tripEventIsFavorite = this._tripEvent.isFavorite;
-    this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.photos);
+    this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.pictures);
 
     this._destinationsNames = this._getDestinationsNames();
 
@@ -192,7 +192,7 @@ export default class TripEventForm extends AbstractSmartComponent {
       activeOffers: this._tripEventActiveOffers,
       basePrice: parseInt(this._tripEventBasePrice, 10),
       destination: this._tripEventDestination,
-      id: this._tripEventId,
+      id: Math.round(this._tripEventId * 10),
     };
 
     if (this._flatpickrEnd) {

@@ -13,7 +13,7 @@ import TripStatisticsComponent from './components/page-main/trip-statistics/trip
 import {RenderPosition, TripDataTab} from "./helpers/constants.js";
 import {render, remove} from './helpers/render.js';
 
-const AUTHORIZATION = `Basic y2StXBzjFLjS18cFElo8wl5HcxPg7rjm`;
+const AUTHORIZATION = `Basic y2StXBzjFLjF18cFEpo8el5HDxgg7rjm`;
 
 const tripMain = document.querySelector(`.trip-main`);
 const pageBodyContainer = document.querySelector(`main .page-body__container`);

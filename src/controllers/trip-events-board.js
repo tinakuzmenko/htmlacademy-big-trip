@@ -113,12 +113,18 @@ export default class TripEventsBoardController {
 
   _dataChangeHandler(tripEventController, oldTripEvent, updatedTripEvent, isFavorite = false) {
     if (oldTripEvent === null) {
-      this._tripEventsModel.addTripEvent(updatedTripEvent);
-      this._tripEventsModel.setIsCreatingMode(false);
-      this.render();
+      this._api.createTripEvent(updatedTripEvent)
+      .then((tripEventModel) => {
+        this._tripEventsModel.addTripEvent(tripEventModel);
+        this._tripEventsModel.setIsCreatingMode(false);
+        this.render();
+      });
     } else if (updatedTripEvent === null) {
-      this._tripEventsModel.removeTripEvent(oldTripEvent.id);
-      this.render();
+      this._api.deleteTripEvent(oldTripEvent.id)
+      .then(() => {
+        this._tripEventsModel.removeTripEvent(oldTripEvent.id);
+        this.render();
+      });
     } else {
       this._api.updateTripEvent(oldTripEvent.id, updatedTripEvent)
         .then((tripEventModel) => {
