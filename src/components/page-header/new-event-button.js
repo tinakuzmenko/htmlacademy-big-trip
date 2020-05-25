@@ -5,10 +5,12 @@ export default class ButtonAddNewEvent extends AbstractComponent {
     super();
 
     this._tripEventsModel = tripEventsModel;
-    this._isDisabled = this._tripEventsModel.getIsCreatingMode();
+
+    this._isEnabled = this._tripEventsModel.getIsButtonNewEventEnabled();
     this._buttonModeChangeHandler = this._buttonModeChangeHandler.bind(this);
 
     this._tripEventsModel.setModeChangeHandler(this._buttonModeChangeHandler);
+    this._tripEventsModel.setIsButtonNewEventEnabledHandler(this._buttonModeChangeHandler);
   }
 
   getTemplate() {
@@ -17,18 +19,18 @@ export default class ButtonAddNewEvent extends AbstractComponent {
 
   setClickHandler() {
     this.getElement().addEventListener(`click`, () => {
-      if (!this._isDisabled) {
+      if (this._isEnabled) {
         this._tripEventsModel.setIsCreatingMode(true);
       }
     });
   }
 
-  setButtonMode() {
-    this.getElement().disabled = this._isDisabled;
+  _setButtonMode() {
+    this.getElement().disabled = !this._isEnabled;
   }
 
   _buttonModeChangeHandler() {
-    this._isDisabled = this._tripEventsModel.getIsCreatingMode();
-    this.setButtonMode();
+    this._isEnabled = this._tripEventsModel.getIsButtonNewEventEnabled();
+    this._setButtonMode();
   }
 }
