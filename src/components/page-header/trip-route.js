@@ -33,24 +33,28 @@ export default class TripRoute extends AbstractComponent {
   }
 
   _getTripRoute() {
-    this._tripEvents = this._tripEventsModel.getTripEvents();
-
-    const tripEventsSortedByDate = getSortedTripEvents(this._tripEvents);
+    const tripEventsSortedByDate = getSortedTripEvents(this._tripEventsModel.getTripEvents());
     const tripEventsCities = tripEventsSortedByDate.map((tripEvent) => tripEvent.destination.name);
 
     return tripEventsCities.length <= this._MAXIMUM_CITIES_SHOWN ? tripEventsCities.join(` — `) : tripEventsCities.slice(0, 1) + ` — … — ` + tripEventsCities.slice(tripEventsCities.length - 1);
   }
 
   _getTripEventsDates() {
-    const tripEventsStartDates = this._tripEvents.map((tripEvent) => {
-      return moment(tripEvent.start).startOf(`date`);
-    }).sort((a, b) => a - b);
+    if (this._tripEventsModel.getTripEvents().length > 0) {
+      this._tripEvents = this._tripEventsModel.getTripEvents();
 
-    const tripEventsEndDates = this._tripEvents.map((tripEvent) => {
-      return moment(tripEvent.end).startOf(`date`);
-    }).sort((a, b) => a - b);
+      const tripEventsStartDates = this._tripEvents.map((tripEvent) => {
+        return moment(tripEvent.start).startOf(`date`);
+      }).sort((a, b) => a - b);
 
-    return [tripEventsStartDates[0], tripEventsEndDates[tripEventsEndDates.length - 1]];
+      const tripEventsEndDates = this._tripEvents.map((tripEvent) => {
+        return moment(tripEvent.end).startOf(`date`);
+      }).sort((a, b) => a - b);
+
+      return [tripEventsStartDates[0], tripEventsEndDates[tripEventsEndDates.length - 1]];
+    }
+
+    return ``;
   }
 
   _getTripDates(startDate, endDate) {

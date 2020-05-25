@@ -11,6 +11,8 @@ export default class NoTripEvents extends AbstractComponent {
     this._destinations = destinations;
     this._dataChangeHandler = dataChangeHandler;
     this._tripEventsModel = tripEventsModel;
+
+    this._viewChangeHandler = this._viewChangeHandler.bind(this);
   }
 
   getTemplate() {
@@ -20,8 +22,17 @@ export default class NoTripEvents extends AbstractComponent {
   }
 
   createNewEventForm() {
-    this._newTripEventController = new TripEventController(this._container, this._offers, this._destinations, this._dataChangeHandler);
+    this._viewChangeHandler();
+    this._newTripEventController = new TripEventController(this._container, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
 
     this._newTripEventController.render(null);
+  }
+
+  _viewChangeHandler() {
+    if (this._newTripEventController) {
+      this._newTripEventController.destroy();
+      this._newTripEventController = null;
+      this._tripEventsModel.setIsCreatingMode(false);
+    }
   }
 }
