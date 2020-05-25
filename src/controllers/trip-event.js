@@ -166,6 +166,7 @@ export default class TripEventController {
 
     this._disableForm();
     this._dataChangeHandler(this, this._tripEvent, data);
+    this._viewChangeHandler();
   }
 
   _tripEventFormComponentDeleteHandler() {
