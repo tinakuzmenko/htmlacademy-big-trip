@@ -374,7 +374,6 @@ export default class TripEventForm extends AbstractSmartComponent {
 
   _renderOffersSection(activeOffers) {
     const tripEventOffers = this._getOffersByType(this._tripEventType);
-
     if (tripEventOffers.offers.length > 0) {
       const tripEventOffersElements = this._renderEventOffers(tripEventOffers, activeOffers);
 

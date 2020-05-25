@@ -2,6 +2,7 @@ import API from './api.js';
 import ButtonAddNewEventComponent from './components/page-header/new-event-button.js';
 import FilterController from './controllers/filter.js';
 import LoadingComponent from './components/loading.js';
+import LoadErrorComponent from './components/load-error.js';
 import PageHeaderContainerComponent from './components/page-header/page-header-container.js';
 import PageNavigationComponent from './components/page-header/page-navigation.js';
 import TripCostComponent from './components/page-header/trip-cost.js';
@@ -25,6 +26,7 @@ const tripEventsModel = new TripEventsModel();
 const pageHeaderContainerComponent = new PageHeaderContainerComponent();
 const pageNavigationComponent = new PageNavigationComponent();
 const loadingComponent = new LoadingComponent();
+const loadErrorComponent = new LoadErrorComponent();
 const filterController = new FilterController(tripControls, tripEventsModel);
 const buttonAddNewEventComponent = new ButtonAddNewEventComponent(tripEventsModel);
 const tripEventsBoardComponent = new TripEventsBoardComponent();
@@ -64,9 +66,9 @@ pageNavigationComponent.setChangeHandler((menuItem) => {
 
 api.getData()
   .then((data) => {
-    tripEventsModel.setTripEvents(data.tripEvents);
     tripEventsModel.setOffers(data.offers);
     tripEventsModel.setDestinations(data.destinations);
+    tripEventsModel.setTripEvents(data.tripEvents);
   })
   .then(() => {
     remove(loadingComponent);
@@ -74,4 +76,9 @@ api.getData()
     tripRouteComponent.render();
     tripCostComponent.render();
     tripEventsBoardController.render();
+  })
+  .catch(() => {
+    remove(tripRouteComponent);
+    remove(loadingComponent);
+    render(pageBodyContainer, loadErrorComponent);
   });

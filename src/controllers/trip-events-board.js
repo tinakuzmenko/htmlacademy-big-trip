@@ -14,7 +14,6 @@ export default class TripEventsBoardController {
     this._api = api;
 
     this._container = this._containerComponent.getElement();
-    this._noTasksComponent = new NoTripEventsComponent();
     this._tripDaysContainer = new TripDaysContainer().getElement();
     this._sortComponent = new TripSortComponent();
     this._sortType = SortType.EVENT;
@@ -48,7 +47,8 @@ export default class TripEventsBoardController {
     this._clearTripEvents();
 
     if (!sortedTripEvents.length) {
-      render(this._container, this._noTasksComponent);
+      this._tripEventsView = new NoTripEventsComponent(this._container, sortedTripEvents, offers, destinations, this._dataChangeHandler, this._tripEventsModel);
+      render(this._container, this._tripEventsView);
       return;
     }
 
