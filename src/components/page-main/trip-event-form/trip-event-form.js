@@ -6,6 +6,11 @@ import moment from 'moment';
 
 import "flatpickr/dist/flatpickr.min.css";
 
+const DefaultData = {
+  DELETE_BUTTON_TEXT: `Delete`,
+  SAVE_BUTTON_TEXT: `Save`,
+};
+
 export default class TripEventForm extends AbstractSmartComponent {
   constructor(tripEvent, offers, destinations, dataChangeHandler, viewChangeHandler, mode = Mode.EDIT) {
     super();
@@ -18,6 +23,7 @@ export default class TripEventForm extends AbstractSmartComponent {
 
     this._flatpickr = null;
 
+    this._externalData = DefaultData;
     this._tripEventId = this._tripEvent.id;
     this._tripEventType = this._tripEvent.type;
     this._tripEventDestination = this._tripEvent.destination;
@@ -41,6 +47,8 @@ export default class TripEventForm extends AbstractSmartComponent {
 
   getTemplate() {
     const renderedOffersSection = this._renderOffersSection(this._tripEventActiveOffers, this._tripEventId);
+    const deleteButtonText = this._externalData.DELETE_BUTTON_TEXT;
+    const saveButtonText = this._externalData.SAVE_BUTTON_TEXT;
 
     return (`<form class="trip-events__item event event--edit" action="#" method="post">
               <header class="event__header">
@@ -100,9 +108,9 @@ export default class TripEventForm extends AbstractSmartComponent {
                   <input class="event__input  event__input--price" this._tripEventId="event-price-${this._tripEventId}" type="text" name="event-price" value="${this._tripEventBasePrice}" required>
                 </div>
 
-                <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+                <button class="event__save-btn  btn  btn--blue" type="submit">${saveButtonText}</button>
                 <button class="event__reset-btn" type="reset">
-                  ${this._tripEventFormMode === Mode.EDIT ? `Delete` : `Cancel`}
+                  ${this._tripEventFormMode === Mode.EDIT ? `${deleteButtonText}` : `Cancel`}
                 </button>
 
                 ${this._tripEventFormMode === Mode.EDIT ? `<input id="event-favorite-${this._tripEventId}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${this._tripEventIsFavorite ? `checked` : ``}>
@@ -134,6 +142,41 @@ export default class TripEventForm extends AbstractSmartComponent {
               </section>` : ``}
 
             </form>`);
+  }
+
+  getData() {
+    const tripEventType = this._tripEventType;
+    const tripEventStartTime = new Date(moment(this._tripEventStartTime, `DD/MM/YY HH:mm`).format());
+    const tripEndTime = new Date(moment(this._tripEventEndTime, `DD/MM/YY HH:mm`).format());
+    const type = tripEventType;
+
+    this._tripEvent = {
+      type,
+      start: tripEventStartTime,
+      end: tripEndTime,
+      isFavorite: this._tripEventFormMode === Mode.EDIT ? this._tripEventIsFavorite : false,
+      activeOffers: this._tripEventActiveOffers,
+      basePrice: parseInt(this._tripEventBasePrice, 10),
+      destination: this._tripEventDestination,
+      id: Math.round(this._tripEventId * 10),
+    };
+
+    if (this._flatpickrEnd) {
+      this._flatpickrEnd.destroy();
+      this._flatpickrEnd = null;
+    }
+
+    if (this._flatpickrStart) {
+      this._flatpickrStart.destroy();
+      this._flatpickrStart = null;
+    }
+
+    return this._tripEvent;
+  }
+
+  setData(data) {
+    this._externalData = Object.assign({}, DefaultData, data);
+    this.rerender();
   }
 
   setSubmitHandler(handler) {
@@ -176,36 +219,6 @@ export default class TripEventForm extends AbstractSmartComponent {
     }
 
     super.removeElement();
-  }
-
-  getData() {
-    const tripEventType = this._tripEventType;
-    const tripEventStartTime = new Date(moment(this._tripEventStartTime, `DD/MM/YY HH:mm`).format());
-    const tripEndTime = new Date(moment(this._tripEventEndTime, `DD/MM/YY HH:mm`).format());
-    const type = tripEventType;
-
-    this._tripEvent = {
-      type,
-      start: tripEventStartTime,
-      end: tripEndTime,
-      isFavorite: this._tripEventFormMode === Mode.EDIT ? this._tripEventIsFavorite : false,
-      activeOffers: this._tripEventActiveOffers,
-      basePrice: parseInt(this._tripEventBasePrice, 10),
-      destination: this._tripEventDestination,
-      id: Math.round(this._tripEventId * 10),
-    };
-
-    if (this._flatpickrEnd) {
-      this._flatpickrEnd.destroy();
-      this._flatpickrEnd = null;
-    }
-
-    if (this._flatpickrStart) {
-      this._flatpickrStart.destroy();
-      this._flatpickrStart = null;
-    }
-
-    return this._tripEvent;
   }
 
   rerender() {

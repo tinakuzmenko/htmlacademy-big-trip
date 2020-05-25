@@ -118,12 +118,19 @@ export default class TripEventsBoardController {
         this._tripEventsModel.addTripEvent(tripEventModel);
         this._tripEventsModel.setIsCreatingMode(false);
         this.render();
+      })
+      .catch(() => {
+        tripEventController.shake();
       });
     } else if (updatedTripEvent === null) {
       this._api.deleteTripEvent(oldTripEvent.id)
       .then(() => {
+        tripEventController.closeTripEventFormOnSuccessDelete();
         this._tripEventsModel.removeTripEvent(oldTripEvent.id);
         this.render();
+      })
+      .catch(() => {
+        tripEventController.shake();
       });
     } else {
       this._api.updateTripEvent(oldTripEvent.id, updatedTripEvent)
@@ -133,9 +140,13 @@ export default class TripEventsBoardController {
           if (isSuccess) {
             tripEventController.render(tripEventModel);
             if (!isFavorite) {
+              tripEventController.closeTripEventFormOnSuccessSave();
               this.updateEvents();
             }
           }
+        })
+        .catch(() => {
+          tripEventController.shake();
         });
     }
   }
