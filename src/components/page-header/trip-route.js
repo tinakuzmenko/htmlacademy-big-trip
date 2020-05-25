@@ -22,9 +22,14 @@ export default class TripRoute extends AbstractComponent {
   }
 
   getTemplate() {
+    this._tripEvents = this._tripEventsModel.getTripEvents();
     const title = this._getTripRoute();
-    const tripDates = this._getTripEventsDates();
-    const tripDatesString = this._getTripDates(tripDates[0], tripDates[tripDates.length - 1]);
+    let tripDatesString = ``;
+
+    if (this._tripEvents.length > 0) {
+      const tripDates = this._getTripEventsDates();
+      tripDatesString = this._getTripDates(tripDates[0], tripDates[tripDates.length - 1]);
+    }
 
     return `<div class="trip-info__main">
               <h1 class="trip-info__title">${title}</h1>
@@ -33,28 +38,22 @@ export default class TripRoute extends AbstractComponent {
   }
 
   _getTripRoute() {
-    const tripEventsSortedByDate = getSortedTripEvents(this._tripEventsModel.getTripEvents());
+    const tripEventsSortedByDate = getSortedTripEvents(this._tripEvents);
     const tripEventsCities = tripEventsSortedByDate.map((tripEvent) => tripEvent.destination.name);
 
     return tripEventsCities.length <= this._MAXIMUM_CITIES_SHOWN ? tripEventsCities.join(` — `) : tripEventsCities.slice(0, 1) + ` — … — ` + tripEventsCities.slice(tripEventsCities.length - 1);
   }
 
   _getTripEventsDates() {
-    if (this._tripEventsModel.getTripEvents().length > 0) {
-      this._tripEvents = this._tripEventsModel.getTripEvents();
+    const tripEventsStartDates = this._tripEvents.map((tripEvent) => {
+      return moment(tripEvent.start).startOf(`date`);
+    }).sort((a, b) => a - b);
 
-      const tripEventsStartDates = this._tripEvents.map((tripEvent) => {
-        return moment(tripEvent.start).startOf(`date`);
-      }).sort((a, b) => a - b);
+    const tripEventsEndDates = this._tripEvents.map((tripEvent) => {
+      return moment(tripEvent.end).startOf(`date`);
+    }).sort((a, b) => a - b);
 
-      const tripEventsEndDates = this._tripEvents.map((tripEvent) => {
-        return moment(tripEvent.end).startOf(`date`);
-      }).sort((a, b) => a - b);
-
-      return [tripEventsStartDates[0], tripEventsEndDates[tripEventsEndDates.length - 1]];
-    }
-
-    return ``;
+    return [tripEventsStartDates[0], tripEventsEndDates[tripEventsEndDates.length - 1]];
   }
 
   _getTripDates(startDate, endDate) {

@@ -14,7 +14,7 @@ import TripStatisticsComponent from './components/page-main/trip-statistics/trip
 import {RenderPosition, TripDataTab} from "./helpers/constants.js";
 import {render, remove} from './helpers/render.js';
 
-const AUTHORIZATION = `Basic y2StXBzjFLjF18cFEpo8el5HDxgg7rjm`;
+const AUTHORIZATION = `Basic y2StXBzjFLjF18cFEpo5el5HDxgg7rjm`;
 
 const tripMain = document.querySelector(`.trip-main`);
 const pageBodyContainer = document.querySelector(`main .page-body__container`);
@@ -78,7 +78,6 @@ api.getData()
     tripEventsBoardController.render();
   })
   .catch(() => {
-    remove(tripRouteComponent);
     remove(loadingComponent);
     render(pageBodyContainer, loadErrorComponent);
   });
