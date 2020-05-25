@@ -13,7 +13,7 @@ export default class TripEventController {
     this._destinations = destinations;
     this._dataChangeHandler = dataChangeHandler;
     this._viewChangeHandler = viewChangeHandler;
-    this._mode = Mode.DEFAULT;
+    this._mode = Mode.VIEW;
 
     this._tripEvent = null;
     this._tripEventComponent = null;
@@ -32,7 +32,7 @@ export default class TripEventController {
     if (!tripEvent) {
       const emptyTripEventObject = createEmptyTripEvent();
 
-      this._tripEventFormComponent = new TripEventFormComponent(emptyTripEventObject, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler, Mode.DEFAULT);
+      this._tripEventFormComponent = new TripEventFormComponent(emptyTripEventObject, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler, Mode.VIEW);
       this._mode = Mode.EDIT;
 
       render(this._tripEventContainer, this._tripEventFormComponent, RenderPosition.BEFOREBEGIN);
@@ -65,7 +65,7 @@ export default class TripEventController {
   }
 
   setDefaultView() {
-    if (this._mode !== Mode.DEFAULT) {
+    if (this._mode !== Mode.VIEW) {
       this._replaceEditFormToTripEvent();
     }
   }
@@ -89,7 +89,7 @@ export default class TripEventController {
 
   _replaceEditFormToTripEvent() {
     replace(this._tripEventComponent, this._tripEventFormComponent);
-    this._mode = Mode.DEFAULT;
+    this._mode = Mode.VIEW;
     this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
     this._setFormHandlers();
   }

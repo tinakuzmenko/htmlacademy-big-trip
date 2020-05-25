@@ -1,10 +1,10 @@
 import {getSortedTripEvents} from '../../helpers/utils.js';
 import {RenderPosition} from '../../helpers/constants.js';
-import AbstractSmartComponent from '../abstract-smart-component.js';
+import AbstractComponent from '../abstract-component.js';
 import {render, remove} from '../../helpers/render.js';
 import moment from 'moment';
 
-export default class TripRoute extends AbstractSmartComponent {
+export default class TripRoute extends AbstractComponent {
   constructor(container, tripEventsModel) {
     super();
     this._container = container;
@@ -27,9 +27,9 @@ export default class TripRoute extends AbstractSmartComponent {
     const tripDatesString = this._getTripDates(tripDates[0], tripDates[tripDates.length - 1]);
 
     return `<div class="trip-info__main">
-            <h1 class="trip-info__title">${title}</h1>
-            <p class="trip-info__dates">${tripDatesString}</p>
-          </div>`;
+              <h1 class="trip-info__title">${title}</h1>
+              <p class="trip-info__dates">${tripDatesString}</p>
+            </div>`;
   }
 
   _getTripRoute() {

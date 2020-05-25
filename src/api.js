@@ -1,5 +1,10 @@
-import {ServerUrl} from './helpers/constants.js';
 import TripEventAdapter from './models/trip-event.js';
+
+const ServerUrl = {
+  POINTS: `https://11.ecmascript.pages.academy/big-trip/points`,
+  OFFERS: `https://11.ecmascript.pages.academy/big-trip/offers`,
+  DESTINATIONS: `https://11.ecmascript.pages.academy/big-trip/destinations`
+};
 
 const Method = {
   GET: `GET`,
