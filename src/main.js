@@ -1,5 +1,5 @@
 import API from './api.js';
-import ButtonAddNewEventComponent from './components/page-header/new-event-button.js';
+import ButtonAddNewEventComponent from './components/page-header/button-add-new-event.js';
 import FilterController from './controllers/filter.js';
 import LoadingComponent from './components/loading.js';
 import LoadErrorComponent from './components/load-error.js';

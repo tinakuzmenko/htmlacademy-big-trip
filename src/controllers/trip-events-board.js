@@ -40,35 +40,20 @@ export default class TripEventsBoardController {
   }
 
   render() {
-    const sortedTripEvents = getSortedTripEvents(this._tripEventsModel.getTripEvents(), this._sortType);
-    const offers = this._tripEventsModel.getOffers();
-    const destinations = this._tripEventsModel.getDestinations();
+    this._sortedTripEvents = getSortedTripEvents(this._tripEventsModel.getTripEvents(), this._sortType);
+    this._offers = this._tripEventsModel.getOffers();
+    this._destinations = this._tripEventsModel.getDestinations();
 
     this._clearTripEvents();
 
-    if (!sortedTripEvents.length) {
-      this._tripEventsView = new NoTripEventsComponent(this._container, sortedTripEvents, offers, destinations, this._dataChangeHandler, this._tripEventsModel);
+    if (!this._sortedTripEvents.length) {
+      this._tripEventsView = new NoTripEventsComponent(this._container, this._sortedTripEvents, this._offers, this._destinations, this._dataChangeHandler, this._tripEventsModel);
       render(this._container, this._tripEventsView);
       return;
     }
 
     render(this._container, this._sortComponent);
-
-    this._tripSortItemDay = this._sortComponent.getElement().querySelector(`.trip-sort__item--day`);
-
-    switch (this._sortType) {
-      case SortType.TIME:
-      case SortType.PRICE:
-        this._tripSortItemDay.textContent = ``;
-        this._tripEventsView = new TripEventsView(this._tripDaysContainer, sortedTripEvents, offers, destinations, this._dataChangeHandler);
-        render(this._container, this._tripEventsView);
-        break;
-      default:
-        this._tripSortItemDay.textContent = `Day`;
-        this._tripEventsView = new TripEventsGroupedByDaysView(this._tripDaysContainer, sortedTripEvents, offers, destinations, this._dataChangeHandler, this._tripEventsModel);
-        render(this._container, this._tripEventsView);
-        break;
-    }
+    this._switchSortType();
   }
 
   updateEvents() {
@@ -88,6 +73,24 @@ export default class TripEventsBoardController {
 
     if (this._container.querySelector(`.trip-events__msg`)) {
       this._container.querySelector(`.trip-events__msg`).remove();
+    }
+  }
+
+  _switchSortType() {
+    this._tripSortItemDay = this._sortComponent.getElement().querySelector(`.trip-sort__item--day`);
+
+    switch (this._sortType) {
+      case SortType.TIME:
+      case SortType.PRICE:
+        this._tripSortItemDay.textContent = ``;
+        this._tripEventsView = new TripEventsView(this._tripDaysContainer, this._sortedTripEvents, this._offers, this._destinations, this._dataChangeHandler);
+        render(this._container, this._tripEventsView);
+        break;
+      default:
+        this._tripSortItemDay.textContent = `Day`;
+        this._tripEventsView = new TripEventsGroupedByDaysView(this._tripDaysContainer, this._sortedTripEvents, this._offers, this._destinations, this._dataChangeHandler, this._tripEventsModel);
+        render(this._container, this._tripEventsView);
+        break;
     }
   }
 
