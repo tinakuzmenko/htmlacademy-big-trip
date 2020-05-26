@@ -115,7 +115,10 @@ export default class TripEventsBoardController {
   }
 
   _dataChangeHandler(tripEventController, oldTripEvent, updatedTripEvent, isFavorite = false) {
-    this._tripEventsModel.setIsButtonNewEventEnabled(false);
+    if (!isFavorite) {
+      this._tripEventsModel.setIsButtonNewEventEnabled(false);
+    }
+
     if (oldTripEvent === null) {
       this._api.createTripEvent(updatedTripEvent)
         .then((tripEventModel) => {
