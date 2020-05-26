@@ -89,8 +89,8 @@ export default class TripEventController {
       this._tripEventFormComponent.getElement().style.animation = ``;
 
       this._tripEventFormComponent.setData({
-        SAVE_BUTTON_TEXT: `Save`,
-        DELETE_BUTTON_TEXT: `Delete`,
+        saveButtonText: `Save`,
+        deleteButtonText: `Delete`,
       });
 
       this._enableForm();
@@ -109,20 +109,24 @@ export default class TripEventController {
 
   closeTripEventFormOnSuccessDelete() {
     document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
-    this._viewChangeHandler();
-    this._mode = Mode.VIEW;
+
+    this._replaceEditFormToTripEvent();
   }
 
   _replaceTripEventToEditForm() {
     this._viewChangeHandler();
+
     replace(this._tripEventFormComponent, this._tripEventComponent);
     this._mode = Mode.EDIT;
   }
 
   _replaceEditFormToTripEvent() {
     replace(this._tripEventComponent, this._tripEventFormComponent);
+
     this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
+
     this._setFormHandlers();
+
     this._mode = Mode.VIEW;
   }
 
@@ -161,12 +165,11 @@ export default class TripEventController {
     const data = this._prepareData(formData);
 
     this._tripEventFormComponent.setData({
-      SAVE_BUTTON_TEXT: `Saving...`
+      saveButtonText: `Saving...`
     });
 
     this._disableForm();
     this._dataChangeHandler(this, this._tripEvent, data);
-    this._viewChangeHandler();
   }
 
   _tripEventFormComponentDeleteHandler() {
@@ -177,7 +180,7 @@ export default class TripEventController {
     }
 
     this._tripEventFormComponent.setData({
-      DELETE_BUTTON_TEXT: `Deleting...`
+      deleteButtonText: `Deleting...`
     });
 
     this._disableForm();

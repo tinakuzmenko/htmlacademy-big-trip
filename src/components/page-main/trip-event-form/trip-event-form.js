@@ -7,8 +7,9 @@ import moment from 'moment';
 import "flatpickr/dist/flatpickr.min.css";
 
 const DefaultData = {
-  DELETE_BUTTON_TEXT: `Delete`,
-  SAVE_BUTTON_TEXT: `Save`,
+  deleteButtonText: `Delete`,
+  cancelButtonText: `Cancel`,
+  saveButtonText: `Save`,
 };
 
 export default class TripEventForm extends AbstractSmartComponent {
@@ -47,8 +48,9 @@ export default class TripEventForm extends AbstractSmartComponent {
 
   getTemplate() {
     const renderedOffersSection = this._renderOffersSection(this._tripEventActiveOffers, this._tripEventId);
-    const deleteButtonText = this._externalData.DELETE_BUTTON_TEXT;
-    const saveButtonText = this._externalData.SAVE_BUTTON_TEXT;
+    const deleteButtonText = this._externalData.deleteButtonText;
+    const saveButtonText = this._externalData.saveButtonText;
+    const cancelButtonText = this._externalData.cancelButtonText;
 
     return (`<form class="trip-events__item event event--edit" action="#" method="post">
               <header class="event__header">
@@ -110,7 +112,7 @@ export default class TripEventForm extends AbstractSmartComponent {
 
                 <button class="event__save-btn  btn  btn--blue" type="submit">${saveButtonText}</button>
                 <button class="event__reset-btn" type="reset">
-                  ${this._tripEventFormMode === Mode.EDIT ? `${deleteButtonText}` : `Cancel`}
+                  ${this._tripEventFormMode === Mode.EDIT ? `${deleteButtonText}` : `${cancelButtonText}`}
                 </button>
 
                 ${this._tripEventFormMode === Mode.EDIT ? `<input id="event-favorite-${this._tripEventId}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${this._tripEventIsFavorite ? `checked` : ``}>
@@ -158,7 +160,7 @@ export default class TripEventForm extends AbstractSmartComponent {
       activeOffers: this._tripEventActiveOffers,
       basePrice: parseInt(this._tripEventBasePrice, 10),
       destination: this._tripEventDestination,
-      id: Math.round(this._tripEventId * 10),
+      id: this._tripEventFormMode === Mode.EDIT ? this._tripEventId : Math.round(this._tripEventId * 1000),
     };
 
     if (this._flatpickrEnd) {

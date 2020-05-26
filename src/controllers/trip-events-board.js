@@ -120,20 +120,22 @@ export default class TripEventsBoardController {
           this._tripEventsModel.setIsCreatingMode();
           this.render();
         })
-        .catch(() => {
+        .catch((error) => {
           tripEventController.shake();
+          throw new Error(`${error}. Please, try again later!`);
         });
     } else if (updatedTripEvent === null) {
       this._api.deleteTripEvent(oldTripEvent.id)
         .then(() => {
-          tripEventController.closeTripEventFormOnSuccessDelete();
           this._tripEventsModel.removeTripEvent(oldTripEvent.id);
-          this.render();
           this._tripEventsModel.setIsButtonNewEventEnabled(true);
+          tripEventController.closeTripEventFormOnSuccessDelete();
+          this.render();
         })
-        .catch(() => {
+        .catch((error) => {
           tripEventController.shake();
           this._tripEventsModel.setIsButtonNewEventEnabled(true);
+          throw new Error(`${error}. Please, try again later!`);
         });
     } else {
       this._api.updateTripEvent(oldTripEvent.id, updatedTripEvent)
@@ -149,9 +151,10 @@ export default class TripEventsBoardController {
               }
             }
           })
-          .catch(() => {
-            this._tripEventsModel.setIsButtonNewEventEnabled(true);
+          .catch((error) => {
             tripEventController.shake();
+            this._tripEventsModel.setIsButtonNewEventEnabled(true);
+            throw new Error(`${error}. Please, try again later!`);
           });
     }
   }

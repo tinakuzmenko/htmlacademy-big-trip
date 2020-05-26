@@ -1,5 +1,6 @@
 import AbstractComponent from '../../abstract-component.js';
 import TripEventController from '../../../controllers/trip-event.js';
+import {EMPTY_TRIP_EVENT_FORM} from '../../../helpers/constants.js';
 
 export default class NoTripEvents extends AbstractComponent {
   constructor(container, sortedTripEvents, offers, destinations, dataChangeHandler, tripEventsModel) {
@@ -25,14 +26,14 @@ export default class NoTripEvents extends AbstractComponent {
     this._viewChangeHandler();
     this._newTripEventController = new TripEventController(this._container, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
 
-    this._newTripEventController.render(null);
+    this._newTripEventController.render(EMPTY_TRIP_EVENT_FORM);
   }
 
   _viewChangeHandler() {
     if (this._newTripEventController) {
       this._newTripEventController.destroy();
       this._newTripEventController = null;
-      this._tripEventsModel.setIsCreatingMode(false);
+      this._tripEventsModel.setIsCreatingMode();
     }
   }
 }

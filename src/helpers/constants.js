@@ -85,4 +85,6 @@ const ChartConfiguration = {
   TIME_SPEND_TEXT: `TIME-SPEND`,
 };
 
-export {TimeInMs, RenderPosition, eventActionsMap, Keycode, SortType, Mode, FilterType, TripDataTab, HIDDEN_CLASS, ChartTypeLabelsMap, EVENT_TYPES, TRANSPORT_TYPES, ChartConfiguration};
+const EMPTY_TRIP_EVENT_FORM = null;
+
+export {TimeInMs, RenderPosition, eventActionsMap, Keycode, SortType, Mode, FilterType, TripDataTab, HIDDEN_CLASS, ChartTypeLabelsMap, EVENT_TYPES, TRANSPORT_TYPES, ChartConfiguration, EMPTY_TRIP_EVENT_FORM};
