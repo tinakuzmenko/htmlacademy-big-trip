@@ -6,8 +6,10 @@ export default class TripEvents {
     this._tripEvents = [];
     this._activeFilterType = FilterType.EVERYTHING;
     this._isCreatingMode = false;
+    this._isButtonNewEventEnabled = true;
 
     this._modeChangeHandlers = [];
+    this._isButtonNewEventEnabledHandlers = [];
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
   }
@@ -36,9 +38,18 @@ export default class TripEvents {
     return this._isCreatingMode;
   }
 
+  getIsButtonNewEventEnabled() {
+    return this._isButtonNewEventEnabled;
+  }
+
   setTripEvents(tripEvents) {
     this._tripEvents = Array.from(tripEvents);
     this._callHandlers(this._dataChangeHandlers);
+  }
+
+  setIsButtonNewEventEnabled(isEnabled) {
+    this._isButtonNewEventEnabled = isEnabled;
+    this._callHandlers(this._isButtonNewEventEnabledHandlers);
   }
 
   setOffers(offers) {
@@ -56,6 +67,7 @@ export default class TripEvents {
 
   setIsCreatingMode(mode = false) {
     this._isCreatingMode = mode;
+    this._isButtonNewEventEnabled = !this._isCreatingMode;
     this._callHandlers(this._modeChangeHandlers);
   }
 
@@ -94,6 +106,10 @@ export default class TripEvents {
 
   setModeChangeHandler(handler) {
     this._modeChangeHandlers.push(handler);
+  }
+
+  setIsButtonNewEventEnabledHandler(handler) {
+    this._isButtonNewEventEnabledHandlers.push(handler);
   }
 
   setDataChangeHandler(handler) {

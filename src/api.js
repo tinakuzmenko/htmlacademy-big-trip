@@ -1,9 +1,16 @@
-import {ServerUrl} from './helpers/constants.js';
 import TripEventAdapter from './models/trip-event.js';
+
+const ServerUrl = {
+  POINTS: `https://11.ecmascript.pages.academy/big-trip/points`,
+  OFFERS: `https://11.ecmascript.pages.academy/big-trip/offers`,
+  DESTINATIONS: `https://11.ecmascript.pages.academy/big-trip/destinations`
+};
 
 const Method = {
   GET: `GET`,
   PUT: `PUT`,
+  POST: `POST`,
+  DELETE: `DELETE`,
 };
 
 export default class API {
@@ -49,6 +56,16 @@ export default class API {
       .then((response) => response.json());
   }
 
+  createTripEvent(data) {
+    return this._loadData({
+      url: ServerUrl.POINTS,
+      method: Method.POST,
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then(TripEventAdapter.parseTripEvent);
+  }
+
   updateTripEvent(id, data) {
     return this._loadData({
       url: `${ServerUrl.POINTS}/${id}`,
@@ -58,6 +75,13 @@ export default class API {
     .then(this._checkStatus)
     .then((response) => response.json())
     .then(TripEventAdapter.parseTripEvent);
+  }
+
+  deleteTripEvent(id) {
+    return this._loadData({
+      url: `${ServerUrl.POINTS}/${id}`,
+      method: Method.DELETE,
+    });
   }
 
   _loadData({url, method = Method.GET, body = null, headers = new Headers()}) {
@@ -70,7 +94,6 @@ export default class API {
         throw error;
       });
   }
-
 
   _checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {

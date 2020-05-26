@@ -1,7 +1,7 @@
-import AbstractSmartComponent from '../abstract-smart-component.js';
+import AbstractComponent from '../abstract-component.js';
 import {render, remove} from '../../helpers/render.js';
 
-export default class TripCost extends AbstractSmartComponent {
+export default class TripCost extends AbstractComponent {
   constructor(container, tripEventsModel) {
     super();
     this._container = container;
@@ -17,16 +17,15 @@ export default class TripCost extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    this._tripEvents = this._tripEventsModel.getTripEvents();
-    this._tripEventsCost = this._getTripEventsCost();
+    this._tripEventsCost = this._getTripEventsCost(this._tripEventsModel.getTripEvents());
 
     return `<p class="trip-info__cost">
               Total: &euro;&nbsp;<span class="trip-info__cost-value">${this._tripEventsCost}</span>
             </p>`;
   }
 
-  _getTripEventsCost() {
-    return this._tripEvents.reduce((total, cost) => total + cost.basePrice + this._countTripOffersCost(cost.offers), 0);
+  _getTripEventsCost(tripEvents) {
+    return tripEvents.reduce((total, cost) => total + cost.basePrice + this._countTripOffersCost(cost.offers), 0);
   }
 
   _countTripOffersCost(offers) {

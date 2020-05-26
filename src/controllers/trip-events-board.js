@@ -14,7 +14,6 @@ export default class TripEventsBoardController {
     this._api = api;
 
     this._container = this._containerComponent.getElement();
-    this._noTasksComponent = new NoTripEventsComponent();
     this._tripDaysContainer = new TripDaysContainer().getElement();
     this._sortComponent = new TripSortComponent();
     this._sortType = SortType.EVENT;
@@ -48,7 +47,8 @@ export default class TripEventsBoardController {
     this._clearTripEvents();
 
     if (!sortedTripEvents.length) {
-      render(this._container, this._noTasksComponent);
+      this._tripEventsView = new NoTripEventsComponent(this._container, sortedTripEvents, offers, destinations, this._dataChangeHandler, this._tripEventsModel);
+      render(this._container, this._tripEventsView);
       return;
     }
 
@@ -112,25 +112,47 @@ export default class TripEventsBoardController {
   }
 
   _dataChangeHandler(tripEventController, oldTripEvent, updatedTripEvent, isFavorite = false) {
+    this._tripEventsModel.setIsButtonNewEventEnabled(false);
     if (oldTripEvent === null) {
-      this._tripEventsModel.addTripEvent(updatedTripEvent);
-      this._tripEventsModel.setIsCreatingMode(false);
-      this.render();
+      this._api.createTripEvent(updatedTripEvent)
+        .then((tripEventModel) => {
+          this._tripEventsModel.addTripEvent(tripEventModel);
+          this._tripEventsModel.setIsCreatingMode();
+          this.render();
+        })
+        .catch(() => {
+          tripEventController.shake();
+        });
     } else if (updatedTripEvent === null) {
-      this._tripEventsModel.removeTripEvent(oldTripEvent.id);
-      this.render();
+      this._api.deleteTripEvent(oldTripEvent.id)
+        .then(() => {
+          tripEventController.closeTripEventFormOnSuccessDelete();
+          this._tripEventsModel.removeTripEvent(oldTripEvent.id);
+          this.render();
+          this._tripEventsModel.setIsButtonNewEventEnabled(true);
+        })
+        .catch(() => {
+          tripEventController.shake();
+          this._tripEventsModel.setIsButtonNewEventEnabled(true);
+        });
     } else {
       this._api.updateTripEvent(oldTripEvent.id, updatedTripEvent)
-        .then((tripEventModel) => {
-          const isSuccess = this._tripEventsModel.updateTripEvent(oldTripEvent.id, tripEventModel);
+          .then((tripEventModel) => {
+            const isSuccess = this._tripEventsModel.updateTripEvent(oldTripEvent.id, tripEventModel);
 
-          if (isSuccess) {
-            tripEventController.render(tripEventModel);
-            if (!isFavorite) {
-              this.updateEvents();
+            if (isSuccess) {
+              tripEventController.render(tripEventModel);
+              if (!isFavorite) {
+                tripEventController.closeTripEventFormOnSuccessSave();
+                this.updateEvents();
+                this._tripEventsModel.setIsButtonNewEventEnabled(true);
+              }
             }
-          }
-        });
+          })
+          .catch(() => {
+            this._tripEventsModel.setIsButtonNewEventEnabled(true);
+            tripEventController.shake();
+          });
     }
   }
 }

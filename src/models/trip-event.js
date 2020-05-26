@@ -13,7 +13,7 @@ export default class TripEventAdapter {
     this.activeOffers = data[`offers`];
 
     this.destination = data[`destination`];
-    this.destination.photos = data[`destination`].pictures;
+    this.destination.pictures = data[`destination`].pictures;
 
     this.timeDiff = getTimeDifference(this.start, this.end);
     this.parsedStartDate = Date.parse(moment(this.start).startOf(`date`));
@@ -22,7 +22,7 @@ export default class TripEventAdapter {
 
   toRAW(data) {
     const RAWObj = {
-      'id': data.id,
+      'id': data.id.toString(),
       'type': data.type.toLowerCase(),
       'date_from': moment.parseZone(data.start).utc().format(),
       'date_to': moment.parseZone(data.end).utc().format(),

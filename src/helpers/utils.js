@@ -79,7 +79,7 @@ const createEmptyTripEvent = () => {
     destination: {
       name: ``,
       description: ``,
-      photos: []
+      pictures: []
     },
     offers: [],
     timeDiff: getTimeDifference(newDate, newDate),

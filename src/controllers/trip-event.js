@@ -13,12 +13,13 @@ export default class TripEventController {
     this._destinations = destinations;
     this._dataChangeHandler = dataChangeHandler;
     this._viewChangeHandler = viewChangeHandler;
-    this._mode = Mode.DEFAULT;
+    this._mode = Mode.VIEW;
 
     this._tripEvent = null;
     this._tripEventComponent = null;
     this._tripEventFormComponent = null;
     this._tripEventWrapper = new TripEventWrapperComponent();
+    this._SHAKE_ANIMATION_TIMEOUT = 600;
 
     this._tripEventComponentClickHandler = this._tripEventComponentClickHandler.bind(this);
     this._tripEventFormComponentRollUpHandler = this._tripEventFormComponentRollUpHandler.bind(this);
@@ -32,7 +33,7 @@ export default class TripEventController {
     if (!tripEvent) {
       const emptyTripEventObject = createEmptyTripEvent();
 
-      this._tripEventFormComponent = new TripEventFormComponent(emptyTripEventObject, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler, Mode.DEFAULT);
+      this._tripEventFormComponent = new TripEventFormComponent(emptyTripEventObject, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler, Mode.VIEW);
       this._mode = Mode.EDIT;
 
       render(this._tripEventContainer, this._tripEventFormComponent, RenderPosition.BEFOREBEGIN);
@@ -65,7 +66,7 @@ export default class TripEventController {
   }
 
   setDefaultView() {
-    if (this._mode !== Mode.DEFAULT) {
+    if (this._mode !== Mode.VIEW) {
       this._replaceEditFormToTripEvent();
     }
   }
@@ -80,18 +81,49 @@ export default class TripEventController {
     document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
   }
 
+  shake() {
+    this._tripEventFormComponent.getElement().style.animation = `shake ${this._SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._tripEventFormComponent.getElement().style.border = `2px solid red`;
+
+    setTimeout(() => {
+      this._tripEventFormComponent.getElement().style.animation = ``;
+
+      this._tripEventFormComponent.setData({
+        SAVE_BUTTON_TEXT: `Save`,
+        DELETE_BUTTON_TEXT: `Delete`,
+      });
+
+      this._enableForm();
+    }, this._SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  closeTripEventFormOnSuccessSave() {
+    document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
+
+    if (this._tripEventComponent) {
+      this._replaceEditFormToTripEvent();
+    } else {
+      this.destroy();
+    }
+  }
+
+  closeTripEventFormOnSuccessDelete() {
+    document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
+    this._viewChangeHandler();
+    this._mode = Mode.VIEW;
+  }
+
   _replaceTripEventToEditForm() {
     this._viewChangeHandler();
     replace(this._tripEventFormComponent, this._tripEventComponent);
-
     this._mode = Mode.EDIT;
   }
 
   _replaceEditFormToTripEvent() {
     replace(this._tripEventComponent, this._tripEventFormComponent);
-    this._mode = Mode.DEFAULT;
     this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
     this._setFormHandlers();
+    this._mode = Mode.VIEW;
   }
 
   _setFormHandlers() {
@@ -128,26 +160,28 @@ export default class TripEventController {
     const formData = this._tripEventFormComponent.getData();
     const data = this._prepareData(formData);
 
+    this._tripEventFormComponent.setData({
+      SAVE_BUTTON_TEXT: `Saving...`
+    });
+
+    this._disableForm();
     this._dataChangeHandler(this, this._tripEvent, data);
-
-    document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
-
-    if (this._tripEventComponent) {
-      this._replaceEditFormToTripEvent();
-    } else {
-      this.destroy();
-    }
+    this._viewChangeHandler();
   }
 
   _tripEventFormComponentDeleteHandler() {
-    document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
-    this._viewChangeHandler();
-
-    if (this._tripEventComponent) {
-      this._dataChangeHandler(this, this._tripEvent, null);
-    } else {
+    if (!this._tripEventComponent) {
       this.destroy();
+      this._viewChangeHandler();
+      return;
     }
+
+    this._tripEventFormComponent.setData({
+      DELETE_BUTTON_TEXT: `Deleting...`
+    });
+
+    this._disableForm();
+    this._dataChangeHandler(this, this._tripEvent, null);
   }
 
   _tripEventFormComponentFavoritesButtonClickHandler() {
@@ -158,6 +192,22 @@ export default class TripEventController {
     const isFavorite = true;
 
     this._dataChangeHandler(this, this._tripEvent, data, isFavorite);
+  }
+
+  _enableForm() {
+    const formElements = this._tripEventFormComponent.getElement().querySelectorAll(`input, button`);
+
+    formElements.forEach((formElement) => {
+      formElement.disabled = false;
+    });
+  }
+
+  _disableForm() {
+    const formElements = this._tripEventFormComponent.getElement().querySelectorAll(`input, button`);
+
+    formElements.forEach((formElement) => {
+      formElement.disabled = true;
+    });
   }
 
   _prepareData(formData) {
