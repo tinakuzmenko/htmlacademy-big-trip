@@ -1,4 +1,6 @@
-import API from './api.js';
+import API from './api/api.js';
+import Store from './api/store.js';
+import Provider from './api/provider.js';
 import ButtonAddNewEventComponent from './components/page-header/button-add-new-event.js';
 import FilterController from './controllers/filter.js';
 import LoadingComponent from './components/loading.js';
@@ -14,7 +16,10 @@ import TripStatisticsComponent from './components/page-main/trip-statistics/trip
 import {RenderPosition, TripDataTab} from "./helpers/constants.js";
 import {render, remove} from './helpers/render.js';
 
-const AUTHORIZATION = `Basic y2StXBzjFLjF18cFEpo5el5HDxgg7rjm`;
+const AUTHORIZATION = `Basic y2StXBzjFLjF18cFEpo5tl5HDxgg7rjm`;
+const STORE_PREFIX = `big-trip-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const tripMain = document.querySelector(`.trip-main`);
 const pageBodyContainer = document.querySelector(`main .page-body__container`);
@@ -22,6 +27,8 @@ const tripControls = tripMain.querySelector(`.trip-controls`);
 const firstTitle = tripControls.querySelector(`h2`);
 
 const api = new API(AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 const tripEventsModel = new TripEventsModel();
 const pageHeaderContainerComponent = new PageHeaderContainerComponent();
 const pageNavigationComponent = new PageNavigationComponent();
@@ -30,7 +37,7 @@ const loadErrorComponent = new LoadErrorComponent();
 const filterController = new FilterController(tripControls, tripEventsModel);
 const buttonAddNewEventComponent = new ButtonAddNewEventComponent(tripEventsModel);
 const tripEventsBoardComponent = new TripEventsBoardComponent();
-const tripEventsBoardController = new TripEventsBoardController(tripEventsBoardComponent, tripEventsModel, api);
+const tripEventsBoardController = new TripEventsBoardController(tripEventsBoardComponent, tripEventsModel, apiWithProvider);
 const tripStatisticsComponent = new TripStatisticsComponent(tripEventsModel);
 
 render(tripMain, pageHeaderContainerComponent, RenderPosition.AFTERBEGIN);
@@ -64,7 +71,7 @@ pageNavigationComponent.setChangeHandler((menuItem) => {
   }
 });
 
-api.getData()
+apiWithProvider.getData()
   .then((data) => {
     tripEventsModel.setOffers(data.offers);
     tripEventsModel.setDestinations(data.destinations);
@@ -77,7 +84,8 @@ api.getData()
     tripCostComponent.render();
     tripEventsBoardController.render();
   })
-  .catch(() => {
+  .catch((error) => {
+    console.log(error);
     remove(loadingComponent);
     render(pageBodyContainer, loadErrorComponent);
   });
