@@ -329,14 +329,15 @@ export default class TripEventForm extends AbstractSmartComponent {
       availableOffersElement.addEventListener(`click`, (evt) => {
         const allOffers = this._getOffersByType(this._tripEventType).offers;
 
-        if (evt.target.tagName === `INPUT` && evt.target.checked) {
+        if (evt.target.tagName === `INPUT`) {
           const offerIndex = evt.target.dataset.offerId;
           const newActiveOffer = allOffers[offerIndex];
-          this._addOffer(newActiveOffer);
-        } else {
-          const offerIndex = evt.target.dataset.offerId;
-          const newActiveOffer = allOffers[offerIndex];
-          this._removeOffer(newActiveOffer);
+
+          if (evt.target.checked) {
+            this._addOffer(newActiveOffer);
+          } else {
+            this._removeOffer(newActiveOffer);
+          }
         }
       });
     }
@@ -347,7 +348,7 @@ export default class TripEventForm extends AbstractSmartComponent {
   }
 
   _removeOffer(offer) {
-    this._tripEventActiveOffers = this._tripEventActiveOffers.filter((activeOffer) => activeOffer !== offer);
+    this._tripEventActiveOffers = this._tripEventActiveOffers.filter((activeOffer) => activeOffer.title !== offer.title);
   }
 
   _clearOffers() {

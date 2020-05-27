@@ -109,7 +109,6 @@ export default class TripEventController {
 
   closeTripEventFormOnSuccessDelete() {
     document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
-
     this._replaceEditFormToTripEvent();
   }
 
@@ -126,7 +125,6 @@ export default class TripEventController {
     this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
 
     this._setFormHandlers();
-
     this._mode = Mode.VIEW;
   }
 
@@ -168,6 +166,7 @@ export default class TripEventController {
       saveButtonText: `Saving...`
     });
 
+    console.log(data.offers);
     this._disableForm();
     this._dataChangeHandler(this, this._tripEvent, data);
   }
