@@ -65,13 +65,12 @@ export default class Provider {
 
   updateTripEvent(id, tripEvent) {
     if (isOnline) {
-      return this._api.updateTripEvent(id, tripEvent);
-      // .then((updatedTripEvent) => {
-      //   console.log(updatedTripEvent);
-      //   this._store.setItem(updatedTripEvent.id, updatedTripEvent);
+      return this._api.updateTripEvent(id, tripEvent)
+      .then((updatedTripEvent) => {
+        this._store.setItem(updatedTripEvent.id, updatedTripEvent);
 
-      //   return updatedTripEvent;
-      // });
+        return updatedTripEvent;
+      });
     }
 
     const localTripEvent = TripEvent.clone(Object.assign(tripEvent, {id}));
@@ -83,9 +82,12 @@ export default class Provider {
 
   deleteTripEvent(id) {
     if (isOnline) {
-      return this._api.deleteTripEvent(id);
+      return this._api.deleteTripEvent(id)
+        .then(() => this._store.removeItem(id));
     }
 
-    return Promise.reject(`offline logic is not implemented`);
+    this._store.removeItem(id);
+
+    return Promise.resolve();
   }
 }

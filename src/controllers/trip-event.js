@@ -103,6 +103,7 @@ export default class TripEventController {
     if (this._tripEventComponent) {
       this._replaceEditFormToTripEvent();
     } else {
+      console.log(`destroy form`);
       this.destroy();
     }
   }
@@ -166,9 +167,9 @@ export default class TripEventController {
       saveButtonText: `Saving...`
     });
 
-    console.log(data.offers);
     this._disableForm();
     this._dataChangeHandler(this, this._tripEvent, data);
+    this._viewChangeHandler();
   }
 
   _tripEventFormComponentDeleteHandler() {

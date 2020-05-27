@@ -29,7 +29,7 @@ export default class Store {
   }
 
   setItem(key, value) {
-    const store = this.getEvents();
+    const store = this.getTripEvents();
 
     this._storage.setItem(
         this._storeKey,
@@ -42,10 +42,7 @@ export default class Store {
   }
 
   setTripEvents(tripEvents) {
-    this._storage.setItem(
-        this._storeKey,
-        JSON.stringify(tripEvents)
-    );
+    this._storage.setItem(this._storeKey, JSON.stringify(tripEvents));
   }
 
   setDestinations(destinations) {
@@ -56,7 +53,14 @@ export default class Store {
     this._storage.setItem(this._storeOffersKey, JSON.stringify(offers));
   }
 
-  // removeItem(key) {
+  removeItem(key) {
+    const store = this.getTripEvents();
 
-  // }
+    delete store[key];
+
+    this._storage.setItem(
+        this._storeKey,
+        JSON.stringify(store)
+    );
+  }
 }

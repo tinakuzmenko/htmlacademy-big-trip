@@ -84,8 +84,7 @@ apiWithProvider.getData()
     tripCostComponent.render();
     tripEventsBoardController.render();
   })
-  .catch((error) => {
-    console.log(error);
+  .catch(() => {
     remove(loadingComponent);
     render(pageBodyContainer, loadErrorComponent);
   });
