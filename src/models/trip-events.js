@@ -85,7 +85,7 @@ export default class TripEvents {
     return true;
   }
 
-  updateTripEvent(id, tripEvent) {
+  updateTripEvent(id, tripEvent, isFavorite) {
     const index = this._tripEvents.findIndex((tripEventItem) => tripEventItem.id === id);
 
     if (index === -1) {
@@ -94,7 +94,9 @@ export default class TripEvents {
 
     this._tripEvents = [].concat(this._tripEvents.slice(0, index), tripEvent, this._tripEvents.slice(index + 1));
 
-    this._callHandlers(this._dataChangeHandlers);
+    if (!isFavorite) {
+      this._callHandlers(this._dataChangeHandlers);
+    }
 
     return true;
   }

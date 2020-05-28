@@ -144,14 +144,13 @@ export default class TripEventsBoardController {
     } else {
       this._api.updateTripEvent(oldTripEvent.id, updatedTripEvent)
           .then((tripEventModel) => {
-            const isSuccess = this._tripEventsModel.updateTripEvent(oldTripEvent.id, tripEventModel);
-            tripEventController.render(tripEventModel);
-            if (isSuccess) {
-              if (!isFavorite) {
-                tripEventController.closeTripEventFormOnSuccessSave();
-                this.updateEvents();
-                this._tripEventsModel.setIsButtonNewEventEnabled(true);
-              }
+            const isSuccess = this._tripEventsModel.updateTripEvent(oldTripEvent.id, tripEventModel, isFavorite);
+
+            if (isSuccess && !isFavorite) {
+              tripEventController.render(tripEventModel);
+              tripEventController.closeTripEventFormOnSuccessSave();
+              this.updateEvents();
+              this._tripEventsModel.setIsButtonNewEventEnabled(true);
             }
           })
           .catch(() => {
