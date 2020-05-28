@@ -80,7 +80,6 @@ apiWithProvider.getData()
     buttonAddNewEventComponent.getElement().disabled = false;
     tripRouteComponent.render();
     tripCostComponent.render();
-    tripEventsBoardController.render();
   });
 
 tripEventsModel.setDataChangeHandler(() => {

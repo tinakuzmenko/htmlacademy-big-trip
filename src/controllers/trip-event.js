@@ -122,11 +122,9 @@ export default class TripEventController {
   }
 
   _replaceEditFormToTripEvent() {
+    this._tripEventFormComponent.reset();
     replace(this._tripEventComponent, this._tripEventFormComponent);
 
-    this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
-
-    this._setFormHandlers();
     this._mode = Mode.VIEW;
   }
 
