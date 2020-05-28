@@ -114,9 +114,11 @@ export default class TripEventController {
 
   _replaceTripEventToEditForm() {
     this._viewChangeHandler();
+    this._mode = Mode.EDIT;
 
     replace(this._tripEventFormComponent, this._tripEventComponent);
-    this._mode = Mode.EDIT;
+
+    document.addEventListener(`keydown`, this._documentEscKeydownHandler);
   }
 
   _replaceEditFormToTripEvent() {
@@ -137,15 +139,13 @@ export default class TripEventController {
 
   _tripEventComponentClickHandler() {
     this._replaceTripEventToEditForm();
-    document.addEventListener(`keydown`, this._documentEscKeydownHandler);
   }
 
   _documentEscKeydownHandler(evt) {
     if (evt.key === Keycode.ESCAPE) {
-      document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
-
-      if (this._tripEventComponent) {
+      if (this._tripEventComponent && Mode.EDIT) {
         this._replaceEditFormToTripEvent();
+        document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
       } else {
         this.destroy();
         this._viewChangeHandler();
