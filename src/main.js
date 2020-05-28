@@ -1,19 +1,19 @@
 import API from './api/api.js';
-import Store from './api/store.js';
 import Provider from './api/provider.js';
-import ButtonAddNewEventComponent from './components/page-header/button-add-new-event.js';
-import FilterController from './controllers/filter.js';
+import Store from './api/store.js';
 import LoadingComponent from './components/loading.js';
+import ButtonAddNewEventComponent from './components/page-header/button-add-new-event.js';
 import PageHeaderContainerComponent from './components/page-header/page-header-container.js';
 import PageNavigationComponent from './components/page-header/page-navigation.js';
 import TripCostComponent from './components/page-header/trip-cost.js';
 import TripRouteComponent from './components/page-header/trip-route.js';
-import TripEventsModel from './models/trip-events.js';
 import TripEventsBoardComponent from './components/page-main/trip-events/trip-event-board.js';
-import TripEventsBoardController from './controllers/trip-events-board.js';
 import TripStatisticsComponent from './components/page-main/trip-statistics/trip-statistics.js';
+import FilterController from './controllers/filter.js';
+import TripEventsBoardController from './controllers/trip-events-board.js';
 import {RenderPosition, TripDataTab} from "./helpers/constants.js";
-import {render, remove} from './helpers/render.js';
+import {remove, render} from './helpers/render.js';
+import TripEventsModel from './models/trip-events.js';
 
 const AUTHORIZATION = `Basic y2StXBzjFLjF18cFElf5tl5Hhxug7rjm`;
 const STORE_PREFIX = `big-trip-localstorage`;

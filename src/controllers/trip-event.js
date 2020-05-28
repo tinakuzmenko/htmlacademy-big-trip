@@ -1,10 +1,9 @@
-import TripEventComponent from '../components/page-main/trip-events/trip-event.js';
 import TripEventFormComponent from '../components/page-main/trip-event-form/trip-event-form.js';
 import TripEventWrapperComponent from '../components/page-main/trip-events/trip-event-wrapper.js';
-import TripEventAdapter from '../models/trip-event.js';
+import TripEventComponent from '../components/page-main/trip-events/trip-event.js';
+import {eventActionsMap, Keycode, Mode, RenderPosition} from '../helpers/constants.js';
+import {remove, render, replace} from "../helpers/render.js";
 import {createEmptyTripEvent, getTimeDifference} from '../helpers/utils.js';
-import {Keycode, RenderPosition, Mode, eventActionsMap} from '../helpers/constants.js';
-import {render, replace, remove} from "../helpers/render.js";
 
 export default class TripEventController {
   constructor(tripEventContainer, offers, destinations, dataChangeHandler, viewChangeHandler) {
@@ -79,7 +78,6 @@ export default class TripEventController {
     }
 
     remove(this._tripEventFormComponent);
-
     document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
   }
 
@@ -150,6 +148,7 @@ export default class TripEventController {
         this._replaceEditFormToTripEvent();
       } else {
         this.destroy();
+        this._viewChangeHandler();
       }
     }
   }
