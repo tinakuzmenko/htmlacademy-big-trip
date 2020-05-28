@@ -19,13 +19,13 @@ const createStoreStructure = (items) => {
 };
 
 export default class Provider {
-  constructor(api, store) {
+  constructor(api, store, tripEventsModel) {
     this._api = api;
     this._store = store;
+    this._tripEventsModel = tripEventsModel;
   }
 
   getTripEvents() {
-    console.log(`I work!`);
     if (isOnline()) {
       return this._api.getTripEvents()
         .then((tripEvents) => {
@@ -37,12 +37,10 @@ export default class Provider {
     }
 
     const storeTripEvents = Object.values(this._store.getTripEvents());
-    // console.log(TripEvent.parseTripEvents(storeTripEvents));
     return Promise.resolve(TripEvent.parseTripEvents(storeTripEvents));
   }
 
   getOffers() {
-    console.log(`GetOffers`);
     if (isOnline()) {
       return this._api.getOffers()
         .then((offers) => {
@@ -72,7 +70,6 @@ export default class Provider {
     if (isOnline()) {
       return this._api.getData()
         .then((response) => {
-          console.log(response);
           const tripEvents = createStoreStructure(response.tripEvents.map((tripEvent) => this._prepareData(tripEvent)));
 
           this._store.setOffers(response.offers);
@@ -91,9 +88,9 @@ export default class Provider {
 
   createTripEvent(tripEvent) {
     if (isOnline()) {
-      return this._api.createTripEvent(tripEvent)
+      return this._api.createTripEvent(this._prepareData(tripEvent))
         .then((newTripEvent) => {
-          this._store.setItem(newTripEvent.id, this._prepareData(newTripEvent));
+          this._store.setItem(newTripEvent.id, newTripEvent);
 
           return newTripEvent;
         });
@@ -145,6 +142,9 @@ export default class Provider {
           const items = createStoreStructure([...createdTripEvents, ...updatedTripEvents]);
 
           this._store.setItems(items);
+
+          const syncedItems = TripEvent.parseTripEvents(Object.values(items));
+          this._tripEventsModel.setTripEvents(syncedItems);
         });
     }
 
@@ -154,7 +154,6 @@ export default class Provider {
   _prepareData(tripEvent) {
     const tripEventAdapter = new TripEvent(tripEvent);
     const data = tripEventAdapter.toRAW(tripEvent);
-    console.log(data);
     return data;
   }
 }

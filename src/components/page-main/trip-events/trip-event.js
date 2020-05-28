@@ -9,7 +9,7 @@ export default class TripEvent extends AbstractComponent {
 
   getTemplate() {
     const {type, destination, basePrice, activeOffers, action, start, end, timeDiff} = this._tripEvent;
-    const eventOffers = activeOffers ? this._renderTripEventOffers(activeOffers) : ``;
+    const eventOffers = activeOffers ? this._renderTripEventOffers(activeOffers.slice(0, 3)) : ``;
     const startTime = moment(start).format(`HH:mm`);
     const endTime = moment(end).format(`HH:mm`);
 

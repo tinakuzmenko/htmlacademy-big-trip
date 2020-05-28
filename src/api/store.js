@@ -58,9 +58,8 @@ export default class Store {
     this._storage.setItem(this._storeOffersKey, JSON.stringify(offers));
   }
 
-
   removeItem(key) {
-    const store = this.getItems();
+    const store = this.getTripEvents();
 
     delete store[key];
 

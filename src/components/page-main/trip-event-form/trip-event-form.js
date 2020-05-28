@@ -2,6 +2,7 @@ import AbstractSmartComponent from '../../abstract-smart-component.js';
 import {EVENT_TYPES, eventActionsMap, Mode} from '../../../helpers/constants.js';
 import flatpickr from 'flatpickr';
 import {encode} from "he";
+import {nanoid} from "nanoid";
 import moment from 'moment';
 
 import "flatpickr/dist/flatpickr.min.css";
@@ -160,7 +161,7 @@ export default class TripEventForm extends AbstractSmartComponent {
       activeOffers: this._tripEventActiveOffers,
       basePrice: parseInt(this._tripEventBasePrice, 10),
       destination: this._tripEventDestination,
-      id: this._tripEventFormMode === Mode.EDIT ? this._tripEventId : Math.round(this._tripEventId * 1000),
+      id: this._tripEventFormMode === Mode.EDIT ? this._tripEventId : nanoid(),
     };
 
     if (this._flatpickrEnd) {

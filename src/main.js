@@ -4,7 +4,6 @@ import Provider from './api/provider.js';
 import ButtonAddNewEventComponent from './components/page-header/button-add-new-event.js';
 import FilterController from './controllers/filter.js';
 import LoadingComponent from './components/loading.js';
-import LoadErrorComponent from './components/load-error.js';
 import PageHeaderContainerComponent from './components/page-header/page-header-container.js';
 import PageNavigationComponent from './components/page-header/page-navigation.js';
 import TripCostComponent from './components/page-header/trip-cost.js';
@@ -16,7 +15,7 @@ import TripStatisticsComponent from './components/page-main/trip-statistics/trip
 import {RenderPosition, TripDataTab} from "./helpers/constants.js";
 import {render, remove} from './helpers/render.js';
 
-const AUTHORIZATION = `Basic y2StXBzjFLjF18cFElf5tl5Hhxgg7rjm`;
+const AUTHORIZATION = `Basic y2StXBzjFLjF18cFElf5tl5Hhxug7rjm`;
 const STORE_PREFIX = `big-trip-localstorage`;
 const STORE_VER = `v1`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
@@ -26,14 +25,13 @@ const pageBodyContainer = document.querySelector(`main .page-body__container`);
 const tripControls = tripMain.querySelector(`.trip-controls`);
 const firstTitle = tripControls.querySelector(`h2`);
 
+const tripEventsModel = new TripEventsModel();
 const api = new API(AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
-const apiWithProvider = new Provider(api, store);
-const tripEventsModel = new TripEventsModel();
+const apiWithProvider = new Provider(api, store, tripEventsModel);
 const pageHeaderContainerComponent = new PageHeaderContainerComponent();
 const pageNavigationComponent = new PageNavigationComponent();
 const loadingComponent = new LoadingComponent();
-const loadErrorComponent = new LoadErrorComponent();
 const filterController = new FilterController(tripControls, tripEventsModel);
 const buttonAddNewEventComponent = new ButtonAddNewEventComponent(tripEventsModel);
 const tripEventsBoardComponent = new TripEventsBoardComponent();
@@ -84,10 +82,10 @@ apiWithProvider.getData()
     tripCostComponent.render();
     tripEventsBoardController.render();
   });
-// .catch(() => {
-//   remove(loadingComponent);
-//   render(pageBodyContainer, loadErrorComponent);
-// });
+
+tripEventsModel.setDataChangeHandler(() => {
+  tripEventsBoardController.render();
+});
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`);

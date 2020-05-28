@@ -5,7 +5,6 @@ import TripEventAdapter from '../models/trip-event.js';
 import {createEmptyTripEvent, getTimeDifference} from '../helpers/utils.js';
 import {Keycode, RenderPosition, Mode, eventActionsMap} from '../helpers/constants.js';
 import {render, replace, remove} from "../helpers/render.js";
-import moment from 'moment';
 
 export default class TripEventController {
   constructor(tripEventContainer, offers, destinations, dataChangeHandler, viewChangeHandler) {
@@ -163,7 +162,6 @@ export default class TripEventController {
   _tripEventFormComponentSubmitHandler(evt) {
     evt.preventDefault();
     const formData = this._tripEventFormComponent.getData();
-    // const data = this._prepareData(formData);
 
     this._tripEventFormComponent.setData({
       saveButtonText: `Saving...`
@@ -193,7 +191,7 @@ export default class TripEventController {
     const updatedTripEvent = Object.assign({}, this._tripEvent, {
       isFavorite: !this._tripEvent.isFavorite,
     });
-    // const data = this._prepareData(updatedTripEvent);
+
     const isFavorite = true;
 
     this._dataChangeHandler(this, this._tripEvent, updatedTripEvent, isFavorite);
@@ -213,12 +211,5 @@ export default class TripEventController {
     formElements.forEach((formElement) => {
       formElement.disabled = true;
     });
-  }
-
-  _prepareData(formData) {
-    const tripEventAdapter = new TripEventAdapter(formData);
-    const data = tripEventAdapter.toRAW(formData);
-
-    return data;
   }
 }
