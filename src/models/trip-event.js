@@ -1,6 +1,5 @@
 import moment from 'moment';
-import {eventActionsMap} from '../helpers/constants.js';
-import {getTimeDifference, getCapitalizedString} from '../helpers/utils.js';
+import {getCapitalizedString} from '../helpers/utils.js';
 
 export default class TripEventAdapter {
   constructor(data) {
@@ -14,10 +13,6 @@ export default class TripEventAdapter {
 
     this.destination = data[`destination`];
     this.destination.pictures = data[`destination`].pictures;
-
-    this.timeDiff = getTimeDifference(this.start, this.end);
-    this.parsedStartDate = Date.parse(moment(this.start).startOf(`date`));
-    this.action = eventActionsMap[this.type];
   }
 
   toRAW(data) {

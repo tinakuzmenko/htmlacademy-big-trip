@@ -3,6 +3,7 @@ import TripEventsContainerComponent from '../trip-events/trip-events-container.j
 import TripEventController from '../../../controllers/trip-event.js';
 import {render} from '../../../helpers/render.js';
 import {TimeInMs, EMPTY_TRIP_EVENT_FORM} from '../../../helpers/constants.js';
+import moment from 'moment';
 
 export default class TripEventsGroupedByDays {
   constructor(container, sortedTripEvents, offers, destinations, dataChangeHandler, tripEventsModel) {
@@ -41,7 +42,7 @@ export default class TripEventsGroupedByDays {
 
   getElement() {
     this._sortedTripEvents.forEach((sortedTripEvent) => {
-      const parsedStartDate = sortedTripEvent.parsedStartDate;
+      const parsedStartDate = Date.parse(moment(sortedTripEvent.start).startOf(`date`));
 
       if (!this._tripDayObject) {
         this.getTripDayObject(sortedTripEvent);

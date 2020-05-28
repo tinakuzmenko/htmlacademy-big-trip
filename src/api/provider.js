@@ -108,7 +108,7 @@ export default class Provider {
 
   updateTripEvent(id, tripEvent) {
     if (isOnline()) {
-      return this._api.updateTripEvent(id, tripEvent)
+      return this._api.updateTripEvent(id, this._prepareData(tripEvent))
       .then((updatedTripEvent) => {
         this._store.setItem(updatedTripEvent.id, updatedTripEvent);
 

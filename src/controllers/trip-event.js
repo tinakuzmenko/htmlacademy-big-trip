@@ -2,9 +2,10 @@ import TripEventComponent from '../components/page-main/trip-events/trip-event.j
 import TripEventFormComponent from '../components/page-main/trip-event-form/trip-event-form.js';
 import TripEventWrapperComponent from '../components/page-main/trip-events/trip-event-wrapper.js';
 import TripEventAdapter from '../models/trip-event.js';
-import {createEmptyTripEvent} from '../helpers/utils.js';
-import {Keycode, RenderPosition, Mode} from '../helpers/constants.js';
+import {createEmptyTripEvent, getTimeDifference} from '../helpers/utils.js';
+import {Keycode, RenderPosition, Mode, eventActionsMap} from '../helpers/constants.js';
 import {render, replace, remove} from "../helpers/render.js";
+import moment from 'moment';
 
 export default class TripEventController {
   constructor(tripEventContainer, offers, destinations, dataChangeHandler, viewChangeHandler) {
@@ -46,6 +47,8 @@ export default class TripEventController {
     }
 
     this._tripEvent = tripEvent;
+    this._tripEvent.timeDiff = getTimeDifference(this._tripEvent.start, this._tripEvent.end);
+    this._tripEvent.action = eventActionsMap[this._tripEvent.type];
 
     const oldTripEventComponent = this._tripEventComponent;
     const oldTripEventFormComponent = this._tripEventFormComponent;
@@ -160,14 +163,14 @@ export default class TripEventController {
   _tripEventFormComponentSubmitHandler(evt) {
     evt.preventDefault();
     const formData = this._tripEventFormComponent.getData();
-    const data = this._prepareData(formData);
+    // const data = this._prepareData(formData);
 
     this._tripEventFormComponent.setData({
       saveButtonText: `Saving...`
     });
 
     this._disableForm();
-    this._dataChangeHandler(this, this._tripEvent, data);
+    this._dataChangeHandler(this, this._tripEvent, formData);
     this._viewChangeHandler();
   }
 
@@ -190,10 +193,10 @@ export default class TripEventController {
     const updatedTripEvent = Object.assign({}, this._tripEvent, {
       isFavorite: !this._tripEvent.isFavorite,
     });
-    const data = this._prepareData(updatedTripEvent);
+    // const data = this._prepareData(updatedTripEvent);
     const isFavorite = true;
 
-    this._dataChangeHandler(this, this._tripEvent, data, isFavorite);
+    this._dataChangeHandler(this, this._tripEvent, updatedTripEvent, isFavorite);
   }
 
   _enableForm() {
