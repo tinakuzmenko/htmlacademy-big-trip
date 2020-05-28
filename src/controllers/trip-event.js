@@ -103,7 +103,6 @@ export default class TripEventController {
     if (this._tripEventComponent) {
       this._replaceEditFormToTripEvent();
     } else {
-      console.log(`destroy form`);
       this.destroy();
     }
   }

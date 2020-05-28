@@ -3,7 +3,8 @@ import TripEventAdapter from '../models/trip-event.js';
 const ServerUrl = {
   POINTS: `https://11.ecmascript.pages.academy/big-trip/points`,
   OFFERS: `https://11.ecmascript.pages.academy/big-trip/offers`,
-  DESTINATIONS: `https://11.ecmascript.pages.academy/big-trip/destinations`
+  DESTINATIONS: `https://11.ecmascript.pages.academy/big-trip/destinations`,
+  SYNC: `https://11.ecmascript.pages.academy/big-trip/points/sync`
 };
 
 const Method = {
@@ -82,6 +83,15 @@ export default class API {
       url: `${ServerUrl.POINTS}/${id}`,
       method: Method.DELETE,
     });
+  }
+
+  sync(data) {
+    return this._loadData({
+      url: `${ServerUrl.SYNC}`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json());
   }
 
   _loadData({url, method = Method.GET, body = null, headers = new Headers()}) {

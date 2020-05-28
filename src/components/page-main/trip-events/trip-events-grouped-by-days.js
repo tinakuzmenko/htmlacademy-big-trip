@@ -22,7 +22,8 @@ export default class TripEventsGroupedByDays {
   }
 
   getTripDayObject(sortedTripEvent) {
-    this._tripEventStartDate = sortedTripEvent.start;
+    this._tripEventStartDate = typeof sortedTripEvent.start === `string` ? new Date(sortedTripEvent.start) : sortedTripEvent.start;
+
     this._tripDay = new Date(this._tripEventStartDate.getFullYear(), this._tripEventStartDate.getMonth(), this._tripEventStartDate.getDate());
 
     this._tripDayObject = {

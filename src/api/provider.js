@@ -1,7 +1,21 @@
 import TripEvent from '../models/trip-event.js';
+import {nanoid} from "nanoid";
 
 const isOnline = () => {
   return window.navigator.onLine;
+};
+
+const getSyncedTripEvents = (items) => {
+  return items.filter(({success}) => success)
+    .map(({payload}) => payload.point);
+};
+
+const createStoreStructure = (items) => {
+  return items.reduce((acc, current) => {
+    return Object.assign({}, acc, {
+      [current.id]: current,
+    });
+  }, {});
 };
 
 export default class Provider {
@@ -11,60 +25,89 @@ export default class Provider {
   }
 
   getTripEvents() {
-    if (isOnline) {
+    console.log(`I work!`);
+    if (isOnline()) {
       return this._api.getTripEvents()
         .then((tripEvents) => {
-          tripEvents.forEach((tripEvent) => this._store.setItem(tripEvent.id, tripEvent.toRAW()));
+          const storedTripEvents = createStoreStructure(tripEvents);
+          this._store.setItems(storedTripEvents);
 
           return tripEvents;
         });
     }
 
-    const storeTripEvents = Object.values(this._store.getItems());
-    return Promise.resolve(TripEvent.parseTasks(storeTripEvents));
+    const storeTripEvents = Object.values(this._store.getTripEvents());
+    // console.log(TripEvent.parseTripEvents(storeTripEvents));
+    return Promise.resolve(TripEvent.parseTripEvents(storeTripEvents));
   }
 
   getOffers() {
-    if (isOnline) {
-      return this._api.getOffers();
+    console.log(`GetOffers`);
+    if (isOnline()) {
+      return this._api.getOffers()
+        .then((offers) => {
+          this._store.setItems(offers);
+          return offers;
+        });
     }
 
-    return Promise.reject(`offline logic is not implemented`);
+    const storeOffers = Object.values(this._store.getOffers());
+    return Promise.resolve(storeOffers);
   }
 
   getDestinations() {
-    if (isOnline) {
-      return this._api.getDestinations();
+    if (isOnline()) {
+      return this._api.getDestinations()
+        .then((destinations) => {
+          this._store.setItems(destinations);
+          return destinations;
+        });
     }
 
-    return Promise.reject(`offline logic is not implemented`);
+    const storeDestinations = Object.values(this._store.getDestinations());
+    return Promise.resolve(storeDestinations);
   }
 
   getData() {
-    if (isOnline) {
+    if (isOnline()) {
       return this._api.getData()
         .then((response) => {
+          console.log(response);
+          const tripEvents = createStoreStructure(response.tripEvents.map((tripEvent) => this._prepareData(tripEvent)));
+
           this._store.setOffers(response.offers);
           this._store.setDestinations(response.destinations);
-          this._store.setTripEvents(response.tripEvents);
+          this._store.setItems(tripEvents);
 
           return response;
         });
     }
 
-    return Promise.reject(`offline logic is not implemented`);
+    return Promise.resolve(Object.assign({},
+        {tripEvents: this._store.getTripEvents()},
+        {destinations: this._store.getDestinations()},
+        {offers: this._store.getOffers()}));
   }
 
   createTripEvent(tripEvent) {
-    if (isOnline) {
-      return this._api.createTripEvent(tripEvent);
+    if (isOnline()) {
+      return this._api.createTripEvent(tripEvent)
+        .then((newTripEvent) => {
+          this._store.setItem(newTripEvent.id, this._prepareData(newTripEvent));
+
+          return newTripEvent;
+        });
     }
 
-    return Promise.reject(`offline logic is not implemented`);
+    const localNewTripEventId = nanoid();
+    const localNewTripEvent = Object.assign(tripEvent, {id: localNewTripEventId});
+
+    this._store.setItem(localNewTripEvent.id, this._prepareData(localNewTripEvent));
+    return Promise.resolve(localNewTripEvent);
   }
 
   updateTripEvent(id, tripEvent) {
-    if (isOnline) {
+    if (isOnline()) {
       return this._api.updateTripEvent(id, tripEvent)
       .then((updatedTripEvent) => {
         this._store.setItem(updatedTripEvent.id, updatedTripEvent);
@@ -73,15 +116,14 @@ export default class Provider {
       });
     }
 
-    const localTripEvent = TripEvent.clone(Object.assign(tripEvent, {id}));
-
-    this._store.setItem(id, localTripEvent.toRAW());
+    const localTripEvent = Object.assign(tripEvent, {id});
+    this._store.setItem(id, this._prepareData(localTripEvent));
 
     return Promise.resolve(localTripEvent);
   }
 
   deleteTripEvent(id) {
-    if (isOnline) {
+    if (isOnline()) {
       return this._api.deleteTripEvent(id)
         .then(() => this._store.removeItem(id));
     }
@@ -89,5 +131,30 @@ export default class Provider {
     this._store.removeItem(id);
 
     return Promise.resolve();
+  }
+
+  sync() {
+    if (isOnline()) {
+      const storeTripEvents = Object.values(this._store.getTripEvents());
+
+      return this._api.sync(storeTripEvents)
+        .then((response) => {
+          const createdTripEvents = response.created;
+          const updatedTripEvents = getSyncedTripEvents(response.updated);
+
+          const items = createStoreStructure([...createdTripEvents, ...updatedTripEvents]);
+
+          this._store.setItems(items);
+        });
+    }
+
+    return Promise.reject(new Error(`Sync data failed`));
+  }
+
+  _prepareData(tripEvent) {
+    const tripEventAdapter = new TripEvent(tripEvent);
+    const data = tripEventAdapter.toRAW(tripEvent);
+    console.log(data);
+    return data;
   }
 }

@@ -42,8 +42,4 @@ export default class TripEventAdapter {
   static parseTripEvents(data) {
     return data.map(TripEventAdapter.parseTripEvent);
   }
-
-  static clone(data) {
-    return new TripEventAdapter(data.toRAW());
-  }
 }

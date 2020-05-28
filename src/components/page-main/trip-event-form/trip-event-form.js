@@ -228,9 +228,10 @@ export default class TripEventForm extends AbstractSmartComponent {
   }
 
   _getDateAndTimeFormFormat(date) {
-    const dateYear = date.getFullYear().toString().slice(2, 4);
+    const currentDate = typeof date === `string` ? new Date(date) : date;
+    const dateYear = currentDate.getFullYear().toString().slice(2, 4);
 
-    const dateValues = Array.of(date.getDate(), date.getMonth() + 1, date.getHours(), date.getMinutes()).map((value) => {
+    const dateValues = Array.of(currentDate.getDate(), currentDate.getMonth() + 1, currentDate.getHours(), currentDate.getMinutes()).map((value) => {
       return value < 10 ? `0` + value : value;
     });
 
