@@ -145,9 +145,9 @@ export default class TripEventsBoardController {
       this._api.updateTripEvent(oldTripEvent.id, updatedTripEvent)
           .then((tripEventModel) => {
             const isSuccess = this._tripEventsModel.updateTripEvent(oldTripEvent.id, tripEventModel, isFavorite);
+            tripEventController.render(tripEventModel);
 
             if (isSuccess && !isFavorite) {
-              tripEventController.render(tripEventModel);
               tripEventController.closeTripEventFormOnSuccessSave();
               this.updateEvents();
               this._tripEventsModel.setIsButtonNewEventEnabled(true);
