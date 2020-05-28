@@ -25,11 +25,17 @@ export default class TripCost extends AbstractComponent {
   }
 
   _getTripEventsCost(tripEvents) {
-    return tripEvents.reduce((total, cost) => total + cost.basePrice + this._countTripOffersCost(cost.offers), 0);
+    const tripEventsCost = tripEvents.reduce((total, cost) => {
+      const offersTotalPrice = this._countTripOffersCost(cost.activeOffers);
+      return total + cost.basePrice + offersTotalPrice;
+    }, 0);
+
+    return tripEventsCost;
   }
 
   _countTripOffersCost(offers) {
-    return offers ? offers.reduce((offersTotal, offerCost) => offersTotal + offerCost.price, 0) : 0;
+    const tripOffersCost = offers ? offers.reduce((offersTotal, offerCost) => offersTotal + offerCost.price, 0) : 0;
+    return tripOffersCost;
   }
 
   _dataChangeHandler() {
