@@ -307,6 +307,7 @@ export default class TripEventForm extends AbstractSmartComponent {
         this._tripEventType = inputTypeListElement.value;
         this._tripEventAction = eventActionsMap[this._tripEventType];
       }
+
       this._clearOffers();
       this._rerender();
     });

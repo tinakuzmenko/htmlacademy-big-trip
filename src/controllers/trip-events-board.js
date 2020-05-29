@@ -38,6 +38,7 @@ export default class TripEventsBoardController {
     if (!this._sortedTripEvents.length) {
       this._tripEventsView = new NoTripEventsComponent(this._container, this._sortedTripEvents, this._offers, this._destinations, this._dataChangeHandler, this._tripEventsModel);
       render(this._container, this._tripEventsView);
+
       return;
     }
 

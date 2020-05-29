@@ -60,9 +60,9 @@ export default class TripRoute extends AbstractComponent {
   _getTripDatesTitle(startDate, endDate) {
     if (moment(startDate).format(`MMM`) === moment(endDate).format(`MMM`)) {
       return `${moment(startDate).format(`MMM D`)} &nbsp;&mdash;&nbsp; ${moment(endDate).format(`D`)}`;
-    } else {
-      return `${moment(startDate).format(`MMM D`)} &nbsp;&mdash;&nbsp; ${moment(endDate).format(`MMM D`)}`;
     }
+
+    return `${moment(startDate).format(`MMM D`)} &nbsp;&mdash;&nbsp; ${moment(endDate).format(`MMM D`)}`;
   }
 
   _dataChangeHandler() {
