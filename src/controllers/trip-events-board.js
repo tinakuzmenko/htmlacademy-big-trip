@@ -33,7 +33,7 @@ export default class TripEventsBoardController {
     this._offers = this._tripEventsModel.getOffers();
     this._destinations = this._tripEventsModel.getDestinations();
 
-    this._clearTripEvents();
+    this._clear();
 
     if (!this._sortedTripEvents.length) {
       this._tripEventsView = new NoTripEventsComponent(this._container, this._sortedTripEvents, this._offers, this._destinations, this._dataChangeHandler, this._tripEventsModel);
@@ -48,7 +48,7 @@ export default class TripEventsBoardController {
 
   hide() {
     this._containerComponent.hide();
-    this._setDefaultBoardMode();
+    this._setDefaultMode();
   }
 
   show() {
@@ -57,17 +57,17 @@ export default class TripEventsBoardController {
     this.render();
   }
 
-  _setDefaultBoardMode() {
+  _setDefaultMode() {
     this._sortType = SortType.EVENT;
     this._tripEventsModel.setFilter(FilterType.EVERYTHING);
   }
 
-  _updateEvents() {
-    this._clearTripEvents();
+  _update() {
+    this._clear();
     this.render();
   }
 
-  _clearTripEvents() {
+  _clear() {
     if (this._container.querySelector(`.trip-days`)) {
       this._container.querySelector(`.trip-days`).innerHTML = ``;
     }
@@ -111,7 +111,7 @@ export default class TripEventsBoardController {
       return;
     }
 
-    this._setDefaultBoardMode();
+    this._setDefaultMode();
     this._tripEventsView.createNewEventForm();
   }
 
@@ -146,7 +146,7 @@ export default class TripEventsBoardController {
         .then(() => {
           this._tripEventsModel.removeTripEvent(oldTripEvent.id);
           this._tripEventsModel.setIsButtonNewEventEnabled(true);
-          tripEventController.closeTripEventFormOnSuccessDelete();
+          tripEventController.closeFormOnSuccessDelete();
           this.render();
         })
         .catch(() => {
@@ -162,8 +162,8 @@ export default class TripEventsBoardController {
             tripEventController.render(tripEventModel);
 
             if (isSuccess && !isFavorite) {
-              tripEventController.closeTripEventFormOnSuccessSave();
-              this._updateEvents();
+              tripEventController.closeFormOnSuccessSave();
+              this._update();
               this._tripEventsModel.setIsButtonNewEventEnabled(true);
             }
           })

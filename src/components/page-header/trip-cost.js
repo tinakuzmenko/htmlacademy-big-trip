@@ -13,10 +13,10 @@ export default class TripCost extends AbstractComponent {
   }
 
   getTemplate() {
-    this._tripEventsCost = this._getTripEventsCost(this._tripEventsModel.getTripEvents());
+    this._tripTotalCost = this._getTotal(this._tripEventsModel.getTripEvents());
 
     return `<p class="trip-info__cost">
-              Total: &euro;&nbsp;<span class="trip-info__cost-value">${this._tripEventsCost}</span>
+              Total: &euro;&nbsp;<span class="trip-info__cost-value">${this._tripTotalCost}</span>
             </p>`;
   }
 
@@ -25,16 +25,16 @@ export default class TripCost extends AbstractComponent {
     render(this._container, this);
   }
 
-  _getTripEventsCost(tripEvents) {
-    const tripEventsCost = tripEvents.reduce((total, cost) => {
-      const offersTotalPrice = this._countTripOffersCost(cost.activeOffers);
+  _getTotal(tripEvents) {
+    const tripTotalCost = tripEvents.reduce((total, cost) => {
+      const offersTotalPrice = this._countTripOffersTotal(cost.activeOffers);
       return total + cost.basePrice + offersTotalPrice;
     }, 0);
 
-    return tripEventsCost;
+    return tripTotalCost;
   }
 
-  _countTripOffersCost(offers) {
+  _countTripOffersTotal(offers) {
     const tripOffersCost = offers ? offers.reduce((offersTotal, offerCost) => offersTotal + offerCost.price, 0) : 0;
     return tripOffersCost;
   }

@@ -9,7 +9,7 @@ export default class TripEvent extends AbstractComponent {
 
   getTemplate() {
     const {type, destination, basePrice, activeOffers, action, start, end, timeDiff} = this._tripEvent;
-    const eventOffers = activeOffers ? this._renderTripEventOffers(activeOffers.slice(0, 3)) : ``;
+    const eventOffers = activeOffers ? this._renderOffers(activeOffers.slice(0, 3)) : ``;
     const startTime = moment(start).format(`HH:mm`);
     const endTime = moment(end).format(`HH:mm`);
 
@@ -49,7 +49,7 @@ export default class TripEvent extends AbstractComponent {
       .addEventListener(`click`, handler);
   }
 
-  _renderTripEventOffers(activeOffers) {
+  _renderOffers(activeOffers) {
     return activeOffers.map((activeOffer) => {
       const {title, price} = activeOffer;
 

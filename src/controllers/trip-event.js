@@ -91,7 +91,7 @@ export default class TripEventController {
     }, this._SHAKE_ANIMATION_TIMEOUT);
   }
 
-  closeTripEventFormOnSuccessSave() {
+  closeFormOnSuccessSave() {
     document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
 
     if (this._tripEventComponent) {
@@ -101,7 +101,7 @@ export default class TripEventController {
     }
   }
 
-  closeTripEventFormOnSuccessDelete() {
+  closeFormOnSuccessDelete() {
     document.removeEventListener(`keydown`, this._documentEscKeydownHandler);
     this._replaceEditFormToTripEvent();
   }

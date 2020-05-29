@@ -19,7 +19,7 @@ export default class TripRoute extends AbstractComponent {
 
   getTemplate() {
     this._tripEvents = this._tripEventsModel.getTripEvents();
-    const title = this._getTripRoute();
+    const title = this._getTripTitle();
     let tripDates = ``;
 
     if (this._tripEvents.length > 0) {
@@ -38,7 +38,7 @@ export default class TripRoute extends AbstractComponent {
     render(this._container, this, RenderPosition.AFTERBEGIN);
   }
 
-  _getTripRoute() {
+  _getTripTitle() {
     const tripEventsSortedByDate = getSortedTripEvents(this._tripEvents);
     const tripEventsCities = tripEventsSortedByDate.map((tripEvent) => tripEvent.destination.name);
 
