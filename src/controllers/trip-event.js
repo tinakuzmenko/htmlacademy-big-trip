@@ -1,7 +1,7 @@
 import TripEventFormComponent from '../components/page-main/trip-event-form/trip-event-form.js';
 import TripEventWrapperComponent from '../components/page-main/trip-events/trip-event-wrapper.js';
 import TripEventComponent from '../components/page-main/trip-events/trip-event.js';
-import {eventActionsMap, Keycode, Mode, RenderPosition} from '../helpers/constants.js';
+import {eventActionsMap, Keycode, Mode, RenderPosition, TimeInMs} from '../helpers/constants.js';
 import {remove, render, replace} from "../helpers/render.js";
 import {createEmptyTripEvent, getTimeDifference} from '../helpers/utils.js';
 
@@ -14,11 +14,12 @@ export default class TripEventController {
     this._viewChangeHandler = viewChangeHandler;
     this._mode = Mode.VIEW;
 
+    this._SHAKE_ANIMATION_TIMEOUT = 600;
+
     this._tripEvent = null;
     this._tripEventComponent = null;
     this._tripEventFormComponent = null;
     this._tripEventWrapper = new TripEventWrapperComponent();
-    this._SHAKE_ANIMATION_TIMEOUT = 600;
 
     this._tripEventComponentClickHandler = this._tripEventComponentClickHandler.bind(this);
     this._tripEventFormComponentRollUpHandler = this._tripEventFormComponentRollUpHandler.bind(this);
@@ -73,7 +74,7 @@ export default class TripEventController {
   }
 
   shake() {
-    this._tripEventFormComponent.getElement().style.animation = `shake ${this._SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._tripEventFormComponent.getElement().style.animation = `shake ${this._SHAKE_ANIMATION_TIMEOUT / TimeInMs.SECOND}s`;
     this._tripEventFormComponent.getElement().style.border = `2px solid red`;
 
     setTimeout(() => {

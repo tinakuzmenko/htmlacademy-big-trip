@@ -1,7 +1,7 @@
 export const HIDDEN_CLASS = `visually-hidden`;
 export const EMPTY_TRIP_EVENT_FORM = null;
-export const EVENT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 export const TRANSPORT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
+export const ACTIVITY_TYPES = [`Check-in`, `Sightseeing`, `Restaurant`];
 
 export const ChartConfiguration = {
   BAR_HEIGHT: 55,
@@ -23,6 +23,7 @@ export const TimeInMs = {
   DAY: 86400000,
   HOUR: 3600000,
   MINUTE: 60000,
+  SECOND: 1000,
 };
 
 export const RenderPosition = {

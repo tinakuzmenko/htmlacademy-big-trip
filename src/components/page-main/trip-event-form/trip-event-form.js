@@ -3,7 +3,7 @@ import "flatpickr/dist/flatpickr.min.css";
 import {encode} from "he";
 import moment from 'moment';
 import {nanoid} from "nanoid";
-import {eventActionsMap, EVENT_TYPES, Mode} from '../../../helpers/constants.js';
+import {ACTIVITY_TYPES, eventActionsMap, Mode, TRANSPORT_TYPES} from '../../../helpers/constants.js';
 import AbstractSmartComponent from '../../abstract-smart-component.js';
 
 const DefaultButtonText = {
@@ -27,8 +27,8 @@ export default class TripEventForm extends AbstractSmartComponent {
     this._flatpickr = null;
 
     this._destinationsNames = this._getDestinationsNames();
-    this._typesTransferList = this._renderTripTypesList(EVENT_TYPES.slice(0, 7));
-    this._typesActivitiesList = this._renderTripTypesList(EVENT_TYPES.slice(7, 10));
+    this._typesTransferList = this._renderTripTypesList(TRANSPORT_TYPES);
+    this._typesActivitiesList = this._renderTripTypesList(ACTIVITY_TYPES);
     this._tripEventCitiesDatalist = this._renderOptions(this._allDestinations);
 
     this._dataChangeHandler = this._dataChangeHandler ? this._dataChangeHandler.bind(this) : null;

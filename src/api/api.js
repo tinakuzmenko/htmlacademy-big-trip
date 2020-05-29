@@ -14,6 +14,11 @@ const Method = {
   DELETE: `DELETE`,
 };
 
+const ResponseStatus = {
+  OK: 200,
+  REDIRECT: 300
+};
+
 export default class API {
   constructor(authorization) {
     this._authorization = authorization;
@@ -106,7 +111,7 @@ export default class API {
   }
 
   _checkStatus(response) {
-    if (response.status >= 200 && response.status < 300) {
+    if (response.status >= ResponseStatus.OK && response.status < ResponseStatus.REDIRECT) {
       return response;
     } else {
       throw new Error(`${response.status}: ${response.statusText}`);
