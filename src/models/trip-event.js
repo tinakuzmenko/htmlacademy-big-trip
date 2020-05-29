@@ -10,9 +10,7 @@ export default class TripEventAdapter {
     this.isFavorite = Boolean(serverData[`is_favorite`]);
     this.basePrice = serverData[`base_price`];
     this.activeOffers = serverData[`offers`];
-
     this.destination = serverData[`destination`];
-    this.destination.pictures = serverData[`destination`].pictures;
   }
 
   toRAW(localData) {
