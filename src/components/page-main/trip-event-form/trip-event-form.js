@@ -310,11 +310,6 @@ export default class TripEventForm extends AbstractSmartComponent {
       saveButtonElement.disabled = true;
     });
 
-    inputBasePriceElement.addEventListener(`input`, () => {
-      inputBasePriceElement.value = inputBasePriceElement.value.replace(/[^\d]/g, ``);
-      this._tripEventBasePrice = encode(inputBasePriceElement.value);
-    });
-
     destinationInputElement.addEventListener(`input`, () => {
       const isInOptions = this._destinationsNames.some((destination) => destination === destinationInputElement.value);
 
@@ -329,6 +324,12 @@ export default class TripEventForm extends AbstractSmartComponent {
       saveButtonElement.disabled = false;
 
       this.rerender();
+      this._clearOffers();
+    });
+
+    inputBasePriceElement.addEventListener(`input`, () => {
+      inputBasePriceElement.value = inputBasePriceElement.value.replace(/[^\d]/g, ``);
+      this._tripEventBasePrice = encode(inputBasePriceElement.value);
     });
 
     if (availableOffersElement) {
