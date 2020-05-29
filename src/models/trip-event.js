@@ -1,10 +1,10 @@
 import moment from 'moment';
-import {getCapitalizedString} from '../helpers/utils.js';
+import {getCapitalizedText} from '../helpers/utils.js';
 
 export default class TripEventAdapter {
   constructor(serverData) {
     this.id = serverData[`id`];
-    this.type = getCapitalizedString(serverData[`type`]);
+    this.type = getCapitalizedText(serverData[`type`]);
     this.start = new Date(serverData[`date_from`]);
     this.end = new Date(serverData[`date_to`]);
     this.isFavorite = Boolean(serverData[`is_favorite`]);

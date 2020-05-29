@@ -24,16 +24,16 @@ export default class TripRoute extends AbstractComponent {
   getTemplate() {
     this._tripEvents = this._tripEventsModel.getTripEvents();
     const title = this._getTripRoute();
-    let tripDatesString = ``;
+    let tripDates = ``;
 
     if (this._tripEvents.length > 0) {
-      const tripDates = this._getTripEventsDates();
-      tripDatesString = this._getTripDates(tripDates[0], tripDates[tripDates.length - 1]);
+      const dates = this._getTripEventsDates();
+      tripDates = this._getTripDates(dates[0], dates[dates.length - 1]);
     }
 
     return `<div class="trip-info__main">
               <h1 class="trip-info__title">${title}</h1>
-              <p class="trip-info__dates">${tripDatesString}</p>
+              <p class="trip-info__dates">${tripDates}</p>
             </div>`;
   }
 

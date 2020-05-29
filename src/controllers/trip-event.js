@@ -30,9 +30,9 @@ export default class TripEventController {
 
   render(tripEvent) {
     if (!tripEvent) {
-      const emptyTripEventObject = createEmptyTripEvent();
+      const emptyTripEvent = createEmptyTripEvent();
 
-      this._tripEventFormComponent = new TripEventFormComponent(emptyTripEventObject, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler, Mode.VIEW);
+      this._tripEventFormComponent = new TripEventFormComponent(emptyTripEvent, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler, Mode.VIEW);
       this._mode = Mode.EDIT;
 
       render(this._tripEventContainer, this._tripEventFormComponent, RenderPosition.BEFOREBEGIN);

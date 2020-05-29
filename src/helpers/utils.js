@@ -32,18 +32,18 @@ const getTripEventsByFilter = (tripEvents, filterType) => {
   }
 };
 
-const createTimeString = (value, signString) => {
-  let timeString = ``;
+const getTimeDifferenceText = (value, sign) => {
+  let timeDifferenceText = ``;
 
   if (value > 0 && value < 10) {
-    timeString = `0` + value + signString;
+    timeDifferenceText = `0` + value + sign;
   }
 
   if (value >= 10) {
-    timeString = value + signString;
+    timeDifferenceText = value + sign;
   }
 
-  return timeString;
+  return timeDifferenceText;
 };
 
 const getTimeDifference = (start, end) => {
@@ -52,16 +52,16 @@ const getTimeDifference = (start, end) => {
   const hours = Math.trunc((difference % TimeInMs.DAY) / TimeInMs.HOUR);
   const minutes = Math.round((difference % TimeInMs.HOUR) / TimeInMs.MINUTE);
 
-  let string;
+  let tripEventDuration;
 
   if (days > 0) {
-    string = `${createTimeString(days, `D`)} ${createTimeString(hours, `H`)} ${createTimeString(minutes, `M`)}`;
+    tripEventDuration = `${getTimeDifferenceText(days, `D`)} ${getTimeDifferenceText(hours, `H`)} ${getTimeDifferenceText(minutes, `M`)}`;
   } else if (hours > 0) {
-    string = `${createTimeString(hours, `H`)} ${createTimeString(minutes, `M`)}`;
+    tripEventDuration = `${getTimeDifferenceText(hours, `H`)} ${getTimeDifferenceText(minutes, `M`)}`;
   } else {
-    string = `${createTimeString(minutes, `M`)}`;
+    tripEventDuration = `${getTimeDifferenceText(minutes, `M`)}`;
   }
-  return string;
+  return tripEventDuration;
 };
 
 const createEmptyTripEvent = () => {
@@ -87,12 +87,12 @@ const createEmptyTripEvent = () => {
   };
 };
 
-const getCapitalizedString = (string) => {
-  if (!string) {
-    return string;
+const getCapitalizedText = (text) => {
+  if (!text) {
+    return text;
   }
 
-  return string[0].toUpperCase() + string.slice(1);
+  return text[0].toUpperCase() + text.slice(1);
 };
 
-export {getSortedTripEvents, getTripEventsByFilter, createEmptyTripEvent, getTimeDifference, getCapitalizedString};
+export {getSortedTripEvents, getTripEventsByFilter, createEmptyTripEvent, getTimeDifference, getCapitalizedText};

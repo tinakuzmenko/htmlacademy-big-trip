@@ -14,7 +14,7 @@ export default class TripEventsGroupedByDays {
     this._dataChangeHandler = dataChangeHandler;
     this._tripEventsModel = tripEventsModel;
 
-    this._tripDayObject = null;
+    this._tripDay = null;
     this._daysDifference = 0;
     this._daysContainerCount = 1;
     this._tripEventsControllers = [];
@@ -22,12 +22,12 @@ export default class TripEventsGroupedByDays {
     this._viewChangeHandler = this._viewChangeHandler.bind(this);
   }
 
-  getTripDayObject(sortedTripEvent) {
+  _getTripDay(sortedTripEvent) {
     this._tripEventStartDate = typeof sortedTripEvent.start === `string` ? new Date(sortedTripEvent.start) : sortedTripEvent.start;
 
     this._tripDay = new Date(this._tripEventStartDate.getFullYear(), this._tripEventStartDate.getMonth(), this._tripEventStartDate.getDate());
 
-    this._tripDayObject = {
+    this._tripDay = {
       counter: this._daysContainerCount,
       date: this._tripDay,
       parsedDate: Date.parse(this._tripDay)
@@ -35,24 +35,24 @@ export default class TripEventsGroupedByDays {
   }
 
   getDayContainerCount() {
-    const daysDifference = (this._tripDayObject.parsedDate - this._oldParsedDate) / TimeInMs.DAY;
+    const daysDifference = (this._tripDay.parsedDate - this._oldParsedDate) / TimeInMs.DAY;
     this._daysContainerCount = this._daysContainerCount + daysDifference;
-    this._tripDayObject.counter = this._daysContainerCount;
+    this._tripDay.counter = this._daysContainerCount;
   }
 
   getElement() {
     this._sortedTripEvents.forEach((sortedTripEvent) => {
       const parsedStartDate = Date.parse(moment(sortedTripEvent.start).startOf(`date`));
 
-      if (!this._tripDayObject) {
-        this.getTripDayObject(sortedTripEvent);
+      if (!this._tripDay) {
+        this._getTripDay(sortedTripEvent);
         this._renderEventsGroup();
       }
 
-      if (parsedStartDate !== this._tripDayObject.parsedDate) {
-        this._oldParsedDate = this._tripDayObject.parsedDate;
+      if (parsedStartDate !== this._tripDay.parsedDate) {
+        this._oldParsedDate = this._tripDay.parsedDate;
 
-        this.getTripDayObject(sortedTripEvent);
+        this._getTripDay(sortedTripEvent);
         this.getDayContainerCount();
         this._renderEventsGroup();
       }
@@ -73,11 +73,11 @@ export default class TripEventsGroupedByDays {
   }
 
   _renderEventsGroup() {
-    this._tripDay = new TripDayComponent(this._tripDayObject);
+    this._tripDayComponent = new TripDayComponent(this._tripDay);
     this._tripEventsContainer = new TripEventsContainerComponent();
 
-    render(this._container, this._tripDay);
-    render(this._tripDay.getElement(), this._tripEventsContainer);
+    render(this._container, this._tripDayComponent);
+    render(this._tripDayComponent.getElement(), this._tripEventsContainer);
   }
 
   _viewChangeHandler() {
