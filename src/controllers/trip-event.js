@@ -88,9 +88,9 @@ export default class TripEventController {
     setTimeout(() => {
       this._tripEventFormComponent.getElement().style.animation = ``;
 
-      this._tripEventFormComponent.setData({
-        saveButtonText: `Save`,
-        deleteButtonText: `Delete`,
+      this._tripEventFormComponent.setButtonText({
+        save: `Save`,
+        delete: `Delete`,
       });
 
       this._enableForm();
@@ -160,8 +160,8 @@ export default class TripEventController {
     evt.preventDefault();
     const formData = this._tripEventFormComponent.getData();
 
-    this._tripEventFormComponent.setData({
-      saveButtonText: `Saving...`
+    this._tripEventFormComponent.setButtonText({
+      save: `Saving...`
     });
 
     this._disableForm();
@@ -176,8 +176,8 @@ export default class TripEventController {
       return;
     }
 
-    this._tripEventFormComponent.setData({
-      deleteButtonText: `Deleting...`
+    this._tripEventFormComponent.setButtonText({
+      delete: `Deleting...`
     });
 
     this._disableForm();

@@ -70,10 +70,10 @@ pageNavigationComponent.setChangeHandler((menuItem) => {
 });
 
 apiWithProvider.getData()
-  .then((data) => {
-    tripEventsModel.setOffers(data.offers);
-    tripEventsModel.setDestinations(data.destinations);
-    tripEventsModel.setTripEvents(data.tripEvents);
+  .then((serverData) => {
+    tripEventsModel.setOffers(serverData.offers);
+    tripEventsModel.setDestinations(serverData.destinations);
+    tripEventsModel.setTripEvents(serverData.tripEvents);
   })
   .then(() => {
     remove(loadingComponent);

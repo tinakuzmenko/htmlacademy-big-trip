@@ -153,7 +153,7 @@ export default class Provider {
 
   _prepareData(tripEvent) {
     const tripEventAdapter = new TripEvent(tripEvent);
-    const data = tripEventAdapter.toRAW(tripEvent);
-    return data;
+    const tripEventRAW = tripEventAdapter.toRAW(tripEvent);
+    return tripEventRAW;
   }
 }

@@ -57,21 +57,21 @@ export default class API {
       .then((response) => response.json());
   }
 
-  createTripEvent(data) {
+  createTripEvent(newTripEvent) {
     return this._loadData({
       url: ServerUrl.POINTS,
       method: Method.POST,
-      body: JSON.stringify(data),
+      body: JSON.stringify(newTripEvent),
     })
       .then((response) => response.json())
       .then(TripEventAdapter.parseTripEvent);
   }
 
-  updateTripEvent(id, data) {
+  updateTripEvent(id, updatedTripEvent) {
     return this._loadData({
       url: `${ServerUrl.POINTS}/${id}`,
       method: Method.PUT,
-      body: JSON.stringify(data),
+      body: JSON.stringify(updatedTripEvent),
     })
     .then(this._checkStatus)
     .then((response) => response.json())
@@ -85,11 +85,11 @@ export default class API {
     });
   }
 
-  sync(data) {
+  sync(localData) {
     return this._loadData({
       url: `${ServerUrl.SYNC}`,
       method: Method.POST,
-      body: JSON.stringify(data),
+      body: JSON.stringify(localData),
     })
       .then((response) => response.json());
   }

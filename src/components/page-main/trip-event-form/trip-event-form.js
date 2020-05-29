@@ -7,10 +7,10 @@ import {eventActionsMap, EVENT_TYPES, Mode} from '../../../helpers/constants.js'
 import AbstractSmartComponent from '../../abstract-smart-component.js';
 
 
-const DefaultData = {
-  deleteButtonText: `Delete`,
-  cancelButtonText: `Cancel`,
-  saveButtonText: `Save`,
+const DefaultButtonText = {
+  delete: `Delete`,
+  cancel: `Cancel`,
+  save: `Save`,
 };
 
 export default class TripEventForm extends AbstractSmartComponent {
@@ -23,7 +23,7 @@ export default class TripEventForm extends AbstractSmartComponent {
     this._dataChangeHandler = dataChangeHandler;
     this._viewChangeHandler = viewChangeHandler;
     this._tripEventFormMode = mode;
-    this._externalData = DefaultData;
+    this._externalButtonText = DefaultButtonText;
 
     this._flatpickr = null;
 
@@ -60,9 +60,9 @@ export default class TripEventForm extends AbstractSmartComponent {
 
   getTemplate() {
     const renderedOffersSection = this._renderOffersSection();
-    const deleteButtonText = this._externalData.deleteButtonText;
-    const saveButtonText = this._externalData.saveButtonText;
-    const cancelButtonText = this._externalData.cancelButtonText;
+    const deleteButtonText = this._externalButtonText.delete;
+    const saveButtonText = this._externalButtonText.save;
+    const cancelButtonText = this._externalButtonText.cancel;
 
     return (`<form class="trip-events__item event event--edit" action="#" method="post">
               <header class="event__header">
@@ -188,8 +188,8 @@ export default class TripEventForm extends AbstractSmartComponent {
     return this._tripEvent;
   }
 
-  setData(data) {
-    this._externalData = Object.assign({}, DefaultData, data);
+  setButtonText(buttonText) {
+    this._externalButtonText = Object.assign({}, DefaultButtonText, buttonText);
     this.rerender();
   }
 
