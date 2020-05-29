@@ -1,5 +1,5 @@
-import AbstractComponent from '../../abstract-component.js';
 import moment from 'moment';
+import AbstractComponent from '../../abstract-component.js';
 
 export default class TripEvent extends AbstractComponent {
   constructor(tripEvent) {
@@ -9,7 +9,7 @@ export default class TripEvent extends AbstractComponent {
 
   getTemplate() {
     const {type, destination, basePrice, activeOffers, action, start, end, timeDiff} = this._tripEvent;
-    const eventOffers = activeOffers ? this._renderTripEventOffers(activeOffers) : ``;
+    const eventOffers = activeOffers ? this._renderOffers(activeOffers.slice(0, 3)) : ``;
     const startTime = moment(start).format(`HH:mm`);
     const endTime = moment(end).format(`HH:mm`);
 
@@ -44,7 +44,12 @@ export default class TripEvent extends AbstractComponent {
     );
   }
 
-  _renderTripEventOffers(activeOffers) {
+  setClickHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, handler);
+  }
+
+  _renderOffers(activeOffers) {
     return activeOffers.map((activeOffer) => {
       const {title, price} = activeOffer;
 
@@ -57,10 +62,5 @@ export default class TripEvent extends AbstractComponent {
       );
     })
     .join(`\n`);
-  }
-
-  setClickHandler(handler) {
-    this.getElement().querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, handler);
   }
 }

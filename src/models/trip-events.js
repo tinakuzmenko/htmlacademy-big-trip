@@ -1,5 +1,5 @@
-import {getTripEventsByFilter} from '../helpers/utils.js';
 import {FilterType} from "../helpers/constants.js";
+import {getTripEventsByFilter} from '../helpers/utils.js';
 
 export default class TripEvents {
   constructor() {
@@ -71,39 +71,6 @@ export default class TripEvents {
     this._callHandlers(this._modeChangeHandlers);
   }
 
-  removeTripEvent(id) {
-    const index = this._tripEvents.findIndex((tripEvent) => tripEvent.id === id);
-
-    if (index === -1) {
-      return false;
-    }
-
-    this._tripEvents = [].concat(this._tripEvents.slice(0, index), this._tripEvents.slice(index + 1));
-
-    this._callHandlers(this._dataChangeHandlers);
-
-    return true;
-  }
-
-  updateTripEvent(id, tripEvent) {
-    const index = this._tripEvents.findIndex((tripEventItem) => tripEventItem.id === id);
-
-    if (index === -1) {
-      return false;
-    }
-
-    this._tripEvents = [].concat(this._tripEvents.slice(0, index), tripEvent, this._tripEvents.slice(index + 1));
-
-    this._callHandlers(this._dataChangeHandlers);
-
-    return true;
-  }
-
-  addTripEvent(tripEvent) {
-    this._tripEvents = [].concat(tripEvent, this._tripEvents);
-    this._callHandlers(this._dataChangeHandlers);
-  }
-
   setModeChangeHandler(handler) {
     this._modeChangeHandlers.push(handler);
   }
@@ -118,6 +85,41 @@ export default class TripEvents {
 
   setFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
+  }
+
+  addTripEvent(tripEvent) {
+    this._tripEvents = [].concat(tripEvent, this._tripEvents);
+    this._callHandlers(this._dataChangeHandlers);
+  }
+
+  removeTripEvent(id) {
+    const index = this._tripEvents.findIndex((tripEvent) => tripEvent.id === id);
+
+    if (index === -1) {
+      return false;
+    }
+
+    this._tripEvents = [].concat(this._tripEvents.slice(0, index), this._tripEvents.slice(index + 1));
+
+    this._callHandlers(this._dataChangeHandlers);
+
+    return true;
+  }
+
+  updateTripEvent(id, tripEvent, isFavorite) {
+    const index = this._tripEvents.findIndex((tripEventItem) => tripEventItem.id === id);
+
+    if (index === -1) {
+      return false;
+    }
+
+    this._tripEvents = [].concat(this._tripEvents.slice(0, index), tripEvent, this._tripEvents.slice(index + 1));
+
+    if (!isFavorite) {
+      this._callHandlers(this._dataChangeHandlers);
+    }
+
+    return true;
   }
 
   _callHandlers(handlers) {

@@ -1,54 +1,47 @@
-import AbstractSmartComponent from '../../abstract-smart-component.js';
-import {EVENT_TYPES, eventActionsMap, Mode} from '../../../helpers/constants.js';
 import flatpickr from 'flatpickr';
+import "flatpickr/dist/flatpickr.min.css";
 import {encode} from "he";
 import moment from 'moment';
+import {nanoid} from "nanoid";
+import {ACTIVITY_TYPES, eventActionsMap, Mode, TRANSPORT_TYPES} from '../../../helpers/constants.js';
+import AbstractSmartComponent from '../../abstract-smart-component.js';
 
-import "flatpickr/dist/flatpickr.min.css";
-
-const DefaultData = {
-  DELETE_BUTTON_TEXT: `Delete`,
-  SAVE_BUTTON_TEXT: `Save`,
+const DefaultButtonText = {
+  delete: `Delete`,
+  cancel: `Cancel`,
+  save: `Save`,
 };
 
 export default class TripEventForm extends AbstractSmartComponent {
   constructor(tripEvent, offers, destinations, dataChangeHandler, viewChangeHandler, mode = Mode.EDIT) {
     super();
     this._tripEvent = tripEvent;
+
     this._tripEventOffers = offers;
     this._allDestinations = destinations;
     this._dataChangeHandler = dataChangeHandler;
     this._viewChangeHandler = viewChangeHandler;
     this._tripEventFormMode = mode;
+    this._externalButtonText = DefaultButtonText;
 
     this._flatpickr = null;
 
-    this._externalData = DefaultData;
-    this._tripEventId = this._tripEvent.id;
-    this._tripEventType = this._tripEvent.type;
-    this._tripEventDestination = this._tripEvent.destination;
-    this._tripEventAction = this._tripEvent.action;
-    this._tripEventActiveOffers = this._tripEvent.activeOffers;
-    this._tripEventStartTime = this._getDateAndTimeFormFormat(this._tripEvent.start);
-    this._tripEventEndTime = this._getDateAndTimeFormFormat(this._tripEvent.end);
-    this._tripEventBasePrice = this._tripEvent.basePrice;
-    this._tripEventIsFavorite = this._tripEvent.isFavorite;
-    this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.pictures);
-
     this._destinationsNames = this._getDestinationsNames();
-
-    this._typesTransferList = this._renderTripTypesList(EVENT_TYPES.slice(0, 7));
-    this._typesActivitiesList = this._renderTripTypesList(EVENT_TYPES.slice(7, 10));
+    this._typesTransferList = this._renderTripTypesList(TRANSPORT_TYPES);
+    this._typesActivitiesList = this._renderTripTypesList(ACTIVITY_TYPES);
     this._tripEventCitiesDatalist = this._renderOptions(this._allDestinations);
 
     this._dataChangeHandler = this._dataChangeHandler ? this._dataChangeHandler.bind(this) : null;
+
+    this._initFormData();
     this._subscribeOnEvents();
   }
 
   getTemplate() {
-    const renderedOffersSection = this._renderOffersSection(this._tripEventActiveOffers, this._tripEventId);
-    const deleteButtonText = this._externalData.DELETE_BUTTON_TEXT;
-    const saveButtonText = this._externalData.SAVE_BUTTON_TEXT;
+    const renderedOffersSection = this._renderOffersSection();
+    const deleteButtonText = this._externalButtonText.delete;
+    const saveButtonText = this._externalButtonText.save;
+    const cancelButtonText = this._externalButtonText.cancel;
 
     return (`<form class="trip-events__item event event--edit" action="#" method="post">
               <header class="event__header">
@@ -110,7 +103,7 @@ export default class TripEventForm extends AbstractSmartComponent {
 
                 <button class="event__save-btn  btn  btn--blue" type="submit">${saveButtonText}</button>
                 <button class="event__reset-btn" type="reset">
-                  ${this._tripEventFormMode === Mode.EDIT ? `${deleteButtonText}` : `Cancel`}
+                  ${this._tripEventFormMode === Mode.EDIT ? `${deleteButtonText}` : `${cancelButtonText}`}
                 </button>
 
                 ${this._tripEventFormMode === Mode.EDIT ? `<input id="event-favorite-${this._tripEventId}" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${this._tripEventIsFavorite ? `checked` : ``}>
@@ -155,10 +148,10 @@ export default class TripEventForm extends AbstractSmartComponent {
       start: tripEventStartTime,
       end: tripEndTime,
       isFavorite: this._tripEventFormMode === Mode.EDIT ? this._tripEventIsFavorite : false,
-      activeOffers: this._tripEventActiveOffers,
+      activeOffers: this._tripEventSelectedOffers,
       basePrice: parseInt(this._tripEventBasePrice, 10),
       destination: this._tripEventDestination,
-      id: Math.round(this._tripEventId * 10),
+      id: this._tripEventFormMode === Mode.EDIT ? this._tripEventId : nanoid(),
     };
 
     if (this._flatpickrEnd) {
@@ -174,8 +167,8 @@ export default class TripEventForm extends AbstractSmartComponent {
     return this._tripEvent;
   }
 
-  setData(data) {
-    this._externalData = Object.assign({}, DefaultData, data);
+  setButtonText(buttonText) {
+    this._externalButtonText = Object.assign({}, DefaultButtonText, buttonText);
     this.rerender();
   }
 
@@ -203,6 +196,16 @@ export default class TripEventForm extends AbstractSmartComponent {
     }
   }
 
+  rerender() {
+    super.rerender();
+  }
+
+  reset() {
+    this._initFormData();
+    this._clearOffers();
+    this.rerender();
+  }
+
   recoveryListeners() {
     this.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
@@ -212,29 +215,33 @@ export default class TripEventForm extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
-  removeElement() {
-    if (this._flatpickr) {
-      this._flatpickr.destroy();
-      this._flatpickr = null;
-    }
+  _initFormData() {
+    this._tripEventId = this._tripEvent.id;
+    this._tripEventType = this._tripEvent.type;
+    this._tripEventDestination = this._tripEvent.destination;
+    this._tripEventAction = this._tripEvent.action;
+    this._tripEventActiveOffers = this._tripEvent.activeOffers;
+    this._tripEventStartTime = this._getDateAndTimeFormFormat(this._tripEvent.start);
+    this._tripEventEndTime = this._getDateAndTimeFormFormat(this._tripEvent.end);
+    this._tripEventBasePrice = this._tripEvent.basePrice;
+    this._tripEventIsFavorite = this._tripEvent.isFavorite;
+    this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.pictures);
 
-    super.removeElement();
-  }
-
-  rerender() {
-    super.rerender();
+    this._tripEventSelectedOffers = this._tripEvent.activeOffers ? this._tripEvent.activeOffers.slice() : [];
   }
 
   _getDateAndTimeFormFormat(date) {
-    const dateYear = date.getFullYear().toString().slice(2, 4);
+    const currentDate = typeof date === `string` ? new Date(date) : date;
+    return moment(currentDate).format(`DD/MM/YY HH:mm`);
+  }
 
-    const dateValues = Array.of(date.getDate(), date.getMonth() + 1, date.getHours(), date.getMinutes()).map((value) => {
-      return value < 10 ? `0` + value : value;
-    });
+  _getDestinationsNames() {
+    return this._allDestinations.map((destination) => destination.name);
+  }
 
-    const [dateDay, dateMonth, dateHours, dateMinutes] = dateValues;
-
-    return dateDay + `/` + dateMonth + `/` + dateYear + ` ` + dateHours + `:` + dateMinutes;
+  _getOffersByType(type) {
+    const offersByType = this._tripEventOffers.filter((tripEventOffer) => type.toLowerCase() === tripEventOffer.type);
+    return offersByType[0];
   }
 
   _applyFlatpickr(element, time) {
@@ -288,23 +295,19 @@ export default class TripEventForm extends AbstractSmartComponent {
 
     typeListElement.addEventListener(`click`, (evt) => {
       if (evt.target.tagName === `LABEL`) {
-        const inputTypeListElement = typeListElement.querySelector(`#` + evt.target.htmlFor);
+        const inputTypeListElement = typeListElement.querySelector(`#${evt.target.htmlFor}`);
 
         this._tripEventType = inputTypeListElement.value;
         this._tripEventAction = eventActionsMap[this._tripEventType];
       }
-      this._clearOffers();
+
       this.rerender();
+      this._clearOffers();
     });
 
     destinationInputElement.addEventListener(`click`, () => {
       destinationInputElement.value = ``;
       saveButtonElement.disabled = true;
-    });
-
-    inputBasePriceElement.addEventListener(`input`, () => {
-      inputBasePriceElement.value = inputBasePriceElement.value.replace(/[^\d]/g, ``);
-      this._tripEventBasePrice = encode(inputBasePriceElement.value);
     });
 
     destinationInputElement.addEventListener(`input`, () => {
@@ -321,42 +324,51 @@ export default class TripEventForm extends AbstractSmartComponent {
       saveButtonElement.disabled = false;
 
       this.rerender();
+      this._clearOffers();
+    });
+
+    inputBasePriceElement.addEventListener(`input`, () => {
+      inputBasePriceElement.value = inputBasePriceElement.value.replace(/[^\d]/g, ``);
+      this._tripEventBasePrice = encode(inputBasePriceElement.value);
     });
 
     if (availableOffersElement) {
       availableOffersElement.addEventListener(`click`, (evt) => {
         const allOffers = this._getOffersByType(this._tripEventType).offers;
 
-        if (evt.target.tagName === `INPUT` && evt.target.checked) {
-          const offerIndex = evt.target.dataset.offerId;
+        if (evt.target.tagName === `INPUT`) {
+          const offerIndex = parseInt(evt.target.dataset.offerId, 10);
           const newActiveOffer = allOffers[offerIndex];
-          this._addOffer(newActiveOffer);
-        } else {
-          const offerIndex = evt.target.dataset.offerId;
-          const newActiveOffer = allOffers[offerIndex];
-          this._removeOffer(newActiveOffer);
+
+          if (evt.target.checked) {
+            this._addOffer(newActiveOffer);
+          } else {
+            this._removeOffer(newActiveOffer);
+          }
         }
       });
     }
   }
 
   _addOffer(offer) {
-    this._tripEventActiveOffers.push(offer);
+    this._tripEventSelectedOffers.push(offer);
   }
 
   _removeOffer(offer) {
-    this._tripEventActiveOffers = this._tripEventActiveOffers.filter((activeOffer) => activeOffer !== offer);
+    this._tripEventSelectedOffers = this._tripEventSelectedOffers.filter((activeOffer) => {
+      return activeOffer.title !== offer.title;
+    });
   }
 
   _clearOffers() {
-    this._tripEventActiveOffers = [];
+    this._tripEventSelectedOffers = [];
   }
 
   _checkIsOfferChecked(offer, activeOffers) {
     let isChecked = false;
 
     activeOffers.forEach((activeOffer) => {
-      if (offer.title === activeOffer.title) {
+      if (offer.title === activeOffer.title && offer.price === activeOffer.price) {
         isChecked = true;
       }
     });
@@ -385,11 +397,11 @@ export default class TripEventForm extends AbstractSmartComponent {
   .join(``);
   }
 
-  _renderOffersSection(activeOffers) {
+  _renderOffersSection() {
     const tripEventOffers = this._getOffersByType(this._tripEventType);
 
     if (tripEventOffers.offers.length > 0) {
-      const tripEventOffersElements = this._renderEventOffers(tripEventOffers, activeOffers);
+      const tripEventOffersElements = this._renderEventOffers(tripEventOffers, this._tripEventActiveOffers);
 
       return (
         `<section class="event__section  event__section--offers">
@@ -433,14 +445,5 @@ export default class TripEventForm extends AbstractSmartComponent {
     }
 
     return ``;
-  }
-
-  _getDestinationsNames() {
-    return this._allDestinations.map((destination) => destination.name);
-  }
-
-  _getOffersByType(type) {
-    const offersByType = this._tripEventOffers.filter((tripEventOffer) => type.toLowerCase() === tripEventOffer.type);
-    return offersByType[0];
   }
 }

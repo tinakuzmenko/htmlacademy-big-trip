@@ -41,14 +41,6 @@ export default class TripSort extends AbstractSmartComponent {
             </form>`.trim();
   }
 
-  rerender() {
-    super.rerender();
-  }
-
-  recoveryListeners() {
-    this.setSortTypeChangeHandler(this._sortTypeChangeHandler);
-  }
-
   setSortTypeChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       if (evt.target.tagName !== `LABEL`) {
@@ -67,5 +59,13 @@ export default class TripSort extends AbstractSmartComponent {
     });
 
     this._sortTypeChangeHandler = handler;
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  recoveryListeners() {
+    this.setSortTypeChangeHandler(this._sortTypeChangeHandler);
   }
 }

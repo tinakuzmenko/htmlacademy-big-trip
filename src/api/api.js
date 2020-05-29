@@ -1,9 +1,10 @@
-import TripEventAdapter from './models/trip-event.js';
+import TripEventAdapter from '../models/trip-event.js';
 
 const ServerUrl = {
   POINTS: `https://11.ecmascript.pages.academy/big-trip/points`,
   OFFERS: `https://11.ecmascript.pages.academy/big-trip/offers`,
-  DESTINATIONS: `https://11.ecmascript.pages.academy/big-trip/destinations`
+  DESTINATIONS: `https://11.ecmascript.pages.academy/big-trip/destinations`,
+  SYNC: `https://11.ecmascript.pages.academy/big-trip/points/sync`
 };
 
 const Method = {
@@ -11,6 +12,11 @@ const Method = {
   PUT: `PUT`,
   POST: `POST`,
   DELETE: `DELETE`,
+};
+
+const ResponseStatus = {
+  OK: 200,
+  REDIRECT: 300
 };
 
 export default class API {
@@ -56,21 +62,21 @@ export default class API {
       .then((response) => response.json());
   }
 
-  createTripEvent(data) {
+  createTripEvent(newTripEvent) {
     return this._loadData({
       url: ServerUrl.POINTS,
       method: Method.POST,
-      body: JSON.stringify(data),
+      body: JSON.stringify(newTripEvent),
     })
       .then((response) => response.json())
       .then(TripEventAdapter.parseTripEvent);
   }
 
-  updateTripEvent(id, data) {
+  updateTripEvent(id, updatedTripEvent) {
     return this._loadData({
       url: `${ServerUrl.POINTS}/${id}`,
       method: Method.PUT,
-      body: JSON.stringify(data),
+      body: JSON.stringify(updatedTripEvent),
     })
     .then(this._checkStatus)
     .then((response) => response.json())
@@ -82,6 +88,15 @@ export default class API {
       url: `${ServerUrl.POINTS}/${id}`,
       method: Method.DELETE,
     });
+  }
+
+  sync(localData) {
+    return this._loadData({
+      url: `${ServerUrl.SYNC}`,
+      method: Method.POST,
+      body: JSON.stringify(localData),
+    })
+      .then((response) => response.json());
   }
 
   _loadData({url, method = Method.GET, body = null, headers = new Headers()}) {
@@ -96,7 +111,7 @@ export default class API {
   }
 
   _checkStatus(response) {
-    if (response.status >= 200 && response.status < 300) {
+    if (response.status >= ResponseStatus.OK && response.status < ResponseStatus.REDIRECT) {
       return response;
     } else {
       throw new Error(`${response.status}: ${response.statusText}`);

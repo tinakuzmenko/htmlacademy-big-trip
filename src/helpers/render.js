@@ -1,13 +1,13 @@
 import {RenderPosition} from './constants.js';
 
-const createElement = (template) => {
+export const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
 
   return newElement.firstChild;
 };
 
-const render = (container, component, place = RenderPosition.BEFOREEND) => {
+export const render = (container, component, place = RenderPosition.BEFOREEND) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
       container.prepend(component.getElement());
@@ -24,7 +24,7 @@ const render = (container, component, place = RenderPosition.BEFOREEND) => {
   }
 };
 
-const replace = (newComponent, oldComponent) => {
+export const replace = (newComponent, oldComponent) => {
   const parentElement = oldComponent.getElement().parentElement;
   const newElement = newComponent.getElement();
   const oldElement = oldComponent.getElement();
@@ -36,9 +36,7 @@ const replace = (newComponent, oldComponent) => {
   }
 };
 
-const remove = (component) => {
+export const remove = (component) => {
   component.getElement().remove();
   component.removeElement();
 };
-
-export {createElement, render, replace, remove};

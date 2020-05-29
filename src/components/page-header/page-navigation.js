@@ -8,11 +8,11 @@ export default class PageNavigation extends AbstractComponent {
   }
 
   setActiveItem(menuTab) {
-    const activeItem = this.getElement().querySelector(`.trip-tabs__btn--active`);
-    const checkedItem = this.getElement().querySelector(`[data-tab="${menuTab}"]`);
+    const activeItemElement = this.getElement().querySelector(`.trip-tabs__btn--active`);
+    const checkedItemElement = this.getElement().querySelector(`[data-tab="${menuTab}"]`);
 
-    activeItem.classList.remove(`trip-tabs__btn--active`);
-    checkedItem.classList.add(`trip-tabs__btn--active`);
+    activeItemElement.classList.remove(`trip-tabs__btn--active`);
+    checkedItemElement.classList.add(`trip-tabs__btn--active`);
   }
 
   setChangeHandler(handler) {
