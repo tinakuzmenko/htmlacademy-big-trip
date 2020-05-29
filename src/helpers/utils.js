@@ -1,3 +1,4 @@
+import {nanoid} from 'nanoid';
 import {FilterType, SortType, TimeInMs} from './constants.js';
 
 export const getSortedTripEvents = (tripEvents, sortType = SortType.EVENT) => {
@@ -74,16 +75,13 @@ export const createEmptyTripEvent = () => {
     isFavorite: false,
     activeOffers: [],
     action: `to`,
-    parsedStartDate: ``,
     basePrice: ``,
     destination: {
       name: ``,
       description: ``,
       pictures: []
     },
-    offers: [],
-    timeDiff: getTimeDifference(newDate, newDate),
-    id: Date.parse(new Date()) + Math.random()
+    id: nanoid(),
   };
 };
 

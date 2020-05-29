@@ -234,12 +234,12 @@ export default class TripEventForm extends AbstractSmartComponent {
     const dateYear = currentDate.getFullYear().toString().slice(2, 4);
 
     const dateValues = Array.of(currentDate.getDate(), currentDate.getMonth() + 1, currentDate.getHours(), currentDate.getMinutes()).map((value) => {
-      return value < 10 ? `0` + value : value;
+      return value < 10 ? `0${value}` : value;
     });
 
     const [dateDay, dateMonth, dateHours, dateMinutes] = dateValues;
 
-    return dateDay + `/` + dateMonth + `/` + dateYear + ` ` + dateHours + `:` + dateMinutes;
+    return `${dateDay}/${dateMonth}/${dateYear} ${dateHours}:${dateMinutes}`;
   }
 
   _getDestinationsNames() {
