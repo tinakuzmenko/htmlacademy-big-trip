@@ -77,17 +77,17 @@ export default class TripEventsBoardController {
   }
 
   _switchSortType() {
-    this._tripSortItemDay = this._sortComponent.getElement().querySelector(`.trip-sort__item--day`);
+    this._tripSortItemDayElement = this._sortComponent.getElement().querySelector(`.trip-sort__item--day`);
 
     switch (this._sortType) {
       case SortType.TIME:
       case SortType.PRICE:
-        this._tripSortItemDay.textContent = ``;
+        this._tripSortItemDayElement.textContent = ``;
         this._tripEventsView = new TripEventsView(this._tripDaysContainer, this._sortedTripEvents, this._offers, this._destinations, this._dataChangeHandler);
         render(this._container, this._tripEventsView);
         break;
       default:
-        this._tripSortItemDay.textContent = `Day`;
+        this._tripSortItemDayElement.textContent = `Day`;
         this._tripEventsView = new TripEventsGroupedByDaysView(this._tripDaysContainer, this._sortedTripEvents, this._offers, this._destinations, this._dataChangeHandler, this._tripEventsModel);
         render(this._container, this._tripEventsView);
         break;

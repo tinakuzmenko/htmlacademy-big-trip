@@ -52,6 +52,8 @@ export default class TripEventController {
     this._tripEventComponent = new TripEventComponent(this._tripEvent);
     this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
 
+    this._formElements = this._tripEventFormComponent.getElement().querySelectorAll(`input, button`);
+
     this._tripEventComponent.setClickHandler(this._tripEventComponentClickHandler);
     this._setFormHandlers();
 
@@ -125,17 +127,13 @@ export default class TripEventController {
   }
 
   _enableForm() {
-    const formElements = this._tripEventFormComponent.getElement().querySelectorAll(`input, button`);
-
-    formElements.forEach((formElement) => {
+    this._formElements.forEach((formElement) => {
       formElement.disabled = false;
     });
   }
 
   _disableForm() {
-    const formElements = this._tripEventFormComponent.getElement().querySelectorAll(`input, button`);
-
-    formElements.forEach((formElement) => {
+    this._formElements.forEach((formElement) => {
       formElement.disabled = true;
     });
   }

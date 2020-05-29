@@ -113,9 +113,9 @@ export default class TripStatistics extends AbstractSmartComponent {
   }
 
   _renderCharts() {
-    const moneyCtx = this.getElement().querySelector(`.statistics__chart--money`);
-    const transportCtx = this.getElement().querySelector(`.statistics__chart--transport`);
-    const timeSpendCtx = this.getElement().querySelector(`.statistics__chart--time`);
+    const moneyCtxElement = this.getElement().querySelector(`.statistics__chart--money`);
+    const transportCtxElement = this.getElement().querySelector(`.statistics__chart--transport`);
+    const timeSpendCtxElement = this.getElement().querySelector(`.statistics__chart--time`);
 
     this._tripEvents = this._tripEventsModel.getTripEvents();
 
@@ -123,15 +123,15 @@ export default class TripStatistics extends AbstractSmartComponent {
     this._tripEventsChartData = this._getTripEventsChartData();
     this._transportEvents = this._getTransportEventsCounts();
 
-    this._moneyChart = this._renderMoneyChart(moneyCtx);
-    this._transportChart = this._renderTransportChart(transportCtx);
-    this._timeSpendChart = this._renderTimeSpendChart(timeSpendCtx);
+    this._moneyChart = this._renderMoneyChart(moneyCtxElement);
+    this._transportChart = this._renderTransportChart(transportCtxElement);
+    this._timeSpendChart = this._renderTimeSpendChart(timeSpendCtxElement);
   }
 
-  _renderMoneyChart(moneyCtx) {
-    moneyCtx.height = ChartConfiguration.BAR_HEIGHT * this._tripEventsTypes.length;
+  _renderMoneyChart(moneyCtxElement) {
+    moneyCtxElement.height = ChartConfiguration.BAR_HEIGHT * this._tripEventsTypes.length;
 
-    return new Chart(moneyCtx, {
+    return new Chart(moneyCtxElement, {
       plugins: [ChartDataLabels],
       type: ChartConfiguration.CHART_TYPE,
       data: {
@@ -202,10 +202,10 @@ export default class TripStatistics extends AbstractSmartComponent {
     });
   }
 
-  _renderTransportChart(transportCtx) {
-    transportCtx.height = ChartConfiguration.BAR_HEIGHT * Object.keys(this._transportEvents).length;
+  _renderTransportChart(transportCtxElement) {
+    transportCtxElement.height = ChartConfiguration.BAR_HEIGHT * Object.keys(this._transportEvents).length;
 
-    return new Chart(transportCtx, {
+    return new Chart(transportCtxElement, {
       plugins: [ChartDataLabels],
       type: ChartConfiguration.CHART_TYPE,
       data: {
@@ -276,10 +276,10 @@ export default class TripStatistics extends AbstractSmartComponent {
     });
   }
 
-  _renderTimeSpendChart(timeSpendCtx) {
-    timeSpendCtx.height = ChartConfiguration.BAR_HEIGHT * this._tripEventsTypes.length;
+  _renderTimeSpendChart(timeSpendCtxElement) {
+    timeSpendCtxElement.height = ChartConfiguration.BAR_HEIGHT * this._tripEventsTypes.length;
 
-    return new Chart(timeSpendCtx, {
+    return new Chart(timeSpendCtxElement, {
       plugins: [ChartDataLabels],
       type: ChartConfiguration.CHART_TYPE,
       data: {
