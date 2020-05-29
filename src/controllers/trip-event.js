@@ -120,6 +120,9 @@ export default class TripEventController {
     this._mode = Mode.EDIT;
 
     render(this._tripEventContainer, this._tripEventFormComponent, RenderPosition.BEFOREBEGIN);
+
+    this._formElements = this._tripEventFormComponent.getElement().querySelectorAll(`input, button`);
+
     document.addEventListener(`keydown`, this._documentEscKeydownHandler);
 
     this._tripEventFormComponent.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
