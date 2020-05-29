@@ -169,7 +169,7 @@ export default class TripEventForm extends AbstractSmartComponent {
 
   setButtonText(buttonText) {
     this._externalButtonText = Object.assign({}, DefaultButtonText, buttonText);
-    this._rerender();
+    this.rerender();
   }
 
   setSubmitHandler(handler) {
@@ -196,9 +196,14 @@ export default class TripEventForm extends AbstractSmartComponent {
     }
   }
 
+  rerender() {
+    super.rerender();
+  }
+
   reset() {
     this._initFormData();
-    this._rerender();
+    this._clearOffers();
+    this.rerender();
   }
 
   recoveryListeners() {
@@ -222,24 +227,12 @@ export default class TripEventForm extends AbstractSmartComponent {
     this._tripEventIsFavorite = this._tripEvent.isFavorite;
     this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.pictures);
 
-    this._tripEventSelectedOffers = this._tripEvent.activeOffers;
-  }
-
-  _rerender() {
-    super.rerender();
+    this._tripEventSelectedOffers = this._tripEvent.activeOffers ? this._tripEvent.activeOffers.slice() : [];
   }
 
   _getDateAndTimeFormFormat(date) {
     const currentDate = typeof date === `string` ? new Date(date) : date;
-    const dateYear = currentDate.getFullYear().toString().slice(2, 4);
-
-    const dateValues = Array.of(currentDate.getDate(), currentDate.getMonth() + 1, currentDate.getHours(), currentDate.getMinutes()).map((value) => {
-      return value < 10 ? `0${value}` : value;
-    });
-
-    const [dateDay, dateMonth, dateHours, dateMinutes] = dateValues;
-
-    return `${dateDay}/${dateMonth}/${dateYear} ${dateHours}:${dateMinutes}`;
+    return moment(currentDate).format(`DD/MM/YY HH:mm`);
   }
 
   _getDestinationsNames() {
@@ -302,14 +295,14 @@ export default class TripEventForm extends AbstractSmartComponent {
 
     typeListElement.addEventListener(`click`, (evt) => {
       if (evt.target.tagName === `LABEL`) {
-        const inputTypeListElement = typeListElement.querySelector(`#` + evt.target.htmlFor);
+        const inputTypeListElement = typeListElement.querySelector(`#${evt.target.htmlFor}`);
 
         this._tripEventType = inputTypeListElement.value;
         this._tripEventAction = eventActionsMap[this._tripEventType];
       }
 
+      this.rerender();
       this._clearOffers();
-      this._rerender();
     });
 
     destinationInputElement.addEventListener(`click`, () => {
@@ -335,7 +328,7 @@ export default class TripEventForm extends AbstractSmartComponent {
 
       saveButtonElement.disabled = false;
 
-      this._rerender();
+      this.rerender();
     });
 
     if (availableOffersElement) {
@@ -343,7 +336,7 @@ export default class TripEventForm extends AbstractSmartComponent {
         const allOffers = this._getOffersByType(this._tripEventType).offers;
 
         if (evt.target.tagName === `INPUT`) {
-          const offerIndex = evt.target.dataset.offerId;
+          const offerIndex = parseInt(evt.target.dataset.offerId, 10);
           const newActiveOffer = allOffers[offerIndex];
 
           if (evt.target.checked) {
@@ -361,7 +354,9 @@ export default class TripEventForm extends AbstractSmartComponent {
   }
 
   _removeOffer(offer) {
-    this._tripEventSelectedOffers = this._tripEventActiveOffers.filter((activeOffer) => activeOffer.title !== offer.title);
+    this._tripEventSelectedOffers = this._tripEventSelectedOffers.filter((activeOffer) => {
+      return activeOffer.title !== offer.title;
+    });
   }
 
   _clearOffers() {
@@ -372,7 +367,7 @@ export default class TripEventForm extends AbstractSmartComponent {
     let isChecked = false;
 
     activeOffers.forEach((activeOffer) => {
-      if (offer.title === activeOffer.title) {
+      if (offer.title === activeOffer.title && offer.price === activeOffer.price) {
         isChecked = true;
       }
     });
