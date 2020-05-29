@@ -57,7 +57,7 @@ export default class TripStatistics extends AbstractSmartComponent {
   }
 
   _getTripEventsTypes() {
-    let tripEventChartData = [];
+    const tripEventChartData = [];
 
     this._tripEvents.forEach((tripEvent) => {
       if (tripEventChartData.indexOf(tripEvent.type) === -1) {
@@ -78,7 +78,7 @@ export default class TripStatistics extends AbstractSmartComponent {
     const totalDifference = allTripEventsTypes.reduce((totalTimeDifference, tripEvent) => {
       return totalTimeDifference + (tripEvent.end - tripEvent.start);
     }, 0);
-    let differenceInHours = Math.round(totalDifference / TimeInMs.HOUR);
+    const differenceInHours = Math.round(totalDifference / TimeInMs.HOUR);
 
     return differenceInHours;
   }
