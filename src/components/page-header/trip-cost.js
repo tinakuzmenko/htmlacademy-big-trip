@@ -8,12 +8,8 @@ export default class TripCost extends AbstractComponent {
     this._tripEventsModel = tripEventsModel;
 
     this._dataChangeHandler = this._dataChangeHandler.bind(this);
-    this._tripEventsModel.setDataChangeHandler(this._dataChangeHandler);
-  }
 
-  render() {
-    remove(this);
-    render(this._container, this);
+    this._tripEventsModel.setDataChangeHandler(this._dataChangeHandler);
   }
 
   getTemplate() {
@@ -22,6 +18,11 @@ export default class TripCost extends AbstractComponent {
     return `<p class="trip-info__cost">
               Total: &euro;&nbsp;<span class="trip-info__cost-value">${this._tripEventsCost}</span>
             </p>`;
+  }
+
+  render() {
+    remove(this);
+    render(this._container, this);
   }
 
   _getTripEventsCost(tripEvents) {

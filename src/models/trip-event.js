@@ -16,7 +16,7 @@ export default class TripEventAdapter {
   }
 
   toRAW(localData) {
-    const RAWObj = {
+    const localDataRAW = {
       'id': localData.id.toString(),
       'type': localData.type.toLowerCase(),
       'date_from': moment.parseZone(localData.start).utc().format(),
@@ -27,7 +27,7 @@ export default class TripEventAdapter {
       'destination': localData.destination,
     };
 
-    return RAWObj;
+    return localDataRAW;
   }
 
   static parseTripEvent(tripEvent) {

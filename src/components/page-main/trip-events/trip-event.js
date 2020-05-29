@@ -1,5 +1,5 @@
-import AbstractComponent from '../../abstract-component.js';
 import moment from 'moment';
+import AbstractComponent from '../../abstract-component.js';
 
 export default class TripEvent extends AbstractComponent {
   constructor(tripEvent) {
@@ -44,6 +44,11 @@ export default class TripEvent extends AbstractComponent {
     );
   }
 
+  setClickHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, handler);
+  }
+
   _renderTripEventOffers(activeOffers) {
     return activeOffers.map((activeOffer) => {
       const {title, price} = activeOffer;
@@ -57,10 +62,5 @@ export default class TripEvent extends AbstractComponent {
       );
     })
     .join(`\n`);
-  }
-
-  setClickHandler(handler) {
-    this.getElement().querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, handler);
   }
 }

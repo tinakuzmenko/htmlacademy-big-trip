@@ -1,9 +1,10 @@
-import AbstractComponent from '../../abstract-component.js';
 import moment from 'moment';
+import AbstractComponent from '../../abstract-component.js';
 
 export default class TripDay extends AbstractComponent {
   constructor(day) {
     super();
+
     this._day = day;
   }
 

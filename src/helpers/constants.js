@@ -1,75 +1,9 @@
-const TimeInMs = {
-  DAY: 86400000,
-  HOUR: 3600000,
-  MINUTE: 60000,
-};
+export const HIDDEN_CLASS = `visually-hidden`;
+export const EMPTY_TRIP_EVENT_FORM = null;
+export const EVENT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
+export const TRANSPORT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
 
-const RenderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  AFTEREND: `afterend`,
-  BEFOREBEGIN: `beforebegin`,
-  BEFOREEND: `beforeend`
-};
-
-const eventActionsMap = {
-  'Taxi': `to`,
-  'Bus': `to`,
-  'Train': `to`,
-  'Ship': `to`,
-  'Transport': `to`,
-  'Drive': `to`,
-  'Flight': `to`,
-  'Check-in': `in`,
-  'Sightseeing': `in`,
-  'Restaurant': `in`,
-};
-
-const Keycode = {
-  ESCAPE: `Escape`,
-};
-
-const SortType = {
-  EVENT: `sort-event`,
-  TIME: `sort-time`,
-  PRICE: `sort-price`,
-};
-
-const Mode = {
-  VIEW: `default`,
-  EDIT: `edit`,
-};
-
-const FilterType = {
-  EVERYTHING: `everything`,
-  FUTURE: `future`,
-  PAST: `past`,
-};
-
-const TripDataTab = {
-  TABLE: `table`,
-  STATS: `stats`,
-};
-
-const HIDDEN_CLASS = `visually-hidden`;
-
-const ChartTypeLabelsMap = {
-  'Taxi': `🚕 TAXI`,
-  'Bus': `🚌 BUS`,
-  'Train': `🚂 TRAIN`,
-  'Ship': `🛳 SHIP`,
-  'Transport': `🚊 TRANSPORT`,
-  'Drive': `🚗 DRIVE`,
-  'Flight': `✈️ FLIGHT`,
-  'Check-in': `🏨 CHECK-IN`,
-  'Sightseeing': `🏛 SIGHTSEEING`,
-  'Restaurant': `🍴 RESTAURANT`,
-};
-
-const EVENT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
-
-const TRANSPORT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
-
-const ChartConfiguration = {
+export const ChartConfiguration = {
   BAR_HEIGHT: 55,
   BACKGROUND_COLOR: `#ffffff`,
   FONT_COLOR: `#000000`,
@@ -85,6 +19,69 @@ const ChartConfiguration = {
   TIME_SPEND_TEXT: `TIME-SPEND`,
 };
 
-const EMPTY_TRIP_EVENT_FORM = null;
+export const TimeInMs = {
+  DAY: 86400000,
+  HOUR: 3600000,
+  MINUTE: 60000,
+};
 
-export {TimeInMs, RenderPosition, eventActionsMap, Keycode, SortType, Mode, FilterType, TripDataTab, HIDDEN_CLASS, ChartTypeLabelsMap, EVENT_TYPES, TRANSPORT_TYPES, ChartConfiguration, EMPTY_TRIP_EVENT_FORM};
+export const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  AFTEREND: `afterend`,
+  BEFOREBEGIN: `beforebegin`,
+  BEFOREEND: `beforeend`
+};
+
+export const Keycode = {
+  ESCAPE: `Escape`,
+};
+
+export const SortType = {
+  EVENT: `sort-event`,
+  TIME: `sort-time`,
+  PRICE: `sort-price`,
+};
+
+export const Mode = {
+  VIEW: `default`,
+  EDIT: `edit`,
+};
+
+export const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`,
+};
+
+export const TripDataTab = {
+  TABLE: `table`,
+  STATS: `stats`,
+};
+
+export const ChartTypeLabelsMap = {
+  'Taxi': `🚕 TAXI`,
+  'Bus': `🚌 BUS`,
+  'Train': `🚂 TRAIN`,
+  'Ship': `🛳 SHIP`,
+  'Transport': `🚊 TRANSPORT`,
+  'Drive': `🚗 DRIVE`,
+  'Flight': `✈️ FLIGHT`,
+  'Check-in': `🏨 CHECK-IN`,
+  'Sightseeing': `🏛 SIGHTSEEING`,
+  'Restaurant': `🍴 RESTAURANT`,
+};
+
+export const eventActionsMap = {
+  'Taxi': `to`,
+  'Bus': `to`,
+  'Train': `to`,
+  'Ship': `to`,
+  'Transport': `to`,
+  'Drive': `to`,
+  'Flight': `to`,
+  'Check-in': `in`,
+  'Sightseeing': `in`,
+  'Restaurant': `in`,
+};
+
+

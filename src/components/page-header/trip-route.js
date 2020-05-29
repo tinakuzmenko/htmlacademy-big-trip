@@ -1,8 +1,8 @@
-import {getSortedTripEvents} from '../../helpers/utils.js';
-import {RenderPosition} from '../../helpers/constants.js';
-import AbstractComponent from '../abstract-component.js';
-import {render, remove} from '../../helpers/render.js';
 import moment from 'moment';
+import {RenderPosition} from '../../helpers/constants.js';
+import {remove, render} from '../../helpers/render.js';
+import {getSortedTripEvents} from '../../helpers/utils.js';
+import AbstractComponent from '../abstract-component.js';
 
 export default class TripRoute extends AbstractComponent {
   constructor(container, tripEventsModel) {
@@ -13,12 +13,8 @@ export default class TripRoute extends AbstractComponent {
     this._MAXIMUM_CITIES_SHOWN = 3;
 
     this._dataChangeHandler = this._dataChangeHandler.bind(this);
-    this._tripEventsModel.setDataChangeHandler(this._dataChangeHandler);
-  }
 
-  render() {
-    remove(this);
-    render(this._container, this, RenderPosition.AFTERBEGIN);
+    this._tripEventsModel.setDataChangeHandler(this._dataChangeHandler);
   }
 
   getTemplate() {
@@ -28,13 +24,18 @@ export default class TripRoute extends AbstractComponent {
 
     if (this._tripEvents.length > 0) {
       const dates = this._getTripEventsDates();
-      tripDates = this._getTripDates(dates[0], dates[dates.length - 1]);
+      tripDates = this._getTripDatesTitle(dates[0], dates[dates.length - 1]);
     }
 
     return `<div class="trip-info__main">
               <h1 class="trip-info__title">${title}</h1>
               <p class="trip-info__dates">${tripDates}</p>
             </div>`;
+  }
+
+  render() {
+    remove(this);
+    render(this._container, this, RenderPosition.AFTERBEGIN);
   }
 
   _getTripRoute() {
@@ -47,16 +48,16 @@ export default class TripRoute extends AbstractComponent {
   _getTripEventsDates() {
     const tripEventsStartDates = this._tripEvents.map((tripEvent) => {
       return moment(tripEvent.start).startOf(`date`);
-    }).sort((a, b) => a - b);
+    }).sort((previousTripEventDate, nextTripEventDate) => previousTripEventDate - nextTripEventDate);
 
     const tripEventsEndDates = this._tripEvents.map((tripEvent) => {
       return moment(tripEvent.end).startOf(`date`);
-    }).sort((a, b) => a - b);
+    }).sort((previousTripEventDate, nextTripEventDate) => previousTripEventDate - nextTripEventDate);
 
     return [tripEventsStartDates[0], tripEventsEndDates[tripEventsEndDates.length - 1]];
   }
 
-  _getTripDates(startDate, endDate) {
+  _getTripDatesTitle(startDate, endDate) {
     if (moment(startDate).format(`MMM`) === moment(endDate).format(`MMM`)) {
       return `${moment(startDate).format(`MMM D`)} &nbsp;&mdash;&nbsp; ${moment(endDate).format(`D`)}`;
     } else {

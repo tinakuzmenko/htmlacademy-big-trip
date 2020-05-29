@@ -1,9 +1,9 @@
-import NoTripEventsComponent from '../components/page-main/trip-events/no-trip-events.js';
 import TripDaysContainer from '../components/page-main/trip-days/trip-days-container.js';
+import NoTripEventsComponent from '../components/page-main/trip-events/no-trip-events.js';
 import TripEventsGroupedByDaysView from '../components/page-main/trip-events/trip-events-grouped-by-days.js';
 import TripEventsView from '../components/page-main/trip-events/trip-events.js';
 import TripSortComponent from '../components/page-main/trip-sort/trip-sort.js';
-import {SortType, FilterType} from '../helpers/constants.js';
+import {FilterType, SortType} from '../helpers/constants.js';
 import {render} from '../helpers/render.js';
 import {getSortedTripEvents} from '../helpers/utils.js';
 
@@ -28,17 +28,6 @@ export default class TripEventsBoardController {
     this._tripEventsModel.setModeChangeHandler(this._creatingNewEventModeChangeHandler);
   }
 
-  hide() {
-    this._containerComponent.hide();
-    this._setDefaultBoardMode();
-  }
-
-  show() {
-    this._containerComponent.show();
-    this._sortComponent.rerender();
-    this.render();
-  }
-
   render() {
     this._sortedTripEvents = getSortedTripEvents(this._tripEventsModel.getTripEvents(), this._sortType);
     this._offers = this._tripEventsModel.getOffers();
@@ -56,14 +45,25 @@ export default class TripEventsBoardController {
     this._switchSortType();
   }
 
-  updateEvents() {
-    this._clearTripEvents();
+  hide() {
+    this._containerComponent.hide();
+    this._setDefaultBoardMode();
+  }
+
+  show() {
+    this._containerComponent.show();
+    this._sortComponent.rerender();
     this.render();
   }
 
   _setDefaultBoardMode() {
     this._sortType = SortType.EVENT;
     this._tripEventsModel.setFilter(FilterType.EVERYTHING);
+  }
+
+  _updateEvents() {
+    this._clearTripEvents();
+    this.render();
   }
 
   _clearTripEvents() {
@@ -120,17 +120,28 @@ export default class TripEventsBoardController {
     }
 
     if (oldTripEvent === null) {
-      this._api.createTripEvent(updatedTripEvent)
-        .then((tripEventModel) => {
-          this._tripEventsModel.addTripEvent(tripEventModel);
-          this._tripEventsModel.setIsCreatingMode();
-          this.render();
-        })
-        .catch(() => {
-          tripEventController.shake();
-        });
+      this._createTripEvent(tripEventController, updatedTripEvent);
     } else if (updatedTripEvent === null) {
-      this._api.deleteTripEvent(oldTripEvent.id)
+      this._deleteTripEvent(tripEventController, oldTripEvent);
+    } else {
+      this._updateTripEvent(tripEventController, oldTripEvent, updatedTripEvent, isFavorite);
+    }
+  }
+
+  _createTripEvent(tripEventController, updatedTripEvent) {
+    this._api.createTripEvent(updatedTripEvent)
+    .then((tripEventModel) => {
+      this._tripEventsModel.addTripEvent(tripEventModel);
+      this._tripEventsModel.setIsCreatingMode();
+      this.render();
+    })
+    .catch(() => {
+      tripEventController.shake();
+    });
+  }
+
+  _deleteTripEvent(tripEventController, oldTripEvent) {
+    this._api.deleteTripEvent(oldTripEvent.id)
         .then(() => {
           this._tripEventsModel.removeTripEvent(oldTripEvent.id);
           this._tripEventsModel.setIsButtonNewEventEnabled(true);
@@ -141,15 +152,17 @@ export default class TripEventsBoardController {
           tripEventController.shake();
           this._tripEventsModel.setIsButtonNewEventEnabled(true);
         });
-    } else {
-      this._api.updateTripEvent(oldTripEvent.id, updatedTripEvent)
+  }
+
+  _updateTripEvent(tripEventController, oldTripEvent, updatedTripEvent, isFavorite) {
+    this._api.updateTripEvent(oldTripEvent.id, updatedTripEvent)
           .then((tripEventModel) => {
             const isSuccess = this._tripEventsModel.updateTripEvent(oldTripEvent.id, tripEventModel, isFavorite);
             tripEventController.render(tripEventModel);
 
             if (isSuccess && !isFavorite) {
               tripEventController.closeTripEventFormOnSuccessSave();
-              this.updateEvents();
+              this._updateEvents();
               this._tripEventsModel.setIsButtonNewEventEnabled(true);
             }
           })
@@ -157,6 +170,5 @@ export default class TripEventsBoardController {
             tripEventController.shake();
             this._tripEventsModel.setIsButtonNewEventEnabled(true);
           });
-    }
   }
 }

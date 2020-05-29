@@ -1,7 +1,7 @@
-import TripDayEmptyComponent from '../trip-days/trip-day-empty.js';
-import TripEventsContainerComponent from './trip-events-container.js';
 import TripEventController from '../../../controllers/trip-event.js';
 import {render} from '../../../helpers/render.js';
+import TripDayEmptyComponent from '../trip-days/trip-day-empty.js';
+import TripEventsContainerComponent from './trip-events-container.js';
 
 export default class TripEvents {
   constructor(container, sortedTripEvents, offers, destinations, dataChangeHandler) {

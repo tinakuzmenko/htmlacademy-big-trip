@@ -28,28 +28,25 @@ export default class TripEventController {
     this._tripEventFormComponentFavoritesButtonClickHandler = this._tripEventFormComponentFavoritesButtonClickHandler.bind(this);
   }
 
+  setDefaultView() {
+    if (this._mode !== Mode.VIEW) {
+      this._replaceEditFormToTripEvent();
+    }
+  }
+
   render(tripEvent) {
     if (!tripEvent) {
-      const emptyTripEvent = createEmptyTripEvent();
-
-      this._tripEventFormComponent = new TripEventFormComponent(emptyTripEvent, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler, Mode.VIEW);
-      this._mode = Mode.EDIT;
-
-      render(this._tripEventContainer, this._tripEventFormComponent, RenderPosition.BEFOREBEGIN);
-      document.addEventListener(`keydown`, this._documentEscKeydownHandler);
-
-      this._tripEventFormComponent.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
-      this._tripEventFormComponent.setDeleteButtonClickHandler(this._tripEventFormComponentDeleteHandler);
-
+      this._renderEmptyForm();
       return;
     }
 
-    this._tripEvent = tripEvent;
-    this._tripEvent.timeDiff = getTimeDifference(this._tripEvent.start, this._tripEvent.end);
-    this._tripEvent.action = eventActionsMap[this._tripEvent.type];
-
     const oldTripEventComponent = this._tripEventComponent;
     const oldTripEventFormComponent = this._tripEventFormComponent;
+
+    this._tripEvent = tripEvent;
+
+    this._tripEvent.timeDiff = getTimeDifference(this._tripEvent.start, this._tripEvent.end);
+    this._tripEvent.action = eventActionsMap[this._tripEvent.type];
 
     this._tripEventComponent = new TripEventComponent(this._tripEvent);
     this._tripEventFormComponent = new TripEventFormComponent(this._tripEvent, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
@@ -63,12 +60,6 @@ export default class TripEventController {
     } else {
       render(this._tripEventWrapper.getElement(), this._tripEventComponent);
       render(this._tripEventContainer.getElement(), this._tripEventWrapper);
-    }
-  }
-
-  setDefaultView() {
-    if (this._mode !== Mode.VIEW) {
-      this._replaceEditFormToTripEvent();
     }
   }
 
@@ -112,6 +103,42 @@ export default class TripEventController {
     this._replaceEditFormToTripEvent();
   }
 
+  _setFormHandlers() {
+    this._tripEventFormComponent.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);
+    this._tripEventFormComponent.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
+    this._tripEventFormComponent.setDeleteButtonClickHandler(this._tripEventFormComponentDeleteHandler);
+    this._tripEventFormComponent.setFavoritesButtonClickHandler(this._tripEventFormComponentFavoritesButtonClickHandler);
+  }
+
+  _renderEmptyForm() {
+    const emptyTripEvent = createEmptyTripEvent();
+
+    this._tripEventFormComponent = new TripEventFormComponent(emptyTripEvent, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler, Mode.VIEW);
+    this._mode = Mode.EDIT;
+
+    render(this._tripEventContainer, this._tripEventFormComponent, RenderPosition.BEFOREBEGIN);
+    document.addEventListener(`keydown`, this._documentEscKeydownHandler);
+
+    this._tripEventFormComponent.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
+    this._tripEventFormComponent.setDeleteButtonClickHandler(this._tripEventFormComponentDeleteHandler);
+  }
+
+  _enableForm() {
+    const formElements = this._tripEventFormComponent.getElement().querySelectorAll(`input, button`);
+
+    formElements.forEach((formElement) => {
+      formElement.disabled = false;
+    });
+  }
+
+  _disableForm() {
+    const formElements = this._tripEventFormComponent.getElement().querySelectorAll(`input, button`);
+
+    formElements.forEach((formElement) => {
+      formElement.disabled = true;
+    });
+  }
+
   _replaceTripEventToEditForm() {
     this._viewChangeHandler();
     this._mode = Mode.EDIT;
@@ -126,13 +153,6 @@ export default class TripEventController {
     replace(this._tripEventComponent, this._tripEventFormComponent);
 
     this._mode = Mode.VIEW;
-  }
-
-  _setFormHandlers() {
-    this._tripEventFormComponent.setButtonRollUpHandler(this._tripEventFormComponentRollUpHandler);
-    this._tripEventFormComponent.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
-    this._tripEventFormComponent.setDeleteButtonClickHandler(this._tripEventFormComponentDeleteHandler);
-    this._tripEventFormComponent.setFavoritesButtonClickHandler(this._tripEventFormComponentFavoritesButtonClickHandler);
   }
 
   _tripEventComponentClickHandler() {
@@ -192,21 +212,5 @@ export default class TripEventController {
     const isFavorite = true;
 
     this._dataChangeHandler(this, this._tripEvent, updatedTripEvent, isFavorite);
-  }
-
-  _enableForm() {
-    const formElements = this._tripEventFormComponent.getElement().querySelectorAll(`input, button`);
-
-    formElements.forEach((formElement) => {
-      formElement.disabled = false;
-    });
-  }
-
-  _disableForm() {
-    const formElements = this._tripEventFormComponent.getElement().querySelectorAll(`input, button`);
-
-    formElements.forEach((formElement) => {
-      formElement.disabled = true;
-    });
   }
 }

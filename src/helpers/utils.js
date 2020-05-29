@@ -1,6 +1,6 @@
-import {SortType, TimeInMs, FilterType} from './constants.js';
+import {FilterType, SortType, TimeInMs} from './constants.js';
 
-const getSortedTripEvents = (tripEvents, sortType = SortType.EVENT) => {
+export const getSortedTripEvents = (tripEvents, sortType = SortType.EVENT) => {
   let sortedTripEvents = [];
   const tripEventsCopy = tripEvents.slice();
 
@@ -19,7 +19,7 @@ const getSortedTripEvents = (tripEvents, sortType = SortType.EVENT) => {
   return sortedTripEvents;
 };
 
-const getTripEventsByFilter = (tripEvents, filterType) => {
+export const getTripEventsByFilter = (tripEvents, filterType) => {
   const nowDate = new Date();
 
   switch (filterType) {
@@ -32,7 +32,7 @@ const getTripEventsByFilter = (tripEvents, filterType) => {
   }
 };
 
-const getTimeDifferenceText = (value, sign) => {
+export const getTimeDifferenceText = (value, sign) => {
   let timeDifferenceText = ``;
 
   if (value > 0 && value < 10) {
@@ -46,7 +46,7 @@ const getTimeDifferenceText = (value, sign) => {
   return timeDifferenceText;
 };
 
-const getTimeDifference = (start, end) => {
+export const getTimeDifference = (start, end) => {
   const difference = end - start;
   const days = Math.trunc(difference / TimeInMs.DAY);
   const hours = Math.trunc((difference % TimeInMs.DAY) / TimeInMs.HOUR);
@@ -64,7 +64,7 @@ const getTimeDifference = (start, end) => {
   return tripEventDuration;
 };
 
-const createEmptyTripEvent = () => {
+export const createEmptyTripEvent = () => {
   const newDate = new Date();
 
   return {
@@ -87,7 +87,7 @@ const createEmptyTripEvent = () => {
   };
 };
 
-const getCapitalizedText = (text) => {
+export const getCapitalizedText = (text) => {
   if (!text) {
     return text;
   }
@@ -95,4 +95,3 @@ const getCapitalizedText = (text) => {
   return text[0].toUpperCase() + text.slice(1);
 };
 
-export {getSortedTripEvents, getTripEventsByFilter, createEmptyTripEvent, getTimeDifference, getCapitalizedText};

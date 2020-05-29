@@ -5,6 +5,7 @@ export default class PageFilter extends AbstractComponent {
     super();
 
     this._filters = filters;
+
     this._FILTER_ID_PREFIX = `filter-`;
   }
 
@@ -13,7 +14,6 @@ export default class PageFilter extends AbstractComponent {
 
     return `<form class="trip-filters" action="#" method="get">
               ${filtersMarkup}
-
               <button class="visually-hidden" type="submit">Accept filter</button>
             </form>`;
   }
@@ -45,6 +45,4 @@ export default class PageFilter extends AbstractComponent {
               <label class="trip-filters__filter-label" for="filter-${name}">${name}</label>
             </div>`;
   }
-
-
 }

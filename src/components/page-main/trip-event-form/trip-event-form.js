@@ -6,7 +6,6 @@ import {nanoid} from "nanoid";
 import {eventActionsMap, EVENT_TYPES, Mode} from '../../../helpers/constants.js';
 import AbstractSmartComponent from '../../abstract-smart-component.js';
 
-
 const DefaultButtonText = {
   delete: `Delete`,
   cancel: `Cancel`,
@@ -34,28 +33,8 @@ export default class TripEventForm extends AbstractSmartComponent {
 
     this._dataChangeHandler = this._dataChangeHandler ? this._dataChangeHandler.bind(this) : null;
 
-    this.initFormData();
+    this._initFormData();
     this._subscribeOnEvents();
-  }
-
-  initFormData() {
-    this._tripEventId = this._tripEvent.id;
-    this._tripEventType = this._tripEvent.type;
-    this._tripEventDestination = this._tripEvent.destination;
-    this._tripEventAction = this._tripEvent.action;
-    this._tripEventActiveOffers = this._tripEvent.activeOffers;
-    this._tripEventStartTime = this._getDateAndTimeFormFormat(this._tripEvent.start);
-    this._tripEventEndTime = this._getDateAndTimeFormFormat(this._tripEvent.end);
-    this._tripEventBasePrice = this._tripEvent.basePrice;
-    this._tripEventIsFavorite = this._tripEvent.isFavorite;
-    this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.pictures);
-
-    this._tripEventSelectedOffers = [];
-  }
-
-  reset() {
-    this.initFormData();
-    this.rerender();
   }
 
   getTemplate() {
@@ -190,7 +169,7 @@ export default class TripEventForm extends AbstractSmartComponent {
 
   setButtonText(buttonText) {
     this._externalButtonText = Object.assign({}, DefaultButtonText, buttonText);
-    this.rerender();
+    this._rerender();
   }
 
   setSubmitHandler(handler) {
@@ -217,6 +196,11 @@ export default class TripEventForm extends AbstractSmartComponent {
     }
   }
 
+  reset() {
+    this._initFormData();
+    this._rerender();
+  }
+
   recoveryListeners() {
     this.setSubmitHandler(this._tripEventFormComponentSubmitHandler);
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
@@ -226,16 +210,22 @@ export default class TripEventForm extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
-  removeElement() {
-    if (this._flatpickr) {
-      this._flatpickr.destroy();
-      this._flatpickr = null;
-    }
+  _initFormData() {
+    this._tripEventId = this._tripEvent.id;
+    this._tripEventType = this._tripEvent.type;
+    this._tripEventDestination = this._tripEvent.destination;
+    this._tripEventAction = this._tripEvent.action;
+    this._tripEventActiveOffers = this._tripEvent.activeOffers;
+    this._tripEventStartTime = this._getDateAndTimeFormFormat(this._tripEvent.start);
+    this._tripEventEndTime = this._getDateAndTimeFormFormat(this._tripEvent.end);
+    this._tripEventBasePrice = this._tripEvent.basePrice;
+    this._tripEventIsFavorite = this._tripEvent.isFavorite;
+    this._tripEventPhotos = this._renderPhotos(this._tripEventDestination.pictures);
 
-    super.removeElement();
+    this._tripEventSelectedOffers = this._tripEvent.activeOffers;
   }
 
-  rerender() {
+  _rerender() {
     super.rerender();
   }
 
@@ -250,6 +240,15 @@ export default class TripEventForm extends AbstractSmartComponent {
     const [dateDay, dateMonth, dateHours, dateMinutes] = dateValues;
 
     return dateDay + `/` + dateMonth + `/` + dateYear + ` ` + dateHours + `:` + dateMinutes;
+  }
+
+  _getDestinationsNames() {
+    return this._allDestinations.map((destination) => destination.name);
+  }
+
+  _getOffersByType(type) {
+    const offersByType = this._tripEventOffers.filter((tripEventOffer) => type.toLowerCase() === tripEventOffer.type);
+    return offersByType[0];
   }
 
   _applyFlatpickr(element, time) {
@@ -309,7 +308,7 @@ export default class TripEventForm extends AbstractSmartComponent {
         this._tripEventAction = eventActionsMap[this._tripEventType];
       }
       this._clearOffers();
-      this.rerender();
+      this._rerender();
     });
 
     destinationInputElement.addEventListener(`click`, () => {
@@ -335,7 +334,7 @@ export default class TripEventForm extends AbstractSmartComponent {
 
       saveButtonElement.disabled = false;
 
-      this.rerender();
+      this._rerender();
     });
 
     if (availableOffersElement) {
@@ -449,14 +448,5 @@ export default class TripEventForm extends AbstractSmartComponent {
     }
 
     return ``;
-  }
-
-  _getDestinationsNames() {
-    return this._allDestinations.map((destination) => destination.name);
-  }
-
-  _getOffersByType(type) {
-    const offersByType = this._tripEventOffers.filter((tripEventOffer) => type.toLowerCase() === tripEventOffer.type);
-    return offersByType[0];
   }
 }

@@ -1,6 +1,6 @@
-import AbstractComponent from '../../abstract-component.js';
 import TripEventController from '../../../controllers/trip-event.js';
 import {EMPTY_TRIP_EVENT_FORM} from '../../../helpers/constants.js';
+import AbstractComponent from '../../abstract-component.js';
 
 export default class NoTripEvents extends AbstractComponent {
   constructor(container, sortedTripEvents, offers, destinations, dataChangeHandler, tripEventsModel) {

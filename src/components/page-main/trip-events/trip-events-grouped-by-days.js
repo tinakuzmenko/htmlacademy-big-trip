@@ -1,9 +1,9 @@
+import moment from 'moment';
+import TripEventController from '../../../controllers/trip-event.js';
+import {EMPTY_TRIP_EVENT_FORM, TimeInMs} from '../../../helpers/constants.js';
+import {render} from '../../../helpers/render.js';
 import TripDayComponent from '../trip-days/trip-day.js';
 import TripEventsContainerComponent from '../trip-events/trip-events-container.js';
-import TripEventController from '../../../controllers/trip-event.js';
-import {render} from '../../../helpers/render.js';
-import {TimeInMs, EMPTY_TRIP_EVENT_FORM} from '../../../helpers/constants.js';
-import moment from 'moment';
 
 export default class TripEventsGroupedByDays {
   constructor(container, sortedTripEvents, offers, destinations, dataChangeHandler, tripEventsModel) {
@@ -22,24 +22,6 @@ export default class TripEventsGroupedByDays {
     this._viewChangeHandler = this._viewChangeHandler.bind(this);
   }
 
-  _getTripDay(sortedTripEvent) {
-    this._tripEventStartDate = typeof sortedTripEvent.start === `string` ? new Date(sortedTripEvent.start) : sortedTripEvent.start;
-
-    this._tripDay = new Date(this._tripEventStartDate.getFullYear(), this._tripEventStartDate.getMonth(), this._tripEventStartDate.getDate());
-
-    this._tripDay = {
-      counter: this._daysContainerCount,
-      date: this._tripDay,
-      parsedDate: Date.parse(this._tripDay)
-    };
-  }
-
-  getDayContainerCount() {
-    const daysDifference = (this._tripDay.parsedDate - this._oldParsedDate) / TimeInMs.DAY;
-    this._daysContainerCount = this._daysContainerCount + daysDifference;
-    this._tripDay.counter = this._daysContainerCount;
-  }
-
   getElement() {
     this._sortedTripEvents.forEach((sortedTripEvent) => {
       const parsedStartDate = Date.parse(moment(sortedTripEvent.start).startOf(`date`));
@@ -53,7 +35,7 @@ export default class TripEventsGroupedByDays {
         this._oldParsedDate = this._tripDay.parsedDate;
 
         this._getTripDay(sortedTripEvent);
-        this.getDayContainerCount();
+        this._getDayContainerCount();
         this._renderEventsGroup();
       }
 
@@ -70,6 +52,24 @@ export default class TripEventsGroupedByDays {
     this._viewChangeHandler();
     this._newTripEventController = new TripEventController(this._container, this._offers, this._destinations, this._dataChangeHandler, this._viewChangeHandler);
     this._newTripEventController.render(EMPTY_TRIP_EVENT_FORM);
+  }
+
+  _getTripDay(sortedTripEvent) {
+    this._tripEventStartDate = typeof sortedTripEvent.start === `string` ? new Date(sortedTripEvent.start) : sortedTripEvent.start;
+
+    this._tripDay = new Date(this._tripEventStartDate.getFullYear(), this._tripEventStartDate.getMonth(), this._tripEventStartDate.getDate());
+
+    this._tripDay = {
+      counter: this._daysContainerCount,
+      date: this._tripDay,
+      parsedDate: Date.parse(this._tripDay)
+    };
+  }
+
+  _getDayContainerCount() {
+    const daysDifference = (this._tripDay.parsedDate - this._oldParsedDate) / TimeInMs.DAY;
+    this._daysContainerCount = this._daysContainerCount + daysDifference;
+    this._tripDay.counter = this._daysContainerCount;
   }
 
   _renderEventsGroup() {

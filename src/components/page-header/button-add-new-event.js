@@ -25,12 +25,8 @@ export default class ButtonAddNewEvent extends AbstractComponent {
     });
   }
 
-  _setButtonMode() {
-    this.getElement().disabled = !this._isEnabled;
-  }
-
   _buttonModeChangeHandler() {
     this._isEnabled = this._tripEventsModel.getIsButtonNewEventEnabled();
-    this._setButtonMode();
+    this.getElement().disabled = !this._isEnabled;
   }
 }

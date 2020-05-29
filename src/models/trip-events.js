@@ -1,5 +1,5 @@
-import {getTripEventsByFilter} from '../helpers/utils.js';
 import {FilterType} from "../helpers/constants.js";
+import {getTripEventsByFilter} from '../helpers/utils.js';
 
 export default class TripEvents {
   constructor() {
@@ -71,6 +71,27 @@ export default class TripEvents {
     this._callHandlers(this._modeChangeHandlers);
   }
 
+  setModeChangeHandler(handler) {
+    this._modeChangeHandlers.push(handler);
+  }
+
+  setIsButtonNewEventEnabledHandler(handler) {
+    this._isButtonNewEventEnabledHandlers.push(handler);
+  }
+
+  setDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
+  }
+
+  setFilterChangeHandler(handler) {
+    this._filterChangeHandlers.push(handler);
+  }
+
+  addTripEvent(tripEvent) {
+    this._tripEvents = [].concat(tripEvent, this._tripEvents);
+    this._callHandlers(this._dataChangeHandlers);
+  }
+
   removeTripEvent(id) {
     const index = this._tripEvents.findIndex((tripEvent) => tripEvent.id === id);
 
@@ -99,27 +120,6 @@ export default class TripEvents {
     }
 
     return true;
-  }
-
-  addTripEvent(tripEvent) {
-    this._tripEvents = [].concat(tripEvent, this._tripEvents);
-    this._callHandlers(this._dataChangeHandlers);
-  }
-
-  setModeChangeHandler(handler) {
-    this._modeChangeHandlers.push(handler);
-  }
-
-  setIsButtonNewEventEnabledHandler(handler) {
-    this._isButtonNewEventEnabledHandlers.push(handler);
-  }
-
-  setDataChangeHandler(handler) {
-    this._dataChangeHandlers.push(handler);
-  }
-
-  setFilterChangeHandler(handler) {
-    this._filterChangeHandlers.push(handler);
   }
 
   _callHandlers(handlers) {
