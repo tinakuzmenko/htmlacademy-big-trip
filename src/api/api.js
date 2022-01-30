@@ -1,10 +1,10 @@
 import TripEventAdapter from '../models/trip-event.js';
 
 const ServerUrl = {
-  POINTS: `https://11.ecmascript.pages.academy/big-trip/points`,
-  OFFERS: `https://11.ecmascript.pages.academy/big-trip/offers`,
-  DESTINATIONS: `https://11.ecmascript.pages.academy/big-trip/destinations`,
-  SYNC: `https://11.ecmascript.pages.academy/big-trip/points/sync`
+  POINTS: `https://16.ecmascript.pages.academy/big-trip/points`,
+  OFFERS: `https://16.ecmascript.pages.academy/big-trip/offers`,
+  DESTINATIONS: `https://16.ecmascript.pages.academy/big-trip/destinations`,
+  SYNC: `https://16.ecmascript.pages.academy/big-trip/points/sync`
 };
 
 const Method = {
